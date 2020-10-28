@@ -7,14 +7,14 @@ require("dotenv").config();
 import * as cors from "cors";
 import * as bodyParser from "body-parser";
 import { debug } from "console";
-import { connecttion } from "./connection";
+import { connection } from "./connection";
 import { router } from "./routers";
 import { loader } from "./loader";
 
 let app = express();
 //connection
 
-connecttion();
+connection();
 
 const options: cors.CorsOptions = {
   allowedHeaders: [

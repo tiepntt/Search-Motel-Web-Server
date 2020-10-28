@@ -1,0 +1,40 @@
+export const staticData = {
+  role: [
+    {
+      code: "MNG",
+      name: "manager",
+      isApproveApartment: true,
+      isApproveUser: true,
+      isApprove: true,
+      isApproveComment: true,
+      isManager: true,
+    },
+    {
+      code: "O",
+      name: "Owner",
+      isApproveApartment: true,
+      isApproveUser: true,
+      isApprove: true,
+      isApproveComment: true,
+      isManager: true,
+    },
+    {
+      code: "R",
+      name: "renter",
+      isApproveApartment: true,
+      isApproveUser: true,
+      isApprove: true,
+      isApproveComment: true,
+      isManager: true,
+    },
+    {
+      code: "A",
+      name: "admin",
+      isApproveApartment: true,
+      isApproveUser: true,
+      isApprove: true,
+      isApproveComment: true,
+      isManager: true,
+    },
+  ],
+};
