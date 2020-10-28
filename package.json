@@ -1,0 +1,42 @@
+{
+   "name": "web-server",
+   "version": "0.0.1",
+   "description": "Awesome project developed with TypeORM.",
+   "devDependencies": {
+      "ts-node": "3.3.0",
+      "@types/node": "^8.0.29",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "-": "0.0.1",
+      "@types/body-parser": "^1.19.0",
+      "@types/nodemailer": "^6.4.0",
+      "body-parser": "^1.19.0",
+      "cheerio": "^1.0.0-rc.3",
+      "cloudinary": "^1.23.0",
+      "cors": "^2.8.5",
+      "express": "^4.17.1",
+      "googleapis": "^59.0.0",
+      "http": "0.0.1-security",
+      "jsonwebtoken": "^8.5.1",
+      "kue": "^0.11.6",
+      "moment": "^2.29.1",
+      "morgan": "^1.10.0",
+      "multer": "^1.4.2",
+      "multer-storage-cloudinary": "^4.0.0",
+      "mysql": "^2.14.1",
+      "nodemailer": "^6.4.11",
+      "object-mapper": "^6.2.0",
+      "path": "^0.12.7",
+      "redis": "^3.0.2",
+      "reflect-metadata": "^0.1.10",
+      "request": "^2.88.2",
+      "swagger-express-ts": "^1.0.1",
+      "swagger-jsdoc": "^4.0.0",
+      "swagger-ui-express": "^4.1.4",
+      "typeorm": "0.2.26"
+   },
+   "scripts": {
+      "start": "ts-node src/index.ts"
+   }
+}
