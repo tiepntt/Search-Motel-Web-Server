@@ -8,7 +8,7 @@
       "typescript": "3.3.3333"
    },
    "dependencies": {
-      "-": "0.0.1",
+      "@dynamic-mapper/mapper": "^1.9.1",
       "@types/body-parser": "^1.19.0",
       "@types/nodemailer": "^6.4.0",
       "body-parser": "^1.19.0",
@@ -34,7 +34,7 @@
       "swagger-express-ts": "^1.0.1",
       "swagger-jsdoc": "^4.0.0",
       "swagger-ui-express": "^4.1.4",
-      "typeorm": "0.2.26"
+      "typeorm": "^0.2.28"
    },
    "scripts": {
       "start": "ts-node src/index.ts"
