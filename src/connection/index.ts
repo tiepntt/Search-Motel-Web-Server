@@ -1,5 +1,5 @@
-import { connectDabase } from "./database";
+import { connectDatabase } from "./database";
 import { configDb } from "./database/config";
-export const connecttion = () => {
-  connectDabase(configDb);
+export const connection = () => {
+  connectDatabase(configDb);
 };
