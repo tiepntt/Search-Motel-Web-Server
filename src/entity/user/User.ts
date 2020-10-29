@@ -8,9 +8,12 @@ import {
   JoinColumn,
   ManyToOne,
   OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { ContactUser } from "./Contact";
+
 import { Role } from "./Role";
 @Entity()
 export class User {
@@ -32,6 +35,7 @@ export class User {
   isBlock: boolean;
   @Column({ nullable: true, default: false })
   isApprove: boolean;
+
   @ManyToOne((type) => Role, (role) => role.users, { onUpdate: "CASCADE" })
   @JoinColumn()
   role: Role;
@@ -41,4 +45,7 @@ export class User {
   @OneToMany((type) => User, (user) => user.userManager)
   @JoinColumn()
   userChild: User[];
+  @OneToOne((type) => ContactUser, (contact) => contact.user)
+  @JoinColumn()
+  contactUser: ContactUser;
 }
