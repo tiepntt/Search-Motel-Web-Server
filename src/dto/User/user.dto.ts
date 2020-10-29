@@ -1,3 +1,5 @@
+import { mapping } from "auto-mapping";
+import { Exclude, Expose, Type } from "class-transformer";
 import { ContactUser } from "../../entity/user/Contact";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
@@ -25,8 +27,22 @@ export class UserGetDto {
   isBlock: boolean;
   isApprove: boolean;
 }
-export class UserDetail {
+export class UserDetailDto {
+  @Expose()
+  id: number;
+  @Expose()
   username: string;
-  password: string;
+  @Expose()
   create_at: Date;
+  @Expose()
+  isBlock: boolean;
+  @Expose()
+  isApprove: boolean;
+  @Expose()
+  @Type(() => RoleDto, {})
+  role: RoleDto;
+  @Expose()
+  userManager: User;
+  @Expose()
+  contactUser: ContactUser;
 }

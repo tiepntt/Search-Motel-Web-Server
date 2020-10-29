@@ -1,4 +1,4 @@
-import { type } from "os";
+import { Exclude, Expose } from "class-transformer";
 import {
   Column,
   CreateDateColumn,
@@ -7,7 +7,6 @@ import {
   JoinColumn,
   OneToMany,
   PrimaryGeneratedColumn,
-  Unique,
   UpdateDateColumn,
 } from "typeorm";
 import { User } from "./User";
@@ -35,6 +34,7 @@ export class Role {
   @UpdateDateColumn()
   update_at: Date;
   @DeleteDateColumn()
+  @Exclude()
   delete_at: Date;
   @OneToMany((type) => User, (user) => user.role, { onUpdate: "CASCADE" })
   @JoinColumn()

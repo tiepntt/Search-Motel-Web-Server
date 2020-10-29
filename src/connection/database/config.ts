@@ -10,11 +10,10 @@ export const configDb = {
   entities: ["src/entity/**/*.[t,j]s"],
   migrations: ["src/migration/**/*.[t,j]s"],
   subscribers: ["src/subscriber/**/*.[t,j]s"],
+  charset: "utf8mb4_unicode_ci",
   cli: {
     entitiesDir: "src/entity",
     migrationsDir: "src/migration",
     subscribersDir: "src/subscriber",
   },
 };
-
-
