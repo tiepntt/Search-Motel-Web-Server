@@ -1,20 +1,10 @@
-import {
-  classToClass,
-  plainToClass,
-  plainToClassFromExist,
-} from "class-transformer";
+import { deserializeArray, plainToClassFromExist } from "class-transformer";
 import { getRepository } from "typeorm";
-import mapper, {
-  DtoMapperUser,
-  UserMapperDto,
-  UserMapperUserDetail,
-} from "../../config/autoMap";
+import mapper, { DtoMapperUser, UserMapperDto } from "../../config/autoMap";
 import { HandelStatus } from "../../config/HandelStatus";
-import { UserDetail, UserDto, UserGetDto } from "../../dto/User/userDto";
-import { ContactUser } from "../../entity/user/Contact";
+import { UserDetailDto, UserDto, UserGetDto } from "../../dto/User/user.dto";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
-import { RoleService } from "./role.model";
 
 const getAll = async () => {
   let userRepo = getRepository(User);
@@ -30,18 +20,19 @@ const getById = async (id) => {
   let userRepo = getRepository(User);
   let user = await userRepo
     .createQueryBuilder("user")
-    .leftJoinAndSelect("user.role", "role")
+    .leftJoin("user.role", "role")
+    .select("user")
+    .addSelect("role")
+    .leftJoinAndSelect("user.contactUser", "contactUser")
     .where("user.id = :id", { id: id })
     .getOne();
   if (!user) return HandelStatus(404);
+  let userRes = deserializeArray(UserDetailDto, JSON.stringify(user), {
+    excludeExtraneousValues: true,
+    excludePrefixes: ["_"],
+  });
 
-  let users = classToClass(user);
-  console.log(users);
-  // let userDetail = new UserDetail();
-  // console.log(userDetail);
-
-  // let result = mapper.map(UserMapperUserDetail, user, userDetail);
-  return HandelStatus(200, null, users);
+  return HandelStatus(200, null, userRes);
 };
 const create = async (userConfig: UserDto) => {
   let userRepo = getRepository(User);

@@ -1,15 +1,20 @@
 import { MappingPair, MapperConfiguration } from "@dynamic-mapper/mapper";
-import { UserDetail, UserDto, UserGetDto } from "../dto/User/userDto";
+import { Type } from "@dynamic-mapper/mapper/lib/interface";
+import { UserDto, UserGetDto } from "../dto/User/user.dto";
 import { User } from "../entity/user/User";
 
 export const UserMapperDto = new MappingPair<User, UserGetDto>();
 export const DtoMapperUser = new MappingPair<UserDto, User>();
-export const UserMapperUserDetail = new MappingPair<User, UserDetail>();
 const configuration = new MapperConfiguration((cfg) => {
-  cfg.createMap(UserMapperDto, {});
-  cfg.createAutoMap(DtoMapperUser, {});
-  cfg.createAutoMap(UserMapperUserDetail, {});
+  cfg.createAutoMap(UserMapperDto, {});
 });
 
 const mapper = configuration.createMapper();
 export default mapper;
+export class DomainConverter {
+  static fromDto<T>(domain: Type<T>, dto: any) {
+    const instance = Object.create(domain.prototype);
+    instance.state = dto;
+    return instance as T;
+  }
+}
