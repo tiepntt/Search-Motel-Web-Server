@@ -12,9 +12,14 @@ const create = async (req, res) => {
   userConfig.password = userReq.password;
   userConfig.roleId = userReq.roleId;
   userConfig.userManagerCode = userReq.userManagerCode || "A";
-  console.log(userConfig);
 
   let result = await UserService.create(userConfig);
   res.send(result);
 };
-export const UserController = { getAll, create };
+const getById = async (req, res) => {
+  let id = req.params.id;
+  let result = await UserService.getById(id);
+
+  res.send(result);
+};
+export const UserController = { getAll, create, getById };

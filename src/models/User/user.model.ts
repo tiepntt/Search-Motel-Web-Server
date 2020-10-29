@@ -1,8 +1,17 @@
-import { plainToClassFromExist } from "class-transformer";
+import {
+  classToClass,
+  plainToClass,
+  plainToClassFromExist,
+} from "class-transformer";
 import { getRepository } from "typeorm";
-import mapper, { DtoMapperUser, UserMapperDto } from "../../config/autoMap";
+import mapper, {
+  DtoMapperUser,
+  UserMapperDto,
+  UserMapperUserDetail,
+} from "../../config/autoMap";
 import { HandelStatus } from "../../config/HandelStatus";
-import { UserDto, UserGetDto } from "../../dto/User/userDto";
+import { UserDetail, UserDto, UserGetDto } from "../../dto/User/userDto";
+import { ContactUser } from "../../entity/user/Contact";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
 import { RoleService } from "./role.model";
@@ -14,7 +23,25 @@ const getAll = async () => {
   let userRes = plainToClassFromExist(UserGetDto, user, {
     excludeExtraneousValues: false,
   });
+
   return HandelStatus(200, null, userRes);
+};
+const getById = async (id) => {
+  let userRepo = getRepository(User);
+  let user = await userRepo
+    .createQueryBuilder("user")
+    .leftJoinAndSelect("user.role", "role")
+    .where("user.id = :id", { id: id })
+    .getOne();
+  if (!user) return HandelStatus(404);
+
+  let users = classToClass(user);
+  console.log(users);
+  // let userDetail = new UserDetail();
+  // console.log(userDetail);
+
+  // let result = mapper.map(UserMapperUserDetail, user, userDetail);
+  return HandelStatus(200, null, users);
 };
 const create = async (userConfig: UserDto) => {
   let userRepo = getRepository(User);
@@ -34,4 +61,4 @@ const create = async (userConfig: UserDto) => {
     return HandelStatus(400, e.massage);
   }
 };
-export const UserService = { getAll, create };
+export const UserService = { getAll, create, getById };
