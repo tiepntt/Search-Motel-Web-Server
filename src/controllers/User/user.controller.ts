@@ -7,13 +7,8 @@ const getAll = async (req, res) => {
 };
 const create = async (req, res) => {
   let userReq = req.body.user;
-  let userConfig = new UserDto();
-  userConfig.username = userReq.username;
-  userConfig.password = userReq.password;
-  userConfig.roleId = userReq.roleId;
-  userConfig.userManagerCode = userReq.userManagerCode || "A";
 
-  let result = await UserService.create(userConfig);
+  let result = await UserService.create(userReq);
   res.send(result);
 };
 const getById = async (req, res) => {

@@ -21,6 +21,11 @@ export class UserDto {
   delete_at: Date;
   userChild: User[];
 }
+export class UserInputDto {
+  username: string;
+  password: string;
+  roleId: number;
+}
 export class UserGetDto {
   id: number;
   username: string;

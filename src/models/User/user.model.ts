@@ -1,8 +1,17 @@
-import { deserializeArray, plainToClassFromExist } from "class-transformer";
+import {
+  deserializeArray,
+  plainToClass,
+  plainToClassFromExist,
+} from "class-transformer";
 import { getRepository } from "typeorm";
 import mapper, { DtoMapperUser, UserMapperDto } from "../../config/autoMap";
 import { HandelStatus } from "../../config/HandelStatus";
-import { UserDetailDto, UserDto, UserGetDto } from "../../dto/User/user.dto";
+import {
+  UserDetailDto,
+  UserDto,
+  UserGetDto,
+  UserInputDto,
+} from "../../dto/User/user.dto";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
 
@@ -34,10 +43,12 @@ const getById = async (id) => {
 
   return HandelStatus(200, null, userRes);
 };
-const create = async (userConfig: UserDto) => {
+const create = async (userConfig: UserInputDto) => {
   let userRepo = getRepository(User);
   let roleRepo = getRepository(Role);
-  let user = mapper.map(DtoMapperUser, userConfig);
+  let user = plainToClass(User, userConfig);
+  console.log(user);
+
   let userGet = await userRepo.findOne({ username: userConfig.username });
   let role = await roleRepo.findOne(userConfig.roleId);
   if (!role) return HandelStatus(404, "Role Not Found");
@@ -49,7 +60,10 @@ const create = async (userConfig: UserDto) => {
     await userRepo.save(user);
     return HandelStatus(200);
   } catch (e) {
-    return HandelStatus(400, e.massage);
+    return HandelStatus(400, e);
   }
 };
-export const UserService = { getAll, create, getById };
+const update = async (userConfig: UserDto) => {};
+const remove = async (id: number) => {};
+
+export const UserService = { getAll, create, getById, update, remove };

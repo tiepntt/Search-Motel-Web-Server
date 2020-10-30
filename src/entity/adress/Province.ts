@@ -11,7 +11,7 @@ import { District } from "./District";
 export class Province {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({ length: "10", unique: true })
   code: string;
   @Column({ type: "nvarchar", charset: "utf8", length: 255 })
   name: string;
