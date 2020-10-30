@@ -24,4 +24,7 @@ const getById = async (id) => {
     return HandelStatus(404);
   } else return HandelStatus(200, null, result);
 };
-export const RoleService = { getAll, getById };
+const create = async (input) => {};
+const update = async (input) => {};
+const remove = async (input) => {};
+export const RoleService = { getAll, getById, create, update, remove };

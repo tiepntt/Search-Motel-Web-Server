@@ -59,12 +59,17 @@ const create = async (contactIpnut: ContactDto) => {
     await contactRepo.save(contact);
     await userRepo.update(contactIpnut.userId, user);
   } catch (e) {
-    return HandelStatus(500, e);
+    return HandelStatus(500, e.name);
   }
   return HandelStatus(200);
 };
-
+const getByid = async (id: number) => {};
+const update = async (input: ContactDto) => {};
+const remove = async (id: number) => {};
 export const ContactUserService = {
   getContactByUserId,
+  getByid,
   create,
+  update,
+  remove,
 };

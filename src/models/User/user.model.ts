@@ -52,4 +52,7 @@ const create = async (userConfig: UserDto) => {
     return HandelStatus(400, e.massage);
   }
 };
-export const UserService = { getAll, create, getById };
+const update = async (userConfig: UserDto) => {};
+const remove = async (id: number) => {};
+
+export const UserService = { getAll, create, getById, update, remove };
