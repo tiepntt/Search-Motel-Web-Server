@@ -1,4 +1,5 @@
-import { Expose } from "class-transformer";
+import { Expose, Type } from "class-transformer";
+import { DistrictDto } from "./district.dto";
 
 export class ProvinceInputDto {
   @Expose()
@@ -8,6 +9,7 @@ export class ProvinceInputDto {
   @Expose()
   name: string;
 }
+
 export class ProvinceGetDto {
   @Expose()
   id: number;

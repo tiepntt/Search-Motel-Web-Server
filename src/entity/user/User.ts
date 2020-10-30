@@ -20,33 +20,23 @@ import { Role } from "./Role";
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
-  @mapping({ type: Number })
   id: number;
   @Column({ length: 30, unique: true })
-  @mapping({ type: String })
   username: string;
-  @Exclude()
-  @Column({ length: 255 })
-  @mapping({ type: String })
+  @Column({ length: 30 })
   password: string;
   @CreateDateColumn({ nullable: false })
-  @mapping({ type: Date })
   create_at: Date;
-  @Exclude()
   @UpdateDateColumn()
-  @mapping({ type: Date })
   update_at: Date;
   @DeleteDateColumn()
   delete_at: Date;
   @Column({ nullable: true, default: false })
-  @mapping({ type: Boolean })
   isBlock: boolean;
   @Column({ nullable: true, default: false })
   isApprove: boolean;
-
   @ManyToOne((type) => Role, (role) => role.users, { onUpdate: "CASCADE" })
   @JoinColumn()
-  @mapping({ type: Role })
   role: Role;
   @ManyToOne((type) => User, (user) => user.userChild)
   @JoinColumn()

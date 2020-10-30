@@ -42,7 +42,7 @@ export const create = async (input: ProvinceInputDto) => {
     return HandelStatus(500, e.name);
   }
 };
-export const update = async (input: ProvinceInputDto) => {
+export const update = async (input: ProvinceGetDto) => {
   if (!input || !input.id) return HandelStatus(400);
   let provinceRepo = getRepository(Province);
   let province = await provinceRepo.findOne(input.id);

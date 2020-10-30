@@ -55,6 +55,7 @@ const create = async (contactIpnut: ContactDto) => {
   }
 
   user.contactUser = contact;
+  contact.user = user;
   try {
     await contactRepo.save(contact);
     await userRepo.update(contactIpnut.userId, user);
