@@ -1,5 +1,5 @@
 import * as express from "express";
-import { ProvinceController } from "../../controllers/Adress/province.controller";
+import { ProvinceController } from "../../controllers/Address/province.controller";
 
 let provinceRouter = express.Router();
 provinceRouter

@@ -4,7 +4,7 @@ export class WardInputDto {
   id: number;
   code: string;
   name: string;
-  districtId: number;
+  districtCode: string;
 }
 export class WardGetDto {
   @Expose()

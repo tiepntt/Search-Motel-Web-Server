@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { District } from "./District";
+import { Location } from "./Location";
 
 @Entity()
 export class Province {
@@ -21,4 +22,7 @@ export class Province {
   })
   @JoinColumn()
   districts: District[];
+  @OneToMany((type) => Location, (o) => o.province)
+  @JoinColumn()
+  locations: Location[];
 }

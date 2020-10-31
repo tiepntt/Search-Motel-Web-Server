@@ -1,5 +1,5 @@
 var { google } = require("googleapis");
-var keys = require("../Cre/gapi-sheets.json");
+var keys = require("../../libs/certifications/gapi-sheets.json");
 export const client = new google.auth.JWT(
   keys.client_email,
   null,
@@ -16,9 +16,14 @@ export const getData = async (id, range) => {
     spreadsheetId: id,
     range: range,
   };
-
-  var data = await gdApi.spreadsheets.values.get(opt);
+  try {
+    var data = await gdApi.spreadsheets.values.get(opt);
   return data.data.values;
+  }
+  catch (e) {
+    return []
+  }
+  
 };
 export const pushData = async (range, data, id) => {
   const gdApi = google.sheets({

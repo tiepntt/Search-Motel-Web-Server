@@ -1,4 +1,4 @@
-import { WardService } from "../../models/Adress/ward.model";
+import { WardService } from "../../models/Address/ward.model";
 
 const getAllByDistrictId = async (req, res) => {
   let districtId = req.params.districtId;
@@ -10,4 +10,5 @@ const create = async (req, res) => {
   let result = await WardService.create(input);
   return res.send(result);
 };
-export const WardController = { create, getAllByDistrictId };
+const getById = async (req, res) => {};
+export const WardController = { create, getAllByDistrictId, getById };
