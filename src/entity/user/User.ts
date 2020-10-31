@@ -14,6 +14,8 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
+import { Apartment } from "../apartment/apartment";
+import { AvatarUser } from "../image/avatarUser";
 import { ContactUser } from "./Contact";
 
 import { Role } from "./Role";
@@ -47,4 +49,10 @@ export class User {
   @OneToOne((type) => ContactUser, (contact) => contact.user)
   @JoinColumn()
   contactUser: ContactUser;
+  @OneToMany((type) => Apartment, (o) => o.user)
+  @JoinColumn()
+  apartments: Apartment[];
+  @OneToOne((type) => AvatarUser, (o) => o.user, { cascade: true })
+  @JoinColumn()
+  avatar: AvatarUser;
 }

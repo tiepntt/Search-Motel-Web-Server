@@ -1,5 +1,5 @@
 import * as express from "express";
-import { WardController } from "../../controllers/Adress/ward.controller";
+import { WardController } from "../../controllers/Address/ward.controller";
 
 let wardRouter = express.Router();
 wardRouter

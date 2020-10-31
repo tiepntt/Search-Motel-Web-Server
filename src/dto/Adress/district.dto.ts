@@ -4,7 +4,7 @@ export class DistrictInputDto {
   id: number;
   code: string;
   name: string;
-  provinceId: number;
+  provinceCode: string;
 }
 export class DistrictDto {
   @Expose()
@@ -14,7 +14,7 @@ export class DistrictDto {
   @Expose()
   name: string;
 }
-export class DistrictForProvineDto {
+export class DistrictForProvinceDto {
   @Expose()
   id: number;
   @Expose()

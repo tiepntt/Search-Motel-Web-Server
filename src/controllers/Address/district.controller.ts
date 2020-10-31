@@ -1,4 +1,4 @@
-import { DistrictService } from "../../models/Adress/district.model";
+import { DistrictService } from "../../models/Address/district.model";
 
 const getAllByProvinceId = async (req, res) => {
   let provinceId = req.params.provinceId;

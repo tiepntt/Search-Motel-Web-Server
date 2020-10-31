@@ -9,7 +9,7 @@ import {
   ProvinceGetDto,
   ProvinceInputDto,
 } from "../../dto/Adress/province.dto";
-import { Province } from "../../entity/adress/Province";
+import { Province } from "../../entity/address/Province";
 import { mapObject } from "../../utils/map";
 
 export const getAll = async () => {
@@ -68,4 +68,4 @@ export const remove = async (id: number) => {
   }
 };
 
-export const ProviceService = { getAll, getById, create, update, remove };
+export const ProvinceService = { getAll, getById, create, update, remove };

@@ -37,4 +37,44 @@ export const staticData = {
       isManager: true,
     },
   ],
+  apartmentTypes: [
+    { name: "Nhà trọ bình dân", code: "0001" },
+    { name: "Chung cư mini", code: "0002" },
+    { name: "Chung cư", code: "0003" },
+    { name: "Nhà riêng", code: "0004" },
+    { name: "Home Stay", code: "0005" },
+  ],
+  kitchenType: [
+    {
+      name: "Chung",
+      code: "001",
+    },
+    {
+      name: "Riêng",
+      code: "002",
+    },
+    {
+      name: "Không nấu ăn",
+      code: "003",
+    },
+    {
+      name: "Không có",
+      code: "004",
+    },
+  ],
+  toiletType: [
+    {
+      name: "Khép kín",
+      code: "001",
+    },
+    {
+      name: "Không khép kín",
+      code: "002",
+    },
+    ,
+    {
+      name: "Không có",
+      code: "003",
+    },
+  ],
 };

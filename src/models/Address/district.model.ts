@@ -2,11 +2,11 @@ import { deserializeArray, plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
-  DistrictForProvineDto,
+  DistrictForProvinceDto,
   DistrictInputDto,
 } from "../../dto/Adress/district.dto";
-import { District } from "../../entity/adress/District";
-import { Province } from "../../entity/adress/Province";
+import { District } from "../../entity/address/District";
+import { Province } from "../../entity/address/Province";
 import { mapObject } from "../../utils/map";
 
 const getAllByProvinceId = async (provinceId: number) => {
@@ -21,7 +21,7 @@ const getAllByProvinceId = async (provinceId: number) => {
     .getOne();
   if (!districts) return HandelStatus(404);
   let result = deserializeArray(
-    DistrictForProvineDto,
+    DistrictForProvinceDto,
     JSON.stringify(districts),
     {
       excludeExtraneousValues: true,
@@ -31,11 +31,11 @@ const getAllByProvinceId = async (provinceId: number) => {
 };
 const getById = async (id: number) => {};
 const create = async (input: DistrictInputDto) => {
-  if (!input || !input.code || !input.name || !input.provinceId)
+  if (!input || !input.code || !input.name || !input.provinceCode)
     return HandelStatus(400);
   let provinceRepo = getRepository(Province);
   let districtRepo = getRepository(District);
-  let province = await provinceRepo.findOne(input.provinceId);
+  let province = await provinceRepo.findOne({ code: input.provinceCode });
   let districtFind = await districtRepo.findOne({ code: input.code });
   if (districtFind) return HandelStatus(302);
   if (!province) return HandelStatus(404, "Dữ liệu tỉnh k tồn tại");
@@ -55,10 +55,12 @@ const update = async (input: DistrictInputDto) => {
   let districtRepo = getRepository(District);
   let district = await districtRepo.findOne(input.id);
   if (!district) return HandelStatus(404);
-  let province = await provinceRepo.findOne(input.provinceId || -1);
+  let province = await provinceRepo.findOne({
+    code: input.provinceCode || "-1",
+  });
   district.province = province || district.province;
   let districtUpdate = mapObject(district, input);
-
+  district.streets = [];
   try {
     await districtRepo.update(input.id, districtUpdate);
     return HandelStatus(200);
