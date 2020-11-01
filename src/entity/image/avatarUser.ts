@@ -1,10 +1,4 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../user/User";
 
 @Entity()
@@ -13,7 +7,4 @@ export class AvatarUser {
   id: number;
   @Column()
   url: string;
-  @OneToOne((type) => User, (user) => user.avatar)
-  @JoinColumn()
-  user: User;
 }

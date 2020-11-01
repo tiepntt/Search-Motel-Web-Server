@@ -10,6 +10,7 @@ import {
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
+
 import { District } from "../address/District";
 import { Location } from "../address/Location";
 import { Province } from "../address/Province";
@@ -66,4 +67,9 @@ export class Apartment {
   @ManyToMany((type) => Location)
   @JoinTable()
   LocationsNear: Location[];
+  @Column({
+    nullable: true,
+    default: "https://www.avatarins.com/image/homesmall.png",
+  })
+  avatar: string;
 }
