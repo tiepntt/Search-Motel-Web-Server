@@ -1,19 +1,13 @@
-import {
-  Column,
-  Entity,
-  JoinColumn,
-  OneToOne,
-  PrimaryGeneratedColumn,
-} from "typeorm";
+import { Column, Entity, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
 import { User } from "../user/User";
 
 @Entity()
 export class AvatarUser {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({
+    nullable: true,
+    default: "https://www.avatarins.com/image/homesmall.png",
+  })
   url: string;
-  @OneToOne((type) => User, (user) => user.avatar)
-  @JoinColumn()
-  user: User;
 }

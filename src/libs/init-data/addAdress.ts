@@ -9,7 +9,7 @@ import { DistrictService } from "../../models/Address/district.model";
 import { ProvinceService } from "../../models/Address/province.model";
 import { StreetService } from "../../models/Address/street.model";
 import { WardService } from "../../models/Address/ward.model";
-import { getData } from "../../services/google-api/gpai-spriteSheet";
+import { getData } from "../../services/google-api/gapi-spriteSheet";
 import { parseIntArray } from "../../utils/parseToArray";
 
 export const addProvinceBySheet = async (idSheet) => {

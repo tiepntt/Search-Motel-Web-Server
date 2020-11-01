@@ -25,7 +25,10 @@ export class Street {
   @Column({ type: "nvarchar", length: 25, charset: "utf8" })
   name: string;
   @Expose()
-  @ManyToMany((type) => District, (o) => o.streets)
+  @ManyToMany((type) => District, (o) => o.streets, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   districts: District[];
   @OneToMany((type) => Location, (o) => o.street)

@@ -18,12 +18,10 @@ export const getData = async (id, range) => {
   };
   try {
     var data = await gdApi.spreadsheets.values.get(opt);
-  return data.data.values;
+    return data.data.values;
+  } catch (e) {
+    return [];
   }
-  catch (e) {
-    return []
-  }
-  
 };
 export const pushData = async (range, data, id) => {
   const gdApi = google.sheets({

@@ -24,11 +24,11 @@ export class District {
   @OneToMany((type) => Ward, (o) => o.district)
   @JoinColumn()
   wards: Ward[];
-  @ManyToOne((type) => Province, (o) => o.districts)
+  @ManyToOne((type) => Province, (o) => o.districts, { onDelete: "SET NULL" })
   @JoinColumn()
   province: Province;
 
-  @ManyToMany((type) => Street, (o) => o.districts, { cascade: true })
+  @ManyToMany((type) => Street, (o) => o.districts)
   @JoinTable()
   streets: Street[];
   @OneToMany((type) => Location, (o) => o.district)
