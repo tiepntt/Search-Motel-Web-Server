@@ -5,6 +5,7 @@ import { ProvinceGetDto } from "../Adress/province.dto";
 import { StreetGetDto } from "../Adress/street.dto";
 import { WardGetDto } from "../Adress/ward.dto";
 import { UserDto } from "../User/user.dto";
+import { ApartmentDetailGetDto } from "./apartmentDetail.dto";
 import { ApartmentTypeGetDto } from "./apartmentType.dto";
 
 export class ApartmentInputDto {
@@ -65,4 +66,7 @@ export class ApartmentGetDto {
   LocationsNear: LocationTitleGetDto[];
   @Expose()
   avatar: string;
+  @Expose()
+  @Type((type) => ApartmentDetailGetDto)
+  apartmentDetail: ApartmentDetailGetDto;
 }

@@ -5,6 +5,9 @@ import { User } from "../user/User";
 export class AvatarUser {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
+  @Column({
+    nullable: true,
+    default: "https://www.avatarins.com/image/homesmall.png",
+  })
   url: string;
 }

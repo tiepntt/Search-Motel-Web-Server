@@ -31,35 +31,50 @@ export class Apartment {
   price: number;
   @CreateDateColumn()
   create_at: Date;
-  @ManyToOne((type) => User, (user) => user.apartments, { cascade: true })
+  @ManyToOne((type) => User, (user) => user.apartments, { onUpdate: "CASCADE" })
   @JoinColumn()
   user: User;
   @Column({ nullable: true, default: false })
   isApprove: boolean;
   @Column({ nullable: true })
   approve_at: Date;
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   deadline: Date;
   @ManyToOne((type) => User)
   userApprove: User;
   //type
-  @ManyToOne((type) => ApartmentType, (o) => o.apartments, { cascade: true })
+  @ManyToOne((type) => ApartmentType, (o) => o.apartments)
   @JoinColumn()
   type: ApartmentType;
-  @OneToOne((type) => ApartmentDetail, (o) => o.apartment)
+  @OneToOne((type) => ApartmentDetail, (o) => o.apartment, {
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   apartmentDetail: ApartmentDetail;
   // address
-  @ManyToOne((type) => Province, { cascade: true })
+  @ManyToOne((type) => Province, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   province: Province;
-  @ManyToOne((type) => District, { cascade: true })
+  @ManyToOne((type) => District, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   district: District;
-  @ManyToOne((type) => Ward, { cascade: true })
+  @ManyToOne((type) => Ward, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   ward: Ward;
-  @ManyToOne((type) => Street, { cascade: true })
+  @ManyToOne((type) => Street, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   street: Street;
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })

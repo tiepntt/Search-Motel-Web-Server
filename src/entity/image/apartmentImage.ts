@@ -13,7 +13,10 @@ export class ApartmentImage {
   id: number;
   @Column()
   url: string;
-  @ManyToOne((type) => ApartmentDetail, (o) => o.images)
+  @ManyToOne((type) => ApartmentDetail, (o) => o.images, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   apartmentDetail: ApartmentDetail;
 }

@@ -18,7 +18,6 @@ export class Province {
   name: string;
   @OneToMany((type) => District, (o) => o.province, {
     onUpdate: "CASCADE",
-    onDelete: "CASCADE",
   })
   @JoinColumn()
   districts: District[];

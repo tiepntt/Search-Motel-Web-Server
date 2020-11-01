@@ -52,7 +52,7 @@ export class User {
   @OneToMany((type) => Apartment, (o) => o.user)
   @JoinColumn()
   apartments: Apartment[];
-  @OneToOne((type) => AvatarUser, (o) => o.user, { cascade: true })
+  @OneToOne((type) => AvatarUser, { cascade: true })
   @JoinColumn()
   avatar: AvatarUser;
 }

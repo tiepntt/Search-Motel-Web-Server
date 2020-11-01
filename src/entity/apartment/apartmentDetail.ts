@@ -19,18 +19,27 @@ export class ApartmentDetail {
   id: number;
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
   description: string;
-  @OneToOne((type) => Apartment, (o) => o.apartmentDetail)
+  @OneToOne((type) => Apartment, (o) => o.apartmentDetail, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   apartment: Apartment;
   @OneToMany((type) => ApartmentImage, (o) => o.apartmentDetail)
   @JoinColumn()
   images: ApartmentImage[];
-  @ManyToOne((type) => ToiletType)
+  @ManyToOne((type) => ToiletType, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   toiletType: ToiletType;
   // vệ sinh : khép kín/ k khép kín
   // nhà bếp : bếp riêng/ bếp chung/ k nấu ăn
-  @ManyToOne((type) => KitchenType)
+  @ManyToOne((type) => KitchenType, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   kitchenType: KitchenType;
   @Column({ nullable: true, default: false })
@@ -44,9 +53,9 @@ export class ApartmentDetail {
   isHasElevator: boolean;
   @Column({ nullable: true, default: false })
   isHasFever: boolean;
-  @Column({ nullable: false })
+  @Column({ nullable: true, default: 0 })
   acreage: number;
-  @Column({ nullable: false })
+  @Column({ nullable: true, default: 0 })
   price: number;
   @Column({ nullable: true })
   priceElectricity: number;

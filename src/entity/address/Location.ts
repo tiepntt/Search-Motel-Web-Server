@@ -19,16 +19,16 @@ export class Location {
   name: string;
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
   description: string;
-  @ManyToOne((type) => Province, (o) => o.locations, { cascade: true })
+  @ManyToOne((type) => Province, (o) => o.locations, { onDelete: "SET NULL" })
   @JoinColumn()
   province: Province;
-  @ManyToOne((type) => District, (o) => o.locations, { cascade: true })
+  @ManyToOne((type) => District, (o) => o.locations, { onDelete: "SET NULL" })
   @JoinColumn()
   district: District;
-  @ManyToOne((type) => Ward, (o) => o.locations, { cascade: true })
+  @ManyToOne((type) => Ward, (o) => o.locations, { onDelete: "SET NULL" })
   @JoinColumn()
   ward: Ward;
-  @ManyToOne((type) => Street, (o) => o.locations, { cascade: true })
+  @ManyToOne((type) => Street, (o) => o.locations, { onDelete: "SET NULL" })
   @JoinColumn()
   street: Street;
   @Column({ nullable: true })

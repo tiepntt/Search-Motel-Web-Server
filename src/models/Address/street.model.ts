@@ -9,7 +9,6 @@ import {
 } from "../../dto/Adress/street.dto";
 import { District } from "../../entity/address/District";
 import { Street } from "../../entity/address/Street";
-import streetRouter from "../../routers/Address/street.router";
 
 const create = async (input: StreetInputDto) => {
   if (!input || !input.code || !input.districtCode || !input.name)

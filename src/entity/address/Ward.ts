@@ -19,7 +19,7 @@ export class Ward {
   name: string;
   @ManyToOne((type) => District, (o) => o.wards, {
     onUpdate: "CASCADE",
-    onDelete: "CASCADE",
+    onDelete: "SET NULL",
   })
   @JoinColumn()
   district: District;

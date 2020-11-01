@@ -2,6 +2,7 @@ import districtRouter from "./Address/district.router";
 import provinceRouter from "./Address/province.router";
 import streetRouter from "./Address/street.router";
 import wardRouter from "./Address/ward.router";
+import apartmentRouter from "./Apartment/apartment.router";
 import initAddressRouter from "./InitData/init-address.router";
 import contactRouter from "./User/contact.router";
 import roleRouter from "./User/role.router";
@@ -16,4 +17,5 @@ export const router = (app) => {
   app.use("/ward", wardRouter);
   app.use("/street", streetRouter);
   app.use("/init-data/address", initAddressRouter);
+  app.use("/apartment", apartmentRouter);
 };
