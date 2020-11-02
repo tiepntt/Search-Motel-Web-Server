@@ -3,6 +3,7 @@ import { ApartmentController } from "../../controllers/Apartment/apartment.contr
 import { ApartmentDetailController } from "../../controllers/Apartment/apartmentDetail.controller";
 import { ImageApartmentController } from "../../controllers/image/imageApartment.controller";
 import { uploadApartment } from "../../services/upload/upload";
+// import { uploadApartment } from "../../services/upload/upload.cloudinary";
 
 let apartmentRouter = express.Router();
 apartmentRouter

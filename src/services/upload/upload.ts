@@ -1,26 +1,24 @@
 import * as multer from "multer";
-const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
-var key = require("../../libs/certifications/cloudinary.json");
-cloudinary.config({
-  cloud_name: "nguyentiep",
-  api_key: key.API_KEY,
-  api_secret: key.API_SECRET,
-});
-
-const storageUser = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  allowedFormats: ["jpg", "jpeg", "png", "mp4", "mp3", "PNG"],
-  params: {
-    folder: (req, file) => "avatarUser",
+var storageAvatar = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/avatar");
+  },
+  filename: function (req, file, cb) {
+    cb(null, "avatar-" + Date.now() + "-" + file.originalname);
   },
 });
-const storageApartment = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  allowedFormats: ["jpg", "jpeg", "png", "mp4", "mp3"],
-  params: {
-    folder: (req, file) => "apartment",
+var storageApartment = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "public/apartment");
+  },
+  filename: function (req, file, cb) {
+    cb(null, "apartment-" + Date.now() + "-" + file.originalname);
   },
 });
-export const uploadAvatarUser = multer({ storage: storageUser });
-export const uploadApartment = multer({ storage: storageApartment });
+// var upload = multer({ storage: storage });
+export const uploadAvatarUser = multer({
+  storage: storageAvatar,
+});
+export const uploadApartment = multer({
+  storage: storageApartment,
+});

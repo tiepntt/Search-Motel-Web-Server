@@ -63,11 +63,4 @@ export class ApartmentDetail {
   priceWater: string;
   @Column({ nullable: true, default: false })
   isHasParking: boolean;
-  // nóng lạnh : có/không
-  // diện tích
-  // giá phòng
-  // giá điện
-  // giá nước
-  // chố để xe : có/không
-  // ảnh minh họa (tối thiểu 3 ảnh)
 }

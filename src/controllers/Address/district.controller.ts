@@ -10,9 +10,9 @@ const create = async (req, res) => {
   let result = await DistrictService.create(input);
   return res.send(result);
 };
-const udpate = async (req, res) => {
+const update = async (req, res) => {
   let input = req.body.district;
   let result = await DistrictService.update(input);
   return res.send(result);
 };
-export const DistrictController = { getAllByProvinceId, create, udpate };
+export const DistrictController = { getAllByProvinceId, create, update };
