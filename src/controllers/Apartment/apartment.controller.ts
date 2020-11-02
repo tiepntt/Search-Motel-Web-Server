@@ -4,12 +4,13 @@ import { ApartmentInputDto } from "../../dto/Apartment/apartment.dto";
 import { ConditionApartmentSearch } from "../../dto/Search/condition.dto";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { mapObject } from "../../utils/map";
+import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
   let body = req.body;
   console.log(req.body);
   let input = plainToClass(ApartmentInputDto, body);
-  input.avatar = req.file ? req.file.path : undefined;
+  input.avatar = req.file ? getUrl(req.file.path) : undefined;
   let result = await ApartmentService.create(input);
   return res.send(result);
 };

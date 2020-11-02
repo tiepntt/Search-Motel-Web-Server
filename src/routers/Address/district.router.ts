@@ -5,6 +5,6 @@ let districtRouter = express.Router();
 districtRouter
   .get("/provinceId=:provinceId", DistrictController.getAllByProvinceId)
   .post("/create", DistrictController.create)
-  .put("/", DistrictController.udpate);
+  .put("/", DistrictController.update);
 
 export default districtRouter;

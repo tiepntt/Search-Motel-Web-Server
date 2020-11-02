@@ -1,5 +1,4 @@
 import * as express from "express";
-import * as path from "path";
 import * as http from "http";
 import * as morgan from "morgan";
 require("dotenv").config();
@@ -30,10 +29,10 @@ const options: cors.CorsOptions = {
   preflightContinue: false,
 };
 app.use(cors(options));
-
-app.use(express.static(path.join(__dirname, "public")));
-var server = http.createServer(app);
-
+// upload
+app.use(express.static("public"));
+app.use(express.static("public/avatar"));
+app.use(express.static("public/apartment"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -47,8 +46,6 @@ app.get("/", (req, res) => {
 });
 loader();
 router(app);
-
-app.use(express.static(path.join(__dirname, "public")));
 var server = http.createServer(app);
 
 server.listen(process.env.PORT || 3000);

@@ -1,7 +1,7 @@
 var fs = require("fs");
 
 export const createFolder = () => {
-  var dirs = ["./upload", "./public"];
+  var dirs = ["./public", "./public/avatar", "./public/apartment"];
 
   for (const dir of dirs) {
     if (!fs.existsSync(dir)) {

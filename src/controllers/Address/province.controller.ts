@@ -20,7 +20,7 @@ const update = async (req, res) => {
   return res.send(result);
 };
 const remove = async (req, res) => {
-  let input = req.parmas.id;
+  let input = req.params.id;
   let result = await ProvinceService.remove(input);
   return res.send(result);
 };
