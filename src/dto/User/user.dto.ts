@@ -9,7 +9,8 @@ import { RoleDto } from "./role.dto";
 
 export class UserDto {
   id: number;
-  username: string;
+  name: string;
+  email: string;
   password: string;
   create_at: Date;
   update_at: Date;
@@ -24,15 +25,26 @@ export class UserDto {
   userChild: User[];
 }
 export class UserInputDto {
-  username: string;
+  name: string;
+  email: string;
   password: string;
   roleId: number;
+}
+export class UserUpdateDto {
+  @Expose()
+  id: number;
+  @Expose()
+  name: string;
+  @Expose()
+  password: string;
 }
 export class UserGetDto {
   @Expose()
   id: number;
   @Expose()
-  username: string;
+  name: string;
+  @Expose()
+  email: string;
   @Expose()
   isBlock: boolean;
   @Expose()

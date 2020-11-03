@@ -1,3 +1,5 @@
+import { plainToClass } from "class-transformer";
+import { UserUpdateDto } from "../../dto/User/user.dto";
 import { UserService } from "../../models/User/user.model";
 
 const getAll = async (req, res) => {
@@ -15,6 +17,12 @@ const getById = async (req, res) => {
 
   res.send(result);
 };
+const update = async (req, res) => {
+  let user = req.body.user;
+  let userUdate = plainToClass(UserUpdateDto, user);
+  let result = await UserService.update(userUdate);
+  return res.send(result);
+};
 const changeAvatar = async (req, res) => {
   let userId = req.body.userId;
   let imgId = req.body.imgId || undefined;
@@ -22,4 +30,4 @@ const changeAvatar = async (req, res) => {
   let result = await UserService.changeAvatar(imgId, userId);
   return res.send(result);
 };
-export const UserController = { getAll, create, getById, changeAvatar };
+export const UserController = { getAll, create, getById, changeAvatar, update };

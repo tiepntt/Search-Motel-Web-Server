@@ -16,9 +16,7 @@ export class Province {
   code: string;
   @Column({ type: "nvarchar", charset: "utf8", length: 255 })
   name: string;
-  @OneToMany((type) => District, (o) => o.province, {
-    onUpdate: "CASCADE",
-  })
+  @OneToMany((type) => District, (o) => o.province)
   @JoinColumn()
   districts: District[];
   @OneToMany((type) => Location, (o) => o.province)

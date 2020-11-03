@@ -24,7 +24,10 @@ export class District {
   @OneToMany((type) => Ward, (o) => o.district)
   @JoinColumn()
   wards: Ward[];
-  @ManyToOne((type) => Province, (o) => o.districts, { onDelete: "SET NULL" })
+  @ManyToOne((type) => Province, (o) => o.districts, {
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+  })
   @JoinColumn()
   province: Province;
 

@@ -5,6 +5,7 @@ import { HandelStatus } from "../../config/HandelStatus";
 import { ContactDto } from "../../dto/User/contact.dto";
 import { ContactUser } from "../../entity/user/Contact";
 import { User } from "../../entity/user/User";
+import { mapObject } from "../../utils/map";
 
 const getContactByUserId = async (userId) => {
   if (!userId) return HandelStatus(404);
@@ -65,8 +66,35 @@ const create = async (contactIpnut: ContactDto) => {
   return HandelStatus(200);
 };
 const getByid = async (id: number) => {};
-const update = async (input: ContactDto) => {};
-const remove = async (id: number) => {};
+const update = async (input: ContactDto) => {
+  if (!input || !input.id) return HandelStatus(400);
+  let contactRepo = getRepository(ContactUser);
+  let user = await getRepository(User).findOne(input.userId || -1);
+  if (!user) return HandelStatus(403);
+  let contact = await contactRepo.findOne({ id: input.id, user: user });
+  if (!contact) return HandelStatus(403);
+  contact = mapObject(contact, input);
+  try {
+    contactRepo.update(input.id, contact);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
+const remove = async (id: number, userId: number) => {
+  if (!id || !userId) return HandelStatus(400);
+  let contactRepo = getRepository(ContactUser);
+  let user = await getRepository(User).findOne(userId || -1);
+  if (!user) return HandelStatus(403);
+  let contact = await contactRepo.findOne({ id: id, user: user });
+  if (!contact) return HandelStatus(403);
+  try {
+    await contactRepo.remove(contact);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 export const ContactUserService = {
   getContactByUserId,
   getByid,

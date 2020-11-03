@@ -15,4 +15,20 @@ const update = async (req, res) => {
   let result = await DistrictService.update(input);
   return res.send(result);
 };
-export const DistrictController = { getAllByProvinceId, create, update };
+const getById = async (req, res) => {
+  let districtId = req.params.districtId;
+  let result = await DistrictService.getById(districtId);
+  return res.send(result);
+};
+const remove = async (req, res) => {
+  let districtId = req.body.districtId;
+  let result = await DistrictService.remove(districtId);
+  return res.send(result);
+};
+export const DistrictController = {
+  getAllByProvinceId,
+  create,
+  update,
+  getById,
+  remove,
+};

@@ -21,6 +21,11 @@ export const HandelStatus = (
       return { status: status, message: message || "Dữ liệu không phù hợp" };
     case 404:
       return { status: status, message: message || "Không tồn tại" };
+    case 403:
+      return {
+        status: status,
+        message: message || "Bạn không có quyền làm điêu này.",
+      };
     case 401:
       return { status: status, message: message || "Đăng nhập thất bại" };
     case 500:
