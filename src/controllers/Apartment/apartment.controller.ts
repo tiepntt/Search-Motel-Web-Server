@@ -16,9 +16,38 @@ const create = async (req, res) => {
 };
 const getAll = async (req, res) => {
   let condition = req.body.condition;
-  if (!condition) return res.send(HandelStatus(400));
+  if (!condition) condition = new ConditionApartmentSearch();
+  console.log(condition);
+  
   let input = plainToClass(ConditionApartmentSearch, condition);
   let result = await ApartmentService.getAll(input);
   return res.send(result);
 };
-export const ApartmentController = { create, getAll };
+const getAllByUserId = async (req, res) => {
+  let userId = req.params.userId;
+  let result = await ApartmentService.getAllByUserId(userId);
+  return res.send(result);
+};
+const remove = async (req, res) => {
+  let apartmentId = req.body.apartmentId;
+  let userId = req.body.userId;
+  let result = await ApartmentService.remove(apartmentId, userId);
+  return res.send(result);
+};
+const getRemoved = async (req, res) => {
+  let result = await ApartmentService.getDeleted();
+  return res.send(result);
+};
+const restore = async (req, res) => {
+  let apartmentId = req.body.apartmentId;
+  let result = await ApartmentService.restoreById(apartmentId);
+  return res.send(result);
+};
+export const ApartmentController = {
+  create,
+  getAll,
+  getAllByUserId,
+  remove,
+  restore,
+  getRemoved,
+};

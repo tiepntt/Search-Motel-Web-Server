@@ -1,11 +1,15 @@
-import { deserializeArray, plainToClass } from "class-transformer";
+import { json } from "body-parser";
+import { deserialize, deserializeArray, plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
+import { runInThisContext } from "vm";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
+  AccountDto,
   UserDetailDto,
   UserDto,
   UserGetDto,
   UserInputDto,
+  UserLogin,
   UserUpdateDto,
 } from "../../dto/User/user.dto";
 import { AvatarUser } from "../../entity/image/avatarUser";
@@ -106,6 +110,18 @@ const changeAvatar = async (avatarId: number, userId: number) => {
     return HandelStatus(500, e.name);
   }
 };
+const getByAccount = async (account: UserLogin) => {
+  if (!account || !account.email || !account.password) return HandelStatus(400);
+  let user = await getRepository(User).findOne({
+    relations: ["role", "avatar"],
+    where: { email: account.email, password: account.password },
+  });
+  if (!user) return HandelStatus(401, "Email hoặc mật khẩu không đúng");
+  let result = deserialize(AccountDto, JSON.stringify(user), {
+    excludeExtraneousValues: true,
+  });
+  return HandelStatus(200, null, result);
+};
 
 export const UserService = {
   getAll,
@@ -114,4 +130,5 @@ export const UserService = {
   update,
   remove,
   changeAvatar,
+  getByAccount,
 };

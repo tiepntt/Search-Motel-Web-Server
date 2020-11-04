@@ -25,6 +25,8 @@ export class User {
   id: number;
   @Column({ length: 30, unique: true })
   email: string;
+  @Column({ nullable: true, default: "Normal" })
+  loginType: string;
   @Column({ length: 30 })
   password: string;
   @Column({ type: "nvarchar", charset: "utf8" })

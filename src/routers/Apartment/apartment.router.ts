@@ -3,6 +3,7 @@ import { ApartmentController } from "../../controllers/Apartment/apartment.contr
 import { ApartmentDetailController } from "../../controllers/Apartment/apartmentDetail.controller";
 import { ImageApartmentController } from "../../controllers/image/imageApartment.controller";
 import { uploadApartment } from "../../services/upload/upload";
+import contactRouter from "../User/contact.router";
 // import { uploadApartment } from "../../services/upload/upload.cloudinary";
 
 let apartmentRouter = express.Router();
@@ -13,8 +14,12 @@ apartmentRouter
     uploadApartment.array("images", 10),
     ImageApartmentController.createMany,
     ApartmentDetailController.create
-  )
+    )
+  .put("/restore", ApartmentController.restore)
+  .delete("/delete", ApartmentController.remove)
+  .get("/deleted", ApartmentController.getRemoved)
   .get("/", ApartmentController.getAll)
+  .get("/userId=:userId", ApartmentController.getAllByUserId)
   .get(
     "/detail/apartmentId=:apartmentId",
     ApartmentDetailController.getByApartmentId

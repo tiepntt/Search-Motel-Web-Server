@@ -6,7 +6,7 @@ export class ConditionApartmentSearch {
   minS = 0;
   maxS = 1000;
   apartmentTypeId = null;
-  provinceId = null;
+  provinceId = 1;
   districtId = null;
   wardId = null;
   streetId = null;

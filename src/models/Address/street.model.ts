@@ -9,6 +9,7 @@ import {
 } from "../../dto/Adress/street.dto";
 import { District } from "../../entity/address/District";
 import { Street } from "../../entity/address/Street";
+import { mapObject } from "../../utils/map";
 
 const create = async (input: StreetInputDto) => {
   if (!input || !input.code || !input.districtCode || !input.name)
@@ -63,8 +64,27 @@ const getById = async (id: number) => {
 
   return HandelStatus(200, null, result);
 };
-const update = (input: StreetInputDto) => {};
-const remove = (id: number) => {};
+const update = async (input: StreetInputDto) => {
+  if (!input || !input.id) return HandelStatus(400);
+  let streetRepo = getRepository(Street);
+  let street = await streetRepo.findOne(input.id);
+  if (!street) return HandelStatus(404);
+  street = mapObject(street, input);
+  try {
+    await streetRepo.update(input.id, street);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e.name);
+  }
+};
+const remove = async (id: number) => {
+  try {
+    await getRepository(Street).delete(id || -1);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e.name);
+  }
+};
 export const StreetService = {
   create,
   getById,

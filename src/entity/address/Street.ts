@@ -19,7 +19,7 @@ export class Street {
   @PrimaryGeneratedColumn()
   id: number;
   @Expose()
-  @Column()
+  @Column({ unique: true, length: 20 })
   code: string;
   @Expose()
   @Column({ type: "nvarchar", length: 25, charset: "utf8" })

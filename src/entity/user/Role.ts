@@ -28,6 +28,14 @@ export class Role {
   @Column({ nullable: true, default: false })
   isApproveComment: boolean;
   @Column({ nullable: true, default: false })
+  isCreateApartment: boolean;
+  @Column({ nullable: true, default: false })
+  isEditApartment: boolean;
+  @Column({ nullable: true, default: false })
+  isCreateOrEditComment: boolean;
+  @Column({ nullable: true, default: false })
+  isReport: boolean;
+  @Column({ nullable: true, default: false })
   isManager: boolean;
   @CreateDateColumn()
   create_at: Date;
