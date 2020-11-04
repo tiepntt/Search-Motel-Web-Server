@@ -1,3 +1,7 @@
+import { plainToClass } from "class-transformer";
+import { getRepository } from "typeorm";
+import { HandelStatus } from "../../config/HandelStatus";
+import { WardInputDto } from "../../dto/Adress/ward.dto";
 import { WardService } from "../../models/Address/ward.model";
 
 const getAllByDistrictId = async (req, res) => {
@@ -10,5 +14,26 @@ const create = async (req, res) => {
   let result = await WardService.create(input);
   return res.send(result);
 };
-const getById = async (req, res) => {};
-export const WardController = { create, getAllByDistrictId, getById };
+const getById = async (req, res) => {
+  let id = req.params.wardId;
+  let result = await WardService.getById(id);
+  return res.send(result);
+};
+const udpate = async (req, res) => {
+  let ward = req.body.ward;
+  ward = plainToClass(WardInputDto, ward);
+  let result = await WardService.update(ward);
+  return res.send(result);
+};
+const remove = async (req, res) => {
+  let id = req.body.wardId;
+  let result = await WardService.remove(id);
+  return res.send(result);
+};
+export const WardController = {
+  create,
+  getAllByDistrictId,
+  getById,
+  udpate,
+  remove,
+};

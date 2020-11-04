@@ -17,6 +17,14 @@ export class RoleDtoDetails {
   isApproveComment: boolean;
   @Expose()
   isManager: boolean;
+  @Expose()
+  isCreateApartment: boolean;
+  @Expose()
+  isEditApartment: boolean;
+  @Expose()
+  isReport: boolean;
+  @Expose()
+  isCreateOrEditComment: boolean;
 }
 export class RoleDto {
   @Expose()

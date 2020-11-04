@@ -19,16 +19,13 @@ export class Street {
   @PrimaryGeneratedColumn()
   id: number;
   @Expose()
-  @Column()
+  @Column({ unique: true, length: 20 })
   code: string;
   @Expose()
   @Column({ type: "nvarchar", length: 25, charset: "utf8" })
   name: string;
   @Expose()
-  @ManyToMany((type) => District, (o) => o.streets, {
-    onDelete: "SET NULL",
-    onUpdate: "CASCADE",
-  })
+  @ManyToMany((type) => District, (o) => o.streets)
   @JoinColumn()
   districts: District[];
   @OneToMany((type) => Location, (o) => o.street)

@@ -24,9 +24,13 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ length: 30, unique: true })
-  username: string;
+  email: string;
+  @Column({ nullable: true, default: "Normal" })
+  loginType: string;
   @Column({ length: 30 })
   password: string;
+  @Column({ type: "nvarchar", charset: "utf8" })
+  name: string;
   @CreateDateColumn({ nullable: false })
   create_at: Date;
   @UpdateDateColumn()
@@ -40,19 +44,34 @@ export class User {
   @ManyToOne((type) => Role, (role) => role.users, { onUpdate: "CASCADE" })
   @JoinColumn()
   role: Role;
-  @ManyToOne((type) => User, (user) => user.userChild)
+  @ManyToOne((type) => User, (user) => user.userChild, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   userManager: User;
-  @OneToMany((type) => User, (user) => user.userManager)
+  @OneToMany((type) => User, (user) => user.userManager, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   userChild: User[];
-  @OneToOne((type) => ContactUser, (contact) => contact.user)
+  @OneToOne((type) => ContactUser, (contact) => contact.user, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   contactUser: ContactUser;
-  @OneToMany((type) => Apartment, (o) => o.user)
+  @OneToMany((type) => Apartment, (o) => o.user, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   apartments: Apartment[];
-  @OneToOne((type) => AvatarUser, { cascade: true })
+  @OneToOne((type) => AvatarUser, {
+    onDelete: "SET NULL",
+    onUpdate: "CASCADE",
+  })
   @JoinColumn()
   avatar: AvatarUser;
 }

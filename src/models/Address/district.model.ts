@@ -7,6 +7,7 @@ import {
 } from "../../dto/Adress/district.dto";
 import { District } from "../../entity/address/District";
 import { Province } from "../../entity/address/Province";
+import districtRouter from "../../routers/Address/district.router";
 import { mapObject } from "../../utils/map";
 
 const getAllByProvinceId = async (provinceId: number) => {
@@ -29,7 +30,13 @@ const getAllByProvinceId = async (provinceId: number) => {
   );
   return HandelStatus(200, null, result);
 };
-const getById = async (id: number) => {};
+const getById = async (id: number) => {
+  if (!id) return HandelStatus(400);
+  let districtRepo = getRepository(District);
+  let distrirct = await districtRepo.findOne(id);
+  if (!distrirct) return HandelStatus(404);
+  return HandelStatus(200, null, distrirct);
+};
 const create = async (input: DistrictInputDto) => {
   if (!input || !input.code || !input.name || !input.provinceCode)
     return HandelStatus(400);
@@ -68,7 +75,14 @@ const update = async (input: DistrictInputDto) => {
     return HandelStatus(500, e.name);
   }
 };
-const remove = async (id: number) => {};
+const remove = async (id: number) => {
+  try {
+    await getRepository(District).delete(id || -1);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 
 export const DistrictService = {
   create,

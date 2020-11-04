@@ -5,11 +5,12 @@ import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
 import { AvatarUserDto } from "../Image/avatarUser.dto";
 import { ContactDto } from "./contact.dto";
-import { RoleDto } from "./role.dto";
+import { RoleDto, RoleDtoDetails } from "./role.dto";
 
 export class UserDto {
   id: number;
-  username: string;
+  name: string;
+  email: string;
   password: string;
   create_at: Date;
   update_at: Date;
@@ -24,15 +25,30 @@ export class UserDto {
   userChild: User[];
 }
 export class UserInputDto {
-  username: string;
+  name: string;
+  email: string;
   password: string;
   roleId: number;
+}
+export class UserLogin {
+  email: string;
+  password: string;
+}
+export class UserUpdateDto {
+  @Expose()
+  id: number;
+  @Expose()
+  name: string;
+  @Expose()
+  password: string;
 }
 export class UserGetDto {
   @Expose()
   id: number;
   @Expose()
-  username: string;
+  name: string;
+  @Expose()
+  email: string;
   @Expose()
   isBlock: boolean;
   @Expose()
@@ -40,20 +56,42 @@ export class UserGetDto {
   @Expose()
   @Type((type) => AvatarUserDto)
   avatar: AvatarUserDto;
+  @Expose()
+  @Type((type) => RoleDto)
+  role: RoleDto;
 }
 export class UserTitleDto {
   @Expose()
   id: number;
   @Expose()
-  username: string;
+  name: string;
+}
+export class AccountDto {
+  @Expose()
+  id: number;
+  @Expose()
+  name: string;
+  @Expose()
+  email: string;
+  @Expose()
+  @Type(() => RoleDtoDetails, {})
+  role: RoleDtoDetails;
+  @Expose()
+  isBlock: boolean;
+  @Expose()
+  isApprove: boolean;
 }
 export class UserDetailDto {
   @Expose()
   id: number;
   @Expose()
-  username: string;
+  email: string;
+  @Expose()
+  name: string;
   @Expose()
   create_at: Date;
+  @Expose()
+  loginType: string;
   @Expose()
   isBlock: boolean;
   @Expose()

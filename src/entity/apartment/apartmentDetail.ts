@@ -1,12 +1,15 @@
 import { cloudkms } from "googleapis/build/src/apis/cloudkms";
 import {
   Column,
+  CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Apartment } from "./apartment";
 import { ApartmentImage } from "../image/apartmentImage";
@@ -20,7 +23,7 @@ export class ApartmentDetail {
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
   description: string;
   @OneToOne((type) => Apartment, (o) => o.apartmentDetail, {
-    onDelete: "SET NULL",
+    onDelete: "CASCADE",
     onUpdate: "CASCADE",
   })
   @JoinColumn()
@@ -63,4 +66,10 @@ export class ApartmentDetail {
   priceWater: string;
   @Column({ nullable: true, default: false })
   isHasParking: boolean;
+  @CreateDateColumn()
+  createAt: Date;
+  @UpdateDateColumn()
+  updateAt: Date;
+  @DeleteDateColumn()
+  deleteAt: Date;
 }

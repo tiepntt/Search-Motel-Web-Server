@@ -8,7 +8,8 @@ import { uploadAvatarUser } from "../../services/upload/upload";
 let userRouter = express.Router();
 userRouter.get("/", UserController.getAll);
 userRouter.get("/:id", UserController.getById);
-userRouter.post("/create", UserController.create);
+// userRouter.post("/create", UserController.create);
+userRouter.put("/update", UserController.update);
 userRouter.post(
   "/changeAvatar",
   uploadAvatarUser.single("avatar"),

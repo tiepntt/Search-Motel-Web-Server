@@ -4,7 +4,7 @@ import { LocationTitleGetDto } from "../Adress/location.dto";
 import { ProvinceGetDto } from "../Adress/province.dto";
 import { StreetGetDto } from "../Adress/street.dto";
 import { WardGetDto } from "../Adress/ward.dto";
-import { UserDto } from "../User/user.dto";
+import { UserDto, UserGetDto, UserTitleDto } from "../User/user.dto";
 import { ApartmentDetailGetDto } from "./apartmentDetail.dto";
 import { ApartmentTypeGetDto } from "./apartmentType.dto";
 
@@ -21,6 +21,34 @@ export class ApartmentInputDto {
   streetNo: string;
   LocationsNearCode: string[];
   avatar: string;
+}
+export class ApartmentDeletedDto {
+  @Expose()
+  id: number;
+  @Expose()
+  title: string;
+  @Expose()
+  description: string;
+  @Expose()
+  price: number;
+  @Expose()
+  create_at: Date;
+  @Expose()
+  delete_at: Date;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  userDeleted: UserTitleDto;
+}
+export class ApartmentTitleDto {
+  @Expose()
+  id: number;
+  @Expose()
+  title: string;
+  @Expose()
+  price: number;
 }
 export class ApartmentGetDto {
   @Expose()

@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   JoinColumn,
   JoinTable,
@@ -9,6 +10,7 @@ import {
   OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 
 import { District } from "../address/District";
@@ -18,6 +20,8 @@ import { Street } from "../address/Street";
 import { Ward } from "../address/Ward";
 import { User } from "../user/User";
 import { ApartmentDetail } from "./apartmentDetail";
+import { ApartmentReport } from "./apartmentReport";
+import { ApartmentReview } from "./apartmentReview";
 import { ApartmentType } from "./apartmentType";
 @Entity()
 export class Apartment {
@@ -31,6 +35,13 @@ export class Apartment {
   price: number;
   @CreateDateColumn()
   create_at: Date;
+  @UpdateDateColumn()
+  update_at: Date;
+  @DeleteDateColumn()
+  delete_at: Date;
+  @ManyToOne((type) => User, { onUpdate: "CASCADE", onDelete: "SET NULL" })
+  @JoinColumn()
+  userDeleted: User;
   @ManyToOne((type) => User, (user) => user.apartments, { onUpdate: "CASCADE" })
   @JoinColumn()
   user: User;
@@ -87,4 +98,10 @@ export class Apartment {
     default: "https://www.avatarins.com/image/homesmall.png",
   })
   avatar: string;
+  @OneToMany((type) => ApartmentReview, (o) => o.apartment, {})
+  @JoinColumn()
+  reviews: ApartmentReview[];
+  @OneToMany((type) => ApartmentReport, (o) => o.apartment, {})
+  @JoinColumn()
+  reports: ApartmentReport[];
 }

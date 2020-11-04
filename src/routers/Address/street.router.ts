@@ -4,5 +4,7 @@ let streetRouter = express.Router();
 streetRouter
   .get("/districtId=:districtId", StreetController.getAllByDistrictId)
   .get("/id=:id", StreetController.getById)
-  .post("/create", StreetController.create);
+  .post("/create", StreetController.create)
+  .put("/update", StreetController.update)
+  .delete("/delete", StreetController.remove);
 export default streetRouter;

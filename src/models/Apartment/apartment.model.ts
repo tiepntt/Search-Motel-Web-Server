@@ -1,18 +1,25 @@
 import { notEqual } from "assert";
-import { deserialize, plainToClass } from "class-transformer";
+import { json } from "body-parser";
+import { deserialize, deserializeArray, plainToClass } from "class-transformer";
+import { now } from "moment";
 import {
   Any,
   Between,
   getRepository,
   In,
   IsNull,
+  LessThan,
   MoreThan,
   Not,
   Repository,
+  Tree,
 } from "typeorm";
-import { isNull, isUndefined } from "util";
+import { SoftDeleteQueryBuilder } from "typeorm/query-builder/SoftDeleteQueryBuilder";
+import { isDate, isNull, isUndefined } from "util";
+import { deflateRaw } from "zlib";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
+  ApartmentDeletedDto,
   ApartmentGetDto,
   ApartmentInputDto,
 } from "../../dto/Apartment/apartment.dto";
@@ -73,7 +80,18 @@ const create = async (input: ApartmentInputDto) => {
     return HandelStatus(500, e);
   }
 };
-const getAllByUserId = async (userId) => {};
+const getAllByUserId = async (userId: number) => {
+  if (!userId) return HandelStatus(400);
+  let apartment = await getRepository(Apartment)
+    .createQueryBuilder("apartment")
+    .where("apartment.userId = :id", { id: userId })
+    .getMany();
+  if (!apartment) return HandelStatus(200);
+  let result = deserializeArray(ApartmentGetDto, JSON.stringify(apartment), {
+    excludeExtraneousValues: true,
+  });
+  return HandelStatus(200, null, result);
+};
 const getAll = async (condition: ConditionApartmentSearch) => {
   let apartmentRepo = getRepository(Apartment);
   let apartmentTypeRepo = getRepository(ApartmentType);
@@ -101,7 +119,6 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   let street = await streetRepo.findOne({
     id: condition.streetId || -1,
   });
-  console.log(street);
 
   let apartment = await apartmentRepo.find({
     relations: ["province", "district", "street", "ward", "type"],
@@ -119,6 +136,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     take: 10,
     skip: 0,
   });
+  if (!apartment) return HandelStatus(404);
   let result = deserialize(ApartmentGetDto, JSON.stringify(apartment), {
     excludeExtraneousValues: true,
   });
@@ -126,7 +144,47 @@ const getAll = async (condition: ConditionApartmentSearch) => {
 };
 
 const update = async (input: ApartmentInputDto) => {};
-const remove = async (id: number) => {};
+const remove = async (id: number, userId: number) => {
+  let apartmentRepo = getRepository(Apartment);
+  let apartment = await apartmentRepo.findOne(id);
+  let user = await getRepository(User).findOne(userId);
+  if (!apartment || !user) return HandelStatus(404);
+  try {
+    apartment.userDeleted = user;
+    apartment.delete_at = new Date();
+    await apartmentRepo.update(id, apartment);
+    await apartmentRepo.softRemove(apartment);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
+const getDeleted = async () => {
+  let apartmentRepo = getRepository(Apartment);
+  let apartments = await apartmentRepo.find({
+    cache: true,
+    withDeleted: true,
+    relations: ["user", "userDeleted"],
+  });
+  if (!apartments) return HandelStatus(404);
+  let result = deserializeArray(
+    ApartmentDeletedDto,
+    JSON.stringify(apartments),
+    {
+      excludeExtraneousValues: true,
+    }
+  );
+  return HandelStatus(200, null, result);
+};
+const restoreById = async (id: number) => {
+  let apartmentRepo = getRepository(Apartment);
+  try {
+    await apartmentRepo.restore(id || -1);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 const getById = async (id: number) => {};
 export const ApartmentService = {
   create,
@@ -135,4 +193,6 @@ export const ApartmentService = {
   remove,
   getById,
   getAllByUserId,
+  getDeleted,
+  restoreById,
 };

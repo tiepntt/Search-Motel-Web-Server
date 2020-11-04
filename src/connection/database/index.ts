@@ -1,9 +1,11 @@
+import { plainToClass } from "class-transformer";
 import "reflect-metadata";
 import { createConnection, getRepository } from "typeorm";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { KitchenType } from "../../entity/apartment/type/kitchenType";
 import { ToiletType } from "../../entity/apartment/type/toiletType";
 import { Role } from "../../entity/user/Role";
+import { mapObject } from "../../utils/map";
 import { staticData } from "./staticdata";
 
 export const connectDatabase = (configDb) =>
@@ -11,16 +13,11 @@ export const connectDatabase = (configDb) =>
     .then(async (connection) => {
       let roleRepo = getRepository(Role);
       staticData.role.forEach(async (item) => {
-        let role = new Role();
-        role.code = item.code;
-        role.name = item.name;
-        role.isApproveApartment = item.isApproveApartment;
-        role.isApproveUser = item.isApproveUser;
-        role.isApproveComment = item.isApproveComment;
-        role.isManager = item.isManager;
+        let role = plainToClass(Role, item);
         let roleGet = await roleRepo.findOne({ code: item.code });
         if (roleGet) {
-          await roleRepo.update(roleGet.id, role);
+          roleGet = mapObject(roleGet, role);
+          await roleRepo.update(roleGet.id, roleGet);
         } else await roleRepo.save(role);
       });
       staticData.apartmentTypes.forEach(async (item) => {
