@@ -25,10 +25,16 @@ export class UserDto {
   userChild: User[];
 }
 export class UserInputDto {
+  @Expose()
   name: string;
+  @Expose()
   email: string;
+  @Expose()
   password: string;
+  @Expose()
   roleId: number;
+  @Expose()
+  managerId: number;
 }
 export class UserLogin {
   email: string;
@@ -59,12 +65,18 @@ export class UserGetDto {
   @Expose()
   @Type((type) => RoleDto)
   role: RoleDto;
+  @Expose()
+  @Type((type) => ContactDto)
+  contactUser: ContactDto;
 }
+
 export class UserTitleDto {
   @Expose()
   id: number;
   @Expose()
   name: string;
+  @Expose()
+  email: string;
 }
 export class AccountDto {
   @Expose()
