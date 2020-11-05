@@ -30,6 +30,7 @@ import { Province } from "../../entity/address/Province";
 import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
+import { ApartmentDetail } from "../../entity/apartment/apartmentDetail";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
 
@@ -190,7 +191,6 @@ const restoreById = async (id: number) => {
 const getById = async (id: number, skip = 0, take: 10) => {};
 const getNeedApproveByAdminId = async (adminId: number) => {
   let userRepo = getRepository(User);
-
   let userAdmin = await userRepo.findOne({
     relations: ["userChild"],
     where: {
