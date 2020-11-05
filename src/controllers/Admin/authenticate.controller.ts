@@ -1,7 +1,9 @@
 import { plainToClass } from "class-transformer";
 import * as jwt from "jsonwebtoken";
 import { HandelStatus } from "../../config/HandelStatus";
-import { AccountDto, UserGetDto, UserInputDto } from "../../dto/User/user.dto";
+import { TokenInputDto } from "../../dto/author/token.dto";
+import { AccountDto, UserInputDto } from "../../dto/User/user.dto";
+import { TokenService } from "../../models/author/token.model";
 import { UserService } from "../../models/User/user.model";
 import roleRouter from "../../routers/User/role.router";
 const login = async (req, res) => {
@@ -11,10 +13,15 @@ const login = async (req, res) => {
   let user = accountGet.result as AccountDto;
   const payload = {
     userId: user.id,
-    role: user.role,
-    isApprove: user.isApprove,
+    roleId: user.role.id,
   };
-  var token = jwt.sign(payload, process.env.TOKEN_SECRET_TV, {
+  let tokenCode = await TokenService.create(payload);
+  let payload2 = {
+    user: tokenCode.user,
+    role: tokenCode.role,
+    id: tokenCode.id,
+  };
+  var token = jwt.sign(payload2, process.env.TOKEN_SECRET_TV, {
     expiresIn: 1400, // expires in 24 hours
   });
   return res.json({
@@ -23,7 +30,7 @@ const login = async (req, res) => {
     token: token,
     account: user,
   });
-};
+};;
 const register = async (req, res) => {
   let account = req.body.account;
   if (!account) return HandelStatus(400);
@@ -33,27 +40,21 @@ const register = async (req, res) => {
 };
 const loginByEmail = async (req, res) => {};
 const logOut = async (req, res) => {
-  // var token = req.headers.token;
-  // if (!token) return res.send(HandelStatus(401, "Bạn chưa đăng nhập"));
-  // var payload = await jwt.verify(
-  //   token,
-  //   process.env.TOKEN_SECRET_TV,
-  //   (err, verifiedJwt) => {
-  //     if (err) {
-  //       res.send(HandelStatus(401, err.message));
-  //       return;
-  //     } else {
-  //       try {
-  //         console.log(verifiedJwt);
-  //         jwt.destroy(verifiedJwt);
-  //         res.send(HandelStatus(200));
-  //       } catch (e) {
-  //         res.send(HandelStatus(500, e));
-  //       }
-  //     }
-  //   }
-  // );
-  res.send(HandelStatus(200));
+  var token = req.headers.token;
+  if (!token) return res.send(HandelStatus(401, "Bạn chưa đăng nhập"));
+  var payload = await jwt.verify(
+    token,
+    process.env.TOKEN_SECRET_TV,
+    async (err, verifiedJwt) => {
+      if (err) {
+        res.send(HandelStatus(401, err.message));
+        return;
+      } else {
+        let result = await TokenService.remove(verifiedJwt.id);
+        res.send(result);
+      }
+    }
+  );
 };
 export const AuthenticateController = {
   login,

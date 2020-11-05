@@ -1,18 +1,23 @@
 import * as jwt from "jsonwebtoken";
 import { HandelStatus } from "../config/HandelStatus";
 import { RoleDto, RoleDtoDetails } from "../dto/User/role.dto";
+import { TokenService } from "../models/author/token.model";
 export const CheckToken = async (req, res, next) => {
   let token = req.headers.token;
   if (!token) return HandelStatus(401, "Bạn chưa đăng nhập");
   var payload = await jwt.verify(
     token,
     process.env.TOKEN_SECRET_TV,
-    (err, verifiedJwt) => {
+    async (err, verifiedJwt) => {
       if (err) {
         res.send(HandelStatus(401, err.message));
         return;
       } else {
-        req.body.userId = verifiedJwt.userId || null;
+        let token = await TokenService.getById(verifiedJwt.id);
+        if  (!token) return res.send(HandelStatus(401));;
+        req.body.userId = token.user.id || null;
+        // req.body.user = token.user || null;
+        req.body.role = token.role || null;
         next();
       }
     }

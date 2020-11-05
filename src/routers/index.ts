@@ -1,9 +1,10 @@
-import { CheckToken } from "../middleware/authenticate.middleware";
+import { CheckRole, CheckToken } from "../middleware/authenticate.middleware";
 import districtRouter from "./Address/district.router";
 import provinceRouter from "./Address/province.router";
 import streetRouter from "./Address/street.router";
 import wardRouter from "./Address/ward.router";
 import AuthenticateRouter from "./Admin/authenticate.router";
+import ManagerRouter from "./Admin/manager.router";
 import apartmentReportRouter from "./Apartment/apartment.report.router";
 import apartmentReviewRouter from "./Apartment/apartment.review.router";
 import apartmentRouter from "./Apartment/apartment.router";
@@ -25,4 +26,5 @@ export const router = (app) => {
   app.use("/review", apartmentReviewRouter);
   app.use("/report", apartmentReportRouter);
   app.use("/authenticate", AuthenticateRouter);
+  app.use("/manager", CheckToken, CheckRole.roleManager, ManagerRouter);
 };
