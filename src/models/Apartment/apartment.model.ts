@@ -16,9 +16,10 @@ import {
 } from "typeorm";
 import { SoftDeleteQueryBuilder } from "typeorm/query-builder/SoftDeleteQueryBuilder";
 import { isDate, isNull, isUndefined } from "util";
-import { deflateRaw } from "zlib";
+import { deflateRaw, deflateRawSync } from "zlib";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
+  ApartmentApproveDto,
   ApartmentDeletedDto,
   ApartmentGetDto,
   ApartmentInputDto,
@@ -29,6 +30,7 @@ import { Province } from "../../entity/address/Province";
 import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
+import { ApartmentDetail } from "../../entity/apartment/apartmentDetail";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
 
@@ -41,6 +43,7 @@ const create = async (input: ApartmentInputDto) => {
     !input.price
   )
     return HandelStatus(400);
+
   let apartmentRepo = getRepository(Apartment);
   let apartmentTypeRepo = getRepository(ApartmentType);
   let provinceRepo = getRepository(Province);
@@ -185,7 +188,36 @@ const restoreById = async (id: number) => {
     return HandelStatus(500, e);
   }
 };
-const getById = async (id: number) => {};
+const getById = async (id: number, skip = 0, take: 10) => {};
+const getNeedApproveByAdminId = async (adminId: number) => {
+  let userRepo = getRepository(User);
+  let userAdmin = await userRepo.findOne({
+    relations: ["userChild"],
+    where: {
+      id: adminId,
+    },
+  });
+  if (!userAdmin) return HandelStatus(404, "User Not Found");
+  let users = userAdmin.userChild;
+  let apartments = await getRepository(Apartment).find({
+    relations: ["user"],
+    where: {
+      user: In(users),
+      isApprove: false,
+    },
+  });
+  try {
+    let apartmentList = deserializeArray(
+      ApartmentApproveDto,
+      JSON.stringify(apartments),
+      { excludeExtraneousValues: true }
+    );
+    return HandelStatus(200, null, apartmentList);
+  } catch (e) {
+    console.log(e);
+    return HandelStatus(500, e.name);
+  }
+};
 export const ApartmentService = {
   create,
   getAll,
@@ -195,4 +227,5 @@ export const ApartmentService = {
   getAllByUserId,
   getDeleted,
   restoreById,
+  getNeedApproveByAdminId,
 };

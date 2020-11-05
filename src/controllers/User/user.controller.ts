@@ -18,7 +18,7 @@ const update = async (req, res) => {
   return res.send(result);
 };
 const changeAvatar = async (req, res) => {
-  let userId = req.body.userId;
+  let userId = res.locals.userId;
   let imgId = req.body.imgId || undefined;
 
   let result = await UserService.changeAvatar(imgId, userId);

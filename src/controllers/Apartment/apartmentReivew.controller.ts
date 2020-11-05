@@ -10,7 +10,7 @@ const create = async (req, res) => {
   let review = req.body.review;
   if (!review) return res.send(HandelStatus(400));
   review = plainToClass(ApartmentReviewInputDto, review);
-  review.userId = req.body.userId;
+  review.userId = res.locals.userId;
   let result = await ApartmentReviewService.create(review);
   return res.send(result);
 };

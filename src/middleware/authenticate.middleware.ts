@@ -14,17 +14,18 @@ export const CheckToken = async (req, res, next) => {
         return;
       } else {
         let token = await TokenService.getById(verifiedJwt.id);
-        if  (!token) return res.send(HandelStatus(401));;
-        req.body.userId = token.user.id || null;
-        // req.body.user = token.user || null;
-        req.body.role = token.role || null;
+
+        if (!token) return res.send(HandelStatus(401));
+        res.locals.userId = token.user.id || null;
+
+        req.locals.role = token.role || null;
         next();
       }
     }
   );
 };
 const roleApproveApartment = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveApartment) next();
@@ -33,7 +34,7 @@ const roleApproveApartment = async (req, res, next) => {
   }
 };
 const roleApproveComment = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveComment) next();
@@ -42,7 +43,7 @@ const roleApproveComment = async (req, res, next) => {
   }
 };
 const roleApproveUser = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveUser) next();
@@ -51,7 +52,7 @@ const roleApproveUser = async (req, res, next) => {
   }
 };
 const roleManager = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isManager) next();
@@ -60,7 +61,7 @@ const roleManager = async (req, res, next) => {
   }
 };
 const RoleIsCreateApartment = (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isCreateApartment) next();
@@ -69,7 +70,7 @@ const RoleIsCreateApartment = (req, res, next) => {
   }
 };
 const RoleIsEditApartment = (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isEditApartment) next();
@@ -78,7 +79,7 @@ const RoleIsEditApartment = (req, res, next) => {
   }
 };
 const RoleIsComment = (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = req.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isCreateOrEditComment) next();

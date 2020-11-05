@@ -8,8 +8,11 @@ import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
   let body = req.body;
-  console.log(req.body);
+  console.log();
+
   let input = plainToClass(ApartmentInputDto, body);
+  input.userId = res.locals.userId || undefined;
+
   input.avatar = req.file ? getUrl(req.file.path) : undefined;
   let result = await ApartmentService.create(input);
   return res.send(result);
@@ -18,7 +21,7 @@ const getAll = async (req, res) => {
   let condition = req.body.condition;
   if (!condition) condition = new ConditionApartmentSearch();
   console.log(condition);
-  
+
   let input = plainToClass(ConditionApartmentSearch, condition);
   let result = await ApartmentService.getAll(input);
   return res.send(result);
@@ -30,7 +33,7 @@ const getAllByUserId = async (req, res) => {
 };
 const remove = async (req, res) => {
   let apartmentId = req.body.apartmentId;
-  let userId = req.body.userId;
+  let userId = res.locals.userId;
   let result = await ApartmentService.remove(apartmentId, userId);
   return res.send(result);
 };

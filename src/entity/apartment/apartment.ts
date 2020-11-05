@@ -51,10 +51,12 @@ export class Apartment {
   approve_at: Date;
   @Column({ nullable: true })
   deadline: Date;
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, { onDelete: "SET NULL", onUpdate: "NO ACTION" })
   userApprove: User;
   //type
-  @ManyToOne((type) => ApartmentType, (o) => o.apartments)
+  @ManyToOne((type) => ApartmentType, (o) => o.apartments, {
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   type: ApartmentType;
   @OneToOne((type) => ApartmentDetail, (o) => o.apartment, {

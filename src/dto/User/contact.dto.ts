@@ -11,4 +11,6 @@ export class ContactDto {
   phone2: string;
   @Expose()
   userId: number;
+  @Expose()
+  address: string;
 }

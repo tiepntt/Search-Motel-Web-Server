@@ -93,4 +93,13 @@ export const staticData = {
       code: "003",
     },
   ],
+  user: [
+    {
+      name: "Manager",
+      personNo: "0000000",
+      email: "nguyenthaitiep206@gmail.com",
+      roleCode: "MNG",
+      password: "123qwe",
+    },
+  ],
 };

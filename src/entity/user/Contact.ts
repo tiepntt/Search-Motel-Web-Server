@@ -23,10 +23,12 @@ export class ContactUser {
   @Column({ length: 15, nullable: true })
   phone2: string;
   @Expose()
+  @Column({ charset: "utf8", type: "nvarchar", nullable: true })
+  address: string;
+  @Expose()
   @OneToOne((type) => User, {
     onUpdate: "CASCADE",
   })
-  @Expose()
   @JoinColumn()
   user: User;
 }
