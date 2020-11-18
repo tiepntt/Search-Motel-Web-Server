@@ -123,7 +123,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   });
 
   let apartment = await apartmentRepo.find({
-    relations: ["province", "district", "street", "ward", "type"],
+    relations: ["province", "district", "street", "ward", "type", "user"],
     where: {
       isApprove: true,
       province: province || Not(isNull(province)),
@@ -241,6 +241,36 @@ const approveApartment = async (id: number, userApproveId: number) => {
     return HandelStatus(500, e.name);
   }
 };
+const getAllByEmploymentId = async (
+  employmentId: number,
+  take: number,
+  skip: number
+) => {
+  let user = await getRepository(User).findOne(employmentId || -1);
+  if (!user) return HandelStatus(401);
+  let apartments = await getRepository(Apartment).find({
+    relations: ["province", "district", "street", "ward", "type", "user"],
+    where: {
+      userApprove: user,
+    },
+    order: {
+      approve_at: "DESC",
+    },
+    withDeleted: true,
+    take: take || 10,
+    skip: skip || 0,
+  });
+
+  if (apartments.length == 0) return HandelStatus(200, null, []);
+  try {
+    let result = plainToClass(ApartmentGetDto, apartments, {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, result);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 export const ApartmentService = {
   create,
   getAll,
@@ -252,4 +282,5 @@ export const ApartmentService = {
   restoreById,
   getNeedApproveByAdminId,
   approveApartment,
+  getAllByEmploymentId,
 };

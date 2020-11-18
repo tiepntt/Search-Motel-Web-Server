@@ -28,6 +28,7 @@ export class ContactUser {
   @Expose()
   @OneToOne((type) => User, {
     onUpdate: "CASCADE",
+    onDelete: "CASCADE",
   })
   @JoinColumn()
   user: User;

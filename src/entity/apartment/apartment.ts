@@ -42,7 +42,10 @@ export class Apartment {
   @ManyToOne((type) => User, { onUpdate: "CASCADE", onDelete: "SET NULL" })
   @JoinColumn()
   userDeleted: User;
-  @ManyToOne((type) => User, (user) => user.apartments, { onUpdate: "CASCADE" })
+  @ManyToOne((type) => User, (user) => user.apartments, {
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   user: User;
   @Column({ nullable: true, default: false })

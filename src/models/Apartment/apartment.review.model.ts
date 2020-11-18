@@ -1,7 +1,10 @@
 import { plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
-import { ApartmentReviewInputDto } from "../../dto/Apartment/apartmentReivew.dto";
+import {
+  ApartmentListGetDto,
+  ApartmentReviewInputDto,
+} from "../../dto/Apartment/apartmentReivew.dto";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentReview } from "../../entity/apartment/apartmentReview";
 import { User } from "../../entity/user/User";
@@ -52,13 +55,63 @@ const getAllByApartmentId = async (apartmentId: number) => {
   let reviews = await reviewRepo.find({ apartment: apartment });
   return HandelStatus(200, null, reviews);
 };
-const getAllNotApprove = async (userId: number) => {};
-const approveReview = async (id: number) => {};
+const getAllNeedApproveByApartmentId = async (apartmentId: number) => {
+  let reviewRepo = getRepository(ApartmentReview);
+  let apartment = await getRepository(Apartment).findOne(apartmentId || -1);
+  if (!apartment) return HandelStatus(404, "Not Found Apartment");
+  let reviews = await reviewRepo.find({
+    apartment: apartment,
+    isApprove: false,
+  });
+  return HandelStatus(200, null, reviews);
+};
+const getAllApproveYet = async (userId: number) => {
+  let apartment = await getRepository(Apartment)
+    .createQueryBuilder("apartment")
+    .innerJoin("apartment.userApprove", "userApprove", "userApprove.id=:id", {
+      id: userId || -1,
+    })
+    .innerJoin("apartment.reviews", "reviews", "reviews.isApprove=false")
+    .getMany();
+
+  try {
+    let result = plainToClass(ApartmentListGetDto, apartment, {
+      excludeExtraneousValues: true,
+    });
+    for (let apartment of result) {
+      apartment.reviewCount = await getRepository(ApartmentReview).count({
+        where: {
+          apartment: apartment,
+          isApprove: false,
+        },
+        cache: true,
+      });
+    }
+    return HandelStatus(200, null, result);
+  } catch (e) {
+    return HandelStatus(500, e.name);
+  }
+};
+const approveReview = async (id: number, userId: number) => {
+  let user = await getRepository(User).findOne(userId || -1);
+  if (!user) return HandelStatus(404, "user not found");
+  let review = await getRepository(ApartmentReview).findOne(id);
+  if (!review) return HandelStatus(404);
+  review.isApprove = true;
+  review.userApprove = user;
+  try {
+    await getRepository(ApartmentReview).save(review);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 export const ApartmentReviewService = {
   create,
   update,
   remove,
   getAllByApartmentId,
-  getAllNotApprove,
+  getAllApproveYet,
   approveReview,
+  getAllNeedApproveByApartmentId,
 };

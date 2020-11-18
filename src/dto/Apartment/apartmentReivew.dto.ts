@@ -1,5 +1,6 @@
 import { Expose, Type } from "class-transformer";
 import { UserDto, UserTitleDto } from "../User/user.dto";
+import { ApartmentTitleDto } from "./apartment.dto";
 
 export class ApartmentReviewInputDto {
   id: number;
@@ -16,8 +17,18 @@ export class ApartmentReviewGetDto {
   @Expose()
   star: number;
   @Expose()
-  ceate_at: Date;
+  create_at: Date;
   @Expose()
   @Type((type) => UserTitleDto)
   user: UserTitleDto;
+}
+export class ApartmentListGetDto {
+  @Expose()
+  id: number;
+  @Expose()
+  title: string;
+  @Expose()
+  price: number;
+  @Expose()
+  reviewCount: number;
 }

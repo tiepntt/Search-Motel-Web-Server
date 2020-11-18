@@ -62,12 +62,14 @@ export class ApartmentGetDto {
   @Expose()
   create_at: Date;
   @Expose()
-  @Type((type) => UserDto)
-  user: UserDto;
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
   @Expose()
   isApprove: boolean;
   @Expose()
   approve_at: Date;
+  @Expose()
+  delete_at: Date;
   @Expose()
   deadline: Date;
   @Expose()
