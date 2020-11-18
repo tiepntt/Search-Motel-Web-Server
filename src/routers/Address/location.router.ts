@@ -3,11 +3,11 @@ import { LocationController } from "../../controllers/Address/location.controlle
 
 let locationRouter = express.Router();
 locationRouter
-    .get("/provinceId=:provinceId", LocationController.getAllByProvinceId)
-    .get("/districtId=:districtId", LocationController.getAllByDistrictId)
-    .get("/id=:id", LocationController.getById)
-    .post("/create", LocationController.create)
-    .put("/update", LocationController.update)
-    .delete("/delete/id=:id", LocationController.remove);
-    
+  .get("/provinceId=:provinceId", LocationController.getAllByProvinceId)
+  .get("/districtId=:districtId", LocationController.getAllByDistrictId)
+  .get("/id=:id", LocationController.getById)
+  .post("/create", LocationController.create)
+  .put("/update", LocationController.update)
+  .delete("/delete/id=:id", LocationController.remove);
+
 export default locationRouter;

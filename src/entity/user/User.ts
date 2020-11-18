@@ -24,6 +24,8 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
   @Column({ length: 30, unique: true })
+  personNo: string;
+  @Column({ length: 30, unique: true })
   email: string;
   @Column({ nullable: true, default: "Normal" })
   loginType: string;
@@ -41,36 +43,39 @@ export class User {
   isBlock: boolean;
   @Column({ nullable: true, default: false })
   isApprove: boolean;
-  @ManyToOne((type) => Role, (role) => role.users, { onUpdate: "CASCADE" })
+  @ManyToOne((type) => Role, (role) => role.users, {
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   role: Role;
   @ManyToOne((type) => User, (user) => user.userChild, {
     onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn()
   userManager: User;
   @OneToMany((type) => User, (user) => user.userManager, {
     onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn()
   userChild: User[];
   @OneToOne((type) => ContactUser, (contact) => contact.user, {
     onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn()
   contactUser: ContactUser;
   @OneToMany((type) => Apartment, (o) => o.user, {
     onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn()
   apartments: Apartment[];
   @OneToOne((type) => AvatarUser, {
     onDelete: "SET NULL",
-    onUpdate: "CASCADE",
+    onUpdate: "NO ACTION",
   })
   @JoinColumn()
   avatar: AvatarUser;

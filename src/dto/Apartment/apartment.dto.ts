@@ -62,12 +62,14 @@ export class ApartmentGetDto {
   @Expose()
   create_at: Date;
   @Expose()
-  @Type((type) => UserDto)
-  user: UserDto;
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
   @Expose()
   isApprove: boolean;
   @Expose()
   approve_at: Date;
+  @Expose()
+  delete_at: Date;
   @Expose()
   deadline: Date;
   @Expose()
@@ -97,4 +99,37 @@ export class ApartmentGetDto {
   @Expose()
   @Type((type) => ApartmentDetailGetDto)
   apartmentDetail: ApartmentDetailGetDto;
+}
+export class ApartmentApproveDto {
+  @Expose()
+  id: number;
+  @Expose()
+  title: string;
+  @Expose()
+  price: number;
+  @Expose()
+  @Type((type) => ProvinceGetDto)
+  province: ProvinceGetDto;
+  @Expose()
+  @Type((type) => DistrictDto)
+  district: DistrictDto;
+  @Expose()
+  @Type((type) => WardGetDto)
+  ward: WardGetDto;
+  @Expose()
+  @Type((type) => StreetGetDto)
+  street: StreetGetDto;
+  @Expose()
+  streetNo: string;
+  @Expose()
+  avatar: string;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
+}
+export class ApproveInput {
+  @Expose()
+  id: number;
+  @Expose()
+  userApproveId: number;
 }

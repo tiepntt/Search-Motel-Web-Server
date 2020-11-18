@@ -12,21 +12,26 @@ export class UserDto {
   name: string;
   email: string;
   password: string;
-  create_at: Date;
-  update_at: Date;
-  isBlock: boolean;
-  isApprove: boolean;
   roleId: number;
   userManagerCode: string;
-  role: Role;
-  userManager: User;
   contact: ContactUser;
-  delete_at: Date;
-  userChild: User[];
+}
+export class UserListDto {
+  @Expose()
+  id: number;
+  @Expose()
+  name: string;
+  @Expose()
+  email: string;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  userChild: UserTitleDto[];
 }
 export class UserInputDto {
   @Expose()
   name: string;
+  @Expose()
+  personNo: string;
   @Expose()
   email: string;
   @Expose()
@@ -34,7 +39,10 @@ export class UserInputDto {
   @Expose()
   roleId: number;
   @Expose()
+  roleCode: string;
+  @Expose()
   managerId: number;
+  isApprove: boolean;
 }
 export class UserLogin {
   email: string;
@@ -77,6 +85,16 @@ export class UserTitleDto {
   name: string;
   @Expose()
   email: string;
+  @Expose()
+  isBlock: boolean;
+  @Expose()
+  isApprove: boolean;
+}
+export class UserAssignDto {
+  @Expose()
+  userId: number;
+  @Expose()
+  userAdminId: number;
 }
 export class AccountDto {
   @Expose()

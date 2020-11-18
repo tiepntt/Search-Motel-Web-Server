@@ -16,9 +16,10 @@ import {
 } from "typeorm";
 import { SoftDeleteQueryBuilder } from "typeorm/query-builder/SoftDeleteQueryBuilder";
 import { isDate, isNull, isUndefined } from "util";
-import { deflateRaw } from "zlib";
+import { deflateRaw, deflateRawSync } from "zlib";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
+  ApartmentApproveDto,
   ApartmentDeletedDto,
   ApartmentGetDto,
   ApartmentInputDto,
@@ -41,6 +42,7 @@ const create = async (input: ApartmentInputDto) => {
     !input.price
   )
     return HandelStatus(400);
+
   let apartmentRepo = getRepository(Apartment);
   let apartmentTypeRepo = getRepository(ApartmentType);
   let provinceRepo = getRepository(Province);
@@ -121,7 +123,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   });
 
   let apartment = await apartmentRepo.find({
-    relations: ["province", "district", "street", "ward", "type"],
+    relations: ["province", "district", "street", "ward", "type", "user"],
     where: {
       isApprove: true,
       province: province || Not(isNull(province)),
@@ -185,7 +187,90 @@ const restoreById = async (id: number) => {
     return HandelStatus(500, e);
   }
 };
-const getById = async (id: number) => {};
+const getById = async (id: number, skip = 0, take: 10) => {};
+const getNeedApproveByAdminId = async (adminId: number) => {
+  let userRepo = getRepository(User);
+
+  let userAdmin = await userRepo.findOne({
+    relations: ["userChild"],
+    where: {
+      id: adminId,
+    },
+  });
+
+  if (!userAdmin) return HandelStatus(404, "User Not Found");
+  let users = userAdmin.userChild;
+  let apartments = [];
+  for (let i = 0; i < users.length; i++) {
+    let apartment = await await getRepository(Apartment).find({
+      relations: ["user"],
+      where: {
+        user: users[i],
+        isApprove: false,
+      },
+    });
+    if (apartment) apartments = apartments.concat(apartment);
+  }
+
+  try {
+    let apartmentList = deserializeArray(
+      ApartmentApproveDto,
+      JSON.stringify(apartments),
+      { excludeExtraneousValues: true }
+    );
+    return HandelStatus(200, null, apartmentList);
+  } catch (e) {
+    console.log(e);
+    return HandelStatus(500, e.name);
+  }
+};
+const approveApartment = async (id: number, userApproveId: number) => {
+  let apartment = await getRepository(Apartment).findOne({
+    id: id,
+    userApprove: IsNull(),
+  });
+  if (!apartment) return HandelStatus(404);
+  apartment.userApprove =
+    (await getRepository(User).findOne(userApproveId)) || apartment.userApprove;
+  apartment.isApprove = true;
+  apartment.approve_at = new Date();
+  try {
+    await getRepository(Apartment).save(apartment);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e.name);
+  }
+};
+const getAllByEmploymentId = async (
+  employmentId: number,
+  take: number,
+  skip: number
+) => {
+  let user = await getRepository(User).findOne(employmentId || -1);
+  if (!user) return HandelStatus(401);
+  let apartments = await getRepository(Apartment).find({
+    relations: ["province", "district", "street", "ward", "type", "user"],
+    where: {
+      userApprove: user,
+    },
+    order: {
+      approve_at: "DESC",
+    },
+    withDeleted: true,
+    take: take || 10,
+    skip: skip || 0,
+  });
+
+  if (apartments.length == 0) return HandelStatus(200, null, []);
+  try {
+    let result = plainToClass(ApartmentGetDto, apartments, {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, result);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 export const ApartmentService = {
   create,
   getAll,
@@ -195,4 +280,7 @@ export const ApartmentService = {
   getAllByUserId,
   getDeleted,
   restoreById,
+  getNeedApproveByAdminId,
+  approveApartment,
+  getAllByEmploymentId,
 };

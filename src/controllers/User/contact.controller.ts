@@ -20,13 +20,13 @@ const update = async (req, res) => {
   let contact = req.body.contact;
   if (!contact) return res.send(HandelStatus(400));
   let contactUpdate = plainToClass(ContactDto, contact);
-  contactUpdate.userId = req.body.userId;
+  contactUpdate.userId = res.locals.userId;
   let result = await ContactUserService.update(contactUpdate);
   return res.send(result);
 };
 const remove = async (req, res) => {
   let contactId = req.body.contactId;
-  let userId = req.body.userId;
+  let userId = res.locals.userId;
   let result = await ContactUserService.remove(contactId, userId);
   return res.send(result);
 };

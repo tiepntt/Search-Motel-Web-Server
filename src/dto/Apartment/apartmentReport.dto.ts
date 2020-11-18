@@ -24,3 +24,13 @@ export class ApartmentReportGetDto {
   @Type((type) => ApartmentTitleDto)
   apartment: ApartmentTitleDto;
 }
+export class ApartmentReportDto {
+  @Expose()
+  id: number;
+  @Expose()
+  title: string;
+  @Expose()
+  price: number;
+  @Expose()
+  reportCount: number;
+}

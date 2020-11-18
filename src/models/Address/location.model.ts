@@ -4,7 +4,6 @@ import { HandelStatus } from "../../config/HandelStatus";
 import { Province } from "../../entity/address/Province";
 import {
   classToClass,
-  classToClassFromExist,
   deserializeArray,
   plainToClass,
 } from "class-transformer";
@@ -13,11 +12,9 @@ import {
   LocationCreateDto,
   LocationUpdateDto,
 } from "../../dto/Adress/location.dto";
-import { json } from "body-parser";
 import { District } from "../../entity/address/District";
 import { Street } from "../../entity/address/Street";
 import { mapObject } from "../../utils/map";
-import { print } from "util";
 
 const getAllByProvinceId = async (provinceId: number) => {
   let provinceRepo = getRepository(Province);
@@ -82,7 +79,7 @@ const create = async (input: LocationCreateDto) => {
     return HandelStatus(400);
   let province = await provinceRepo.findOne(input.provinceCode);
   let district = await districtRepo.findOne(input.districtCode);
-  let valid = province && district; 
+  let valid = province && district;
   if (!valid)
     return HandelStatus(404, "Dữ liệu tỉnh/quận/phường không chính xác");
   let location = plainToClass(Location, input);
@@ -104,7 +101,7 @@ const update = async (input: LocationUpdateDto) => {
   if (!id || !(await locationRepo.findOne(id))) return HandelStatus(400);
   let province = await provinceRepo.findOne(input.provinceCode);
   let district = await districtRepo.findOne(input.districtCode);
-  let valid = province && district; 
+  let valid = province && district;
   if (!valid)
     return HandelStatus(404, "Dữ liệu tỉnh/quận/phường không chính xác");
   let oldLocation = await locationRepo.findOne(id);

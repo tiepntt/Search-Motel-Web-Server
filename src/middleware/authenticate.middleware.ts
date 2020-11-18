@@ -14,17 +14,18 @@ export const CheckToken = async (req, res, next) => {
         return;
       } else {
         let token = await TokenService.getById(verifiedJwt.id);
-        if  (!token) return res.send(HandelStatus(401));;
-        req.body.userId = token.user.id || null;
-        // req.body.user = token.user || null;
-        req.body.role = token.role || null;
+
+        if (!token) return res.send(HandelStatus(401));
+        res.locals.userId = token.user.id || null;
+        res.locals.isApprove = token.user.isApprove || false;
+        res.locals.role = token.role || null;
         next();
       }
     }
   );
 };
 const roleApproveApartment = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveApartment) next();
@@ -33,7 +34,7 @@ const roleApproveApartment = async (req, res, next) => {
   }
 };
 const roleApproveComment = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveComment) next();
@@ -42,7 +43,7 @@ const roleApproveComment = async (req, res, next) => {
   }
 };
 const roleApproveUser = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isApproveUser) next();
@@ -51,7 +52,7 @@ const roleApproveUser = async (req, res, next) => {
   }
 };
 const roleManager = async (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isManager) next();
@@ -60,25 +61,28 @@ const roleManager = async (req, res, next) => {
   }
 };
 const RoleIsCreateApartment = (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
+  let isApprove = res.locals.isApprove;
   if (!roleReq) return res.send(HandelStatus(400));
+
   let role = roleReq as RoleDtoDetails;
-  if (role.isCreateApartment) next();
+  if (role.isCreateApartment || isApprove) next();
   else {
     return res.send(HandelStatus(403));
   }
 };
 const RoleIsEditApartment = (req, res, next) => {
-  let roleReq = req.body.role;
-  if (!roleReq) return res.send(HandelStatus(400));
+  let roleReq = res.locals.role;
+  let isApprove = res.locals.isApprove;
+  if (!roleReq || !isApprove) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
-  if (role.isEditApartment) next();
+  if (role.isEditApartment || isApprove) next();
   else {
     return res.send(HandelStatus(403));
   }
 };
 const RoleIsComment = (req, res, next) => {
-  let roleReq = req.body.role;
+  let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;
   if (role.isCreateOrEditComment) next();

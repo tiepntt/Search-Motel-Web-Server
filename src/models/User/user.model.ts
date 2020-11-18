@@ -1,13 +1,16 @@
-import { json } from "body-parser";
 import { deserialize, deserializeArray, plainToClass } from "class-transformer";
-import { getRepository } from "typeorm";
+import { ETIMEDOUT } from "constants";
+import { accessSync } from "fs";
+
+import { Equal, getRepository, In, IsNull, Not } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
   AccountDto,
+  UserAssignDto,
   UserDetailDto,
-  UserDto,
   UserGetDto,
   UserInputDto,
+  UserListDto,
   UserLogin,
   UserTitleDto,
   UserUpdateDto,
@@ -34,7 +37,6 @@ const getEmployments = async (userId) => {
   if (!userId) return HandelStatus(404);
   let userRepo = getRepository(User);
   let user = await userRepo.findOne(userId);
-
   let employments = await userRepo.find({
     relations: ["userManager", "role", "avatar"],
     where: {
@@ -50,15 +52,23 @@ const getEmployments = async (userId) => {
     return HandelStatus(500, e.name);
   }
 };
-const getAllNewUser = async () => {
+const getAllNewOwner = async () => {
+  let role = await getRepository(Role).findOne({ code: "O" });
   let users = await getRepository(User).find({
     relations: ["role"],
-    where: {
-      isApprove: false,
-    },
+    where: [
+      {
+        isApprove: false,
+        role: role,
+      },
+      {
+        role: role,
+        userManager: IsNull(),
+      },
+    ],
   });
   try {
-    let result = deserializeArray(UserTitleDto, JSON.stringify(users), {
+    let result = deserialize(UserTitleDto, JSON.stringify(users), {
       excludeExtraneousValues: true,
     });
     return HandelStatus(200, null, result);
@@ -66,7 +76,38 @@ const getAllNewUser = async () => {
     return HandelStatus(500, e);
   }
 };
-const assignUserToAdmin = async (adminId: number) => {};
+const assignUserToAdmin = async (input: UserAssignDto) => {
+  console.log(input);
+
+  if (!input || !input.userId || !input.userAdminId) return HandelStatus(400);
+  let userRepo = getRepository(User);
+  let userAdmin = await userRepo
+    .createQueryBuilder("user")
+    .leftJoin("user.role", "role")
+    .where("user.id=:id", { id: input.userAdminId })
+    .andWhere("role.code=:code", { code: "A" })
+    .getOne();
+  if (!userAdmin) return HandelStatus(404, "user Admin Not found");
+  let user = await userRepo.findOne({
+    where: [
+      {
+        id: input.userId,
+        isApprove: false,
+        userManager: Not(IsNull()),
+      },
+      { id: input.userId, userManager: IsNull() },
+    ],
+  });
+  if (!user) return HandelStatus(404, "user Not Found");
+  user.isApprove = true;
+  user.userManager = userAdmin;
+  try {
+    await userRepo.update(user.id, user);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 const getById = async (id) => {
   let userRepo = getRepository(User);
   let user = await userRepo
@@ -84,17 +125,14 @@ const getById = async (id) => {
   return HandelStatus(200, null, userRes);
 };
 const create = async (userConfig: UserInputDto) => {
-  // console.log(userConfig);
-
   if (
     !userConfig ||
-    !userConfig.roleId ||
     !userConfig.name ||
-    !userConfig.email
+    !userConfig.email ||
+    !userConfig.roleCode ||
+    !userConfig.personNo
   )
     return HandelStatus(400);
-  // console.log(userConfig);
-
   if (!checkEmail(userConfig.email))
     return HandelStatus(400, "Email k đúng định dạng");
   let userRepo = getRepository(User);
@@ -103,13 +141,12 @@ const create = async (userConfig: UserInputDto) => {
   let user = plainToClass(User, userConfig);
   user.userManager = await userRepo.findOne(userConfig.managerId || -1);
   let userGet = await userRepo.findOne({ email: userConfig.email });
-  let role = await roleRepo.findOne(userConfig.roleId);
+  let role = await roleRepo.findOne({ code: userConfig.roleCode });
   if (!role) return HandelStatus(404, "Role Not Found");
   if (userGet) return HandelStatus(302);
   user.role = role;
   let avatar = new AvatarUser();
   user.avatar = avatar;
-
   try {
     await avatarRepo.save(avatar);
     await userRepo.save(user);
@@ -134,7 +171,21 @@ const update = async (input: UserUpdateDto) => {
     return HandelStatus(500, e);
   }
 };
-const remove = async (id: number) => {};
+const remove = async (id: number) => {
+  let userRepo = getRepository(User);
+  let role = await getRepository(Role).findOne({ code: "MNG" });
+  if (!role) return HandelStatus(404, "role Not Found");
+  let user = await userRepo.findOne({ where: { id: id }, relations: ["role"] });
+  if (!user) return HandelStatus(404);
+  if (user.role.id === role.id)
+    return HandelStatus(400, "Không thể xóa tài khoản manager");
+  try {
+    await userRepo.softDelete(user.id);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
 const changeAvatar = async (avatarId: number, userId: number) => {
   if (!avatarId || !userId) return HandelStatus(400);
   let avatarUserRepo = getRepository(AvatarUser);
@@ -162,6 +213,24 @@ const getByAccount = async (account: UserLogin) => {
   });
   return HandelStatus(200, null, result);
 };
+const getUsersByEmployment = async (userId: number) => {
+  if (!userId) return HandelStatus(400);
+  let user = await getRepository(User).find({
+    relations: ["userChild"],
+    where: {
+      id: userId,
+    },
+  });
+  if (!user) return HandelStatus(404);
+  try {
+    let resull = deserialize(UserListDto, JSON.stringify(user), {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, resull);
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
 
 export const UserService = {
   getAll,
@@ -172,6 +241,7 @@ export const UserService = {
   changeAvatar,
   getByAccount,
   getEmployments,
-  getAllNewUser,
+  getAllNewOwner,
   assignUserToAdmin,
+  getUsersByEmployment,
 };

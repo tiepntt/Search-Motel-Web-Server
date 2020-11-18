@@ -5,7 +5,7 @@ import { ApartmentReportService } from "../../models/Apartment/apartment.report.
 
 const create = async (req, res) => {
   let report = req.body.report;
-  report.userId = req.body.userId;
+  report.userId = res.locals.userId;
   report = plainToClass(ApartmentReportInputDto, report);
   let result = await ApartmentReportService.create(report);
   return res.send(result);

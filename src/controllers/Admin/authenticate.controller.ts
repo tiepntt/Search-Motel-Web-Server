@@ -30,11 +30,18 @@ const login = async (req, res) => {
     token: token,
     account: user,
   });
-};;
+};
 const register = async (req, res) => {
-  let account = req.body.account;
-  if (!account) return HandelStatus(400);
-  account = plainToClass(UserInputDto, account);
+  let accountInput = req.body.account;
+  if (!accountInput) return res.send(HandelStatus(400));
+  let account = plainToClass(UserInputDto, accountInput);
+  if (
+    account.roleCode === "MNG" ||
+    account.roleCode === "A" ||
+    !account.roleCode
+  ) {
+    account.roleCode = "R";
+  }
   let result = await UserService.create(account);
   return res.send(result);
 };

@@ -42,7 +42,10 @@ export class Apartment {
   @ManyToOne((type) => User, { onUpdate: "CASCADE", onDelete: "SET NULL" })
   @JoinColumn()
   userDeleted: User;
-  @ManyToOne((type) => User, (user) => user.apartments, { onUpdate: "CASCADE" })
+  @ManyToOne((type) => User, (user) => user.apartments, {
+    onUpdate: "CASCADE",
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   user: User;
   @Column({ nullable: true, default: false })
@@ -51,10 +54,12 @@ export class Apartment {
   approve_at: Date;
   @Column({ nullable: true })
   deadline: Date;
-  @ManyToOne((type) => User)
+  @ManyToOne((type) => User, { onDelete: "SET NULL", onUpdate: "NO ACTION" })
   userApprove: User;
   //type
-  @ManyToOne((type) => ApartmentType, (o) => o.apartments)
+  @ManyToOne((type) => ApartmentType, (o) => o.apartments, {
+    onDelete: "SET NULL",
+  })
   @JoinColumn()
   type: ApartmentType;
   @OneToOne((type) => ApartmentDetail, (o) => o.apartment, {
