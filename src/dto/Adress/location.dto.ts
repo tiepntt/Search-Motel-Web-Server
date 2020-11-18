@@ -4,7 +4,17 @@ import { DistrictDto } from "./district.dto";
 import { ProvinceGetDto } from "./province.dto";
 import { StreetGetDto } from "./street.dto";
 import { WardGetDto } from "./ward.dto";
-export class LocationInputDto {
+export class LocationCreateDto {
+  name: string;
+  description: string;
+  provinceCode: number;
+  districtCode: number;
+  wardCode: number;
+  streetCode: number;
+  streetNo: string;
+}
+export class LocationUpdateDto {
+  id: number;
   name: string;
   description: string;
   provinceCode: number;
