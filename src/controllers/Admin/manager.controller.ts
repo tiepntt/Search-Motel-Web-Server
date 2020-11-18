@@ -14,8 +14,11 @@ const createEmployment = async (req, res) => {
   let userId = res.locals.userId;
   let user = req.body.user;
   if (!user) return res.send(HandelStatus(400));
-  let userInput = plainToClass(UserInputDto, user);
+  let userInput = plainToClass(UserInputDto, user, {
+    excludeExtraneousValues: true,
+  });
   userInput.managerId = userId || null;
+  userInput.isApprove = true;
   let result = await UserService.create(userInput);
   return res.send(result);
 };

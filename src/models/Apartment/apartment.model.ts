@@ -30,7 +30,6 @@ import { Province } from "../../entity/address/Province";
 import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
-import { ApartmentDetail } from "../../entity/apartment/apartmentDetail";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
 
@@ -191,21 +190,28 @@ const restoreById = async (id: number) => {
 const getById = async (id: number, skip = 0, take: 10) => {};
 const getNeedApproveByAdminId = async (adminId: number) => {
   let userRepo = getRepository(User);
+
   let userAdmin = await userRepo.findOne({
     relations: ["userChild"],
     where: {
       id: adminId,
     },
   });
+
   if (!userAdmin) return HandelStatus(404, "User Not Found");
   let users = userAdmin.userChild;
-  let apartments = await getRepository(Apartment).find({
-    relations: ["user"],
-    where: {
-      user: In(users),
-      isApprove: false,
-    },
-  });
+  let apartments = [];
+  for (let i = 0; i < users.length; i++) {
+    let apartment = await await getRepository(Apartment).find({
+      relations: ["user"],
+      where: {
+        user: users[i],
+        isApprove: false,
+      },
+    });
+    if (apartment) apartments = apartments.concat(apartment);
+  }
+
   try {
     let apartmentList = deserializeArray(
       ApartmentApproveDto,
@@ -215,6 +221,23 @@ const getNeedApproveByAdminId = async (adminId: number) => {
     return HandelStatus(200, null, apartmentList);
   } catch (e) {
     console.log(e);
+    return HandelStatus(500, e.name);
+  }
+};
+const approveApartment = async (id: number, userApproveId: number) => {
+  let apartment = await getRepository(Apartment).findOne({
+    id: id,
+    userApprove: IsNull(),
+  });
+  if (!apartment) return HandelStatus(404);
+  apartment.userApprove =
+    (await getRepository(User).findOne(userApproveId)) || apartment.userApprove;
+  apartment.isApprove = true;
+  apartment.approve_at = new Date();
+  try {
+    await getRepository(Apartment).save(apartment);
+    return HandelStatus(200);
+  } catch (e) {
     return HandelStatus(500, e.name);
   }
 };
@@ -228,4 +251,5 @@ export const ApartmentService = {
   getDeleted,
   restoreById,
   getNeedApproveByAdminId,
+  approveApartment,
 };

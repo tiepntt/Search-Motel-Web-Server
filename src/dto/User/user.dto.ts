@@ -42,6 +42,7 @@ export class UserInputDto {
   roleCode: string;
   @Expose()
   managerId: number;
+  isApprove: boolean;
 }
 export class UserLogin {
   email: string;

@@ -125,3 +125,9 @@ export class ApartmentApproveDto {
   @Type((type) => UserTitleDto)
   user: UserTitleDto;
 }
+export class ApproveInput {
+  @Expose()
+  id: number;
+  @Expose()
+  userApproveId: number;
+}

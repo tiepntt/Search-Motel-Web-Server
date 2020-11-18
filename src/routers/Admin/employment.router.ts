@@ -5,6 +5,8 @@ let EmploymentRouter = express.Router();
 EmploymentRouter.get(
   "/getUsers/userId=:Id",
   EmploymentController.getUserOfEmployment
-).get("/apartmentNeedApprove", EmploymentController.getAllApartmentApproveYet);
+)
+  .get("/apartmentNeedApprove", EmploymentController.getAllApartmentApproveYet)
+  .post("/approve", EmploymentController.approveApartment);
 
 export default EmploymentRouter;
