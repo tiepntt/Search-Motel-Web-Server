@@ -1,4 +1,4 @@
-import { getRepository } from "typeorm";
+import { Code, getRepository } from "typeorm";
 import { Location } from "../../entity/address/Location";
 import { HandelStatus } from "../../config/HandelStatus";
 import { Province } from "../../entity/address/Province";
@@ -66,25 +66,18 @@ const create = async (input: LocationCreateDto) => {
   let provinceRepo = getRepository(Province);
   let districtRepo = getRepository(District);
   let locationRepo = getRepository(Location);
-  let streetRepo = getRepository(Street);
-  console.log(input);
 
-  if (
-    !input ||
-    !input.wardCode ||
-    !input.streetCode ||
-    !input.districtCode ||
-    !input.provinceCode
-  )
+  if (!input || !input.districtCode || !input.provinceCode)
     return HandelStatus(400);
-  let province = await provinceRepo.findOne(input.provinceCode);
-  let district = await districtRepo.findOne(input.districtCode);
+  let province = await provinceRepo.findOne({ code: input.provinceCode });
+  let district = await districtRepo.findOne({ code: input.districtCode });
   let valid = province && district;
   if (!valid)
     return HandelStatus(404, "Dữ liệu tỉnh/quận/phường không chính xác");
   let location = plainToClass(Location, input);
   location.province = province;
   location.district = district;
+
   try {
     await locationRepo.save(location);
     return HandelStatus(200);
@@ -99,8 +92,8 @@ const update = async (input: LocationUpdateDto) => {
   let locationRepo = getRepository(Location);
   let id = input.id;
   if (!id || !(await locationRepo.findOne(id))) return HandelStatus(400);
-  let province = await provinceRepo.findOne(input.provinceCode);
-  let district = await districtRepo.findOne(input.districtCode);
+  let province = await provinceRepo.findOne({ code: input.provinceCode });
+  let district = await districtRepo.findOne({ code: input.districtCode });
   let valid = province && district;
   if (!valid)
     return HandelStatus(404, "Dữ liệu tỉnh/quận/phường không chính xác");

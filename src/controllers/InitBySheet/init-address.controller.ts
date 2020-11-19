@@ -1,5 +1,6 @@
 import {
   addDistrictBySheet,
+  addLocationBySheet,
   addProvinceBySheet,
   addStreetBySheet,
   addWardBySheet,
@@ -7,6 +8,7 @@ import {
 
 const initProvinceBySheet = async (req, res) => {
   let id = req.body.id;
+
   let result = await addProvinceBySheet(id);
   return res.send(result);
 };
@@ -26,9 +28,15 @@ const initStreetBySheet = async (req, res) => {
   let result = await addStreetBySheet(id);
   return res.send(result);
 };
+const initLocationsBySheet = async (req, res) => {
+  let id = req.body.id;
+  let result = await addLocationBySheet(id);
+  return res.send(result);
+};
 export const InitAddressController = {
   initProvinceBySheet,
   initDistrictBySheet,
   initWardBySheet,
   initStreetBySheet,
+  initLocationsBySheet,
 };

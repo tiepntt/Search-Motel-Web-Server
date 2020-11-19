@@ -5,27 +5,30 @@ import { ProvinceGetDto } from "./province.dto";
 import { StreetGetDto } from "./street.dto";
 import { WardGetDto } from "./ward.dto";
 export class LocationCreateDto {
+  code: string;
   name: string;
   description: string;
-  provinceCode: number;
-  districtCode: number;
-  wardCode: number;
-  streetCode: number;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  streetCode: string;
   streetNo: string;
 }
 export class LocationUpdateDto {
+  code: string;
   id: number;
   name: string;
   description: string;
-  provinceCode: number;
-  districtCode: number;
-  wardCode: number;
-  streetCode: number;
+  provinceCode: string;
+  districtCode: string;
+  wardCode: string;
+  streetCode: string;
   streetNo: string;
 }
 export class LocationGetDto {
   id: number;
   name: string;
+
   description: string;
   @Type((type) => ProvinceGetDto)
   province: ProvinceGetDto;

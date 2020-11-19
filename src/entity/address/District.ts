@@ -32,7 +32,7 @@ export class District {
   province: Province;
 
   @ManyToMany((type) => Street, (o) => o.districts)
-  @JoinTable()
+  @JoinColumn()
   streets: Street[];
   @OneToMany((type) => Location, (o) => o.district)
   @JoinColumn()
