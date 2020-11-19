@@ -1,4 +1,5 @@
 import { Expose } from "class-transformer";
+import { mkdtempSync } from "fs";
 import {
   Check,
   Column,
@@ -25,9 +26,9 @@ export class Street {
   @Column({ type: "nvarchar", length: 25, charset: "utf8" })
   name: string;
   @Expose()
-  @ManyToMany((type) => District, (o) => o.streets)
+  @ManyToOne((type) => District, (o) => o.streets)
   @JoinColumn()
-  districts: District[];
+  districts: District;
   @OneToMany((type) => Location, (o) => o.street)
   @JoinColumn()
   locations: Location[];

@@ -5,7 +5,7 @@ export class StreetInputDto {
   id: number;
   code: string;
   name: string;
-  districtCode: string[];
+  districtCode: string;
 }
 export class StreetGetDto {
   @Expose()
@@ -16,7 +16,7 @@ export class StreetGetDto {
   name: string;
   @Expose()
   @Type((type) => DistrictDto)
-  districts: DistrictDto[];
+  districts: DistrictDto;
 }
 export class StreetsOfDistrict {
   @Expose()
@@ -27,5 +27,5 @@ export class StreetsOfDistrict {
   name: string;
   @Expose()
   @Type((type) => StreetGetDto)
-  streets: StreetGetDto[];
+  streets: StreetGetDto;
 }

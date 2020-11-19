@@ -6,6 +6,7 @@ initAddressRouter
   .post("/province", InitAddressController.initProvinceBySheet)
   .post("/district", InitAddressController.initDistrictBySheet)
   .post("/ward", InitAddressController.initWardBySheet)
-  .post("/street", InitAddressController.initStreetBySheet);
+  .post("/street", InitAddressController.initStreetBySheet)
+  .post("/location", InitAddressController.initLocationsBySheet);
 
 export default initAddressRouter;

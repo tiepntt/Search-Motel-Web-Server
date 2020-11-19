@@ -22,8 +22,8 @@ const create = async (input: StreetInputDto) => {
   });
   let streetFind = await streetRepo.findOne({ code: input.code });
   if (streetFind) return HandelStatus(302, "Mã code đã tồn tại");
-  let districts = await districtRepo.find({ code: In(input.districtCode) });
-  if (!districts || districts.length === 0)
+  let districts = await districtRepo.findOne({ code: input.districtCode });
+  if (!districts)
     return HandelStatus(404, "Mã huyện k hợp lệ");
 
   street.districts = districts;
