@@ -1,4 +1,4 @@
-import { HandelStatus } from "../../config/HandelStatus";
+
 import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { ApartmentReportService } from "../../models/Apartment/apartment.report.model";
 import { ApartmentReviewService } from "../../models/Apartment/apartment.review.model";

@@ -1,6 +1,5 @@
 import { plainToClass } from "class-transformer";
 import { ApartmentReportInputDto } from "../../dto/Apartment/apartmentReport.dto";
-import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { ApartmentReportService } from "../../models/Apartment/apartment.report.model";
 
 const create = async (req, res) => {

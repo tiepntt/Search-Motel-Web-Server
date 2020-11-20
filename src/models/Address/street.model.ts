@@ -1,7 +1,6 @@
-import { deserialize, plainToClass } from "class-transformer";
-import { Any, getRepository, In, LessThan } from "typeorm";
+import { deserialize } from "class-transformer";
+import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
-import { DistrictDto } from "../../dto/Adress/district.dto";
 import {
   StreetGetDto,
   StreetInputDto,
@@ -23,8 +22,7 @@ const create = async (input: StreetInputDto) => {
   let streetFind = await streetRepo.findOne({ code: input.code });
   if (streetFind) return HandelStatus(302, "Mã code đã tồn tại");
   let districts = await districtRepo.findOne({ code: input.districtCode });
-  if (!districts)
-    return HandelStatus(404, "Mã huyện k hợp lệ");
+  if (!districts) return HandelStatus(404, "Mã huyện k hợp lệ");
 
   street.districts = districts;
   try {

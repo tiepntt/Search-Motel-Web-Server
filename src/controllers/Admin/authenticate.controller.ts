@@ -1,11 +1,9 @@
 import { plainToClass } from "class-transformer";
 import * as jwt from "jsonwebtoken";
 import { HandelStatus } from "../../config/HandelStatus";
-import { TokenInputDto } from "../../dto/author/token.dto";
 import { AccountDto, UserInputDto } from "../../dto/User/user.dto";
 import { TokenService } from "../../models/author/token.model";
 import { UserService } from "../../models/User/user.model";
-import roleRouter from "../../routers/User/role.router";
 const login = async (req, res) => {
   var account = req.body.account;
   var accountGet = await UserService.getByAccount(account);

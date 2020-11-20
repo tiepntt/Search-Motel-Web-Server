@@ -1,5 +1,4 @@
-import { Type } from "class-transformer";
-import { type } from "os";
+import { Expose, Type } from "class-transformer";
 import { DistrictDto } from "./district.dto";
 import { ProvinceGetDto } from "./province.dto";
 import { StreetGetDto } from "./street.dto";
@@ -26,22 +25,32 @@ export class LocationUpdateDto {
   streetNo: string;
 }
 export class LocationGetDto {
+  @Expose()
   id: number;
+  @Expose()
   name: string;
-
+  @Expose()
   description: string;
+  @Expose()
   @Type((type) => ProvinceGetDto)
   province: ProvinceGetDto;
+  @Expose()
   @Type((type) => DistrictDto)
   district: DistrictDto;
+  @Expose()
   @Type((type) => WardGetDto)
   ward: WardGetDto;
+  @Expose()
   @Type((type) => StreetGetDto)
   street: StreetGetDto;
+  @Expose()
   streetNo: string;
 }
 export class LocationTitleGetDto {
+  @Expose()
   id: number;
+  @Expose()
   name: string;
+  @Expose()
   description: string;
 }

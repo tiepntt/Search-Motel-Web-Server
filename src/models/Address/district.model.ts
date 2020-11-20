@@ -7,7 +7,6 @@ import {
 } from "../../dto/Adress/district.dto";
 import { District } from "../../entity/address/District";
 import { Province } from "../../entity/address/Province";
-import districtRouter from "../../routers/Address/district.router";
 import { mapObject } from "../../utils/map";
 
 const getAllByProvinceId = async (provinceId: number) => {

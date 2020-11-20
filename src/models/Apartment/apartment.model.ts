@@ -1,22 +1,6 @@
-import { notEqual } from "assert";
-import { json } from "body-parser";
 import { deserialize, deserializeArray, plainToClass } from "class-transformer";
-import { now } from "moment";
-import {
-  Any,
-  Between,
-  getRepository,
-  In,
-  IsNull,
-  LessThan,
-  MoreThan,
-  Not,
-  Repository,
-  Tree,
-} from "typeorm";
-import { SoftDeleteQueryBuilder } from "typeorm/query-builder/SoftDeleteQueryBuilder";
-import { isDate, isNull, isUndefined } from "util";
-import { deflateRaw, deflateRawSync } from "zlib";
+import { getRepository, IsNull, Not } from "typeorm";
+import { isNull } from "util";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
   ApartmentApproveDto,
@@ -30,7 +14,6 @@ import { Province } from "../../entity/address/Province";
 import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
-import { ApartmentDetail } from "../../entity/apartment/apartmentDetail";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
 
