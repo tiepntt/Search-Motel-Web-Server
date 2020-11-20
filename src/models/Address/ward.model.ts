@@ -1,4 +1,4 @@
-import { deserialize, deserializeArray, plainToClass } from "class-transformer";
+import { deserialize, plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import { WardInputDto, WardsOfDistrictDto } from "../../dto/Adress/ward.dto";

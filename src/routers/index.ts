@@ -10,6 +10,7 @@ import ManagerRouter from "./Admin/manager.router";
 import apartmentReportRouter from "./Apartment/apartment.report.router";
 import apartmentReviewRouter from "./Apartment/apartment.review.router";
 import apartmentRouter from "./Apartment/apartment.router";
+import apartmentTypeRouter from "./Apartment/apartment.type.router";
 import initAddressRouter from "./InitData/init-address.router";
 import contactRouter from "./User/contact.router";
 import roleRouter from "./User/role.router";
@@ -36,4 +37,5 @@ export const router = (app) => {
   app.use("/manager", CheckToken, CheckRole.roleManager, ManagerRouter);
   app.use("/location", locationRouter);
   app.use("/employment", CheckToken, EmploymentRouter);
+  app.use("/type", apartmentTypeRouter);
 };

@@ -6,7 +6,6 @@ import {
   ApartmentInputDto,
 } from "../../dto/Apartment/apartment.dto";
 import {
-  ApartmentDetailGetDto,
   ApartmentDetailInputDto,
 } from "../../dto/Apartment/apartmentDetail.dto";
 import { Apartment } from "../../entity/apartment/apartment";

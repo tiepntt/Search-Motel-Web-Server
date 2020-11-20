@@ -1,8 +1,6 @@
 import { plainToClass } from "class-transformer";
-import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import { UserAssignDto, UserInputDto } from "../../dto/User/user.dto";
-import { User } from "../../entity/user/User";
 import { UserService } from "../../models/User/user.model";
 
 const getEmployments = async (req, res) => {

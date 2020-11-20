@@ -1,7 +1,6 @@
 import { plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
-import { ApartmentImageDto } from "../../dto/Image/apartmentImages.dto";
 import { AvatarUserDto } from "../../dto/Image/avatarUser.dto";
 import { AvatarUser } from "../../entity/image/avatarUser";
 const getByUserId = async (userId: number) => {};

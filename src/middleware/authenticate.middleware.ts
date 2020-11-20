@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import { HandelStatus } from "../config/HandelStatus";
-import { RoleDto, RoleDtoDetails } from "../dto/User/role.dto";
+import { RoleDtoDetails } from "../dto/User/role.dto";
 import { TokenService } from "../models/author/token.model";
 export const CheckToken = async (req, res, next) => {
   let token = req.headers.token;

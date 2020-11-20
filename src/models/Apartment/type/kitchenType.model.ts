@@ -1,5 +1,5 @@
 import { plainToClass } from "class-transformer";
-import { getRepository, Repository } from "typeorm";
+import { getRepository } from "typeorm";
 import { HandelStatus } from "../../../config/HandelStatus";
 import { KitchenTypeDto } from "../../../dto/Apartment/type/kitchenType.dto";
 import { KitchenType } from "../../../entity/apartment/type/kitchenType";
@@ -16,7 +16,17 @@ const create = async (input: KitchenTypeDto) => {
   }
 };
 const update = async (input: KitchenTypeDto) => {};
-const getAll = async () => {};
+const getAll = async () => {
+  let kitchenTypes = await getRepository(KitchenType).find();
+  try {
+    let result = plainToClass(KitchenTypeDto, kitchenTypes, {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, result);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
 const getById = async (id: number) => {};
 const remove = async (id: number) => {};
 export const KitchenTypeService = { create, update, getAll, getById, remove };

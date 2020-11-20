@@ -1,4 +1,3 @@
-import { request } from "https";
 import { AvatarUserDto } from "../../dto/Image/avatarUser.dto";
 import { AvatarUserService } from "../../models/Image/avatarUser.model";
 import { getUrl } from "../../utils/regex";

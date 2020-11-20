@@ -1,4 +1,4 @@
-import { Code, getRepository } from "typeorm";
+import {  getRepository } from "typeorm";
 import { Location } from "../../entity/address/Location";
 import { HandelStatus } from "../../config/HandelStatus";
 import { Province } from "../../entity/address/Province";
@@ -13,7 +13,6 @@ import {
   LocationUpdateDto,
 } from "../../dto/Adress/location.dto";
 import { District } from "../../entity/address/District";
-import { Street } from "../../entity/address/Street";
 import { mapObject } from "../../utils/map";
 
 const getAllByProvinceId = async (provinceId: number) => {

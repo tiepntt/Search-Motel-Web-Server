@@ -1,5 +1,4 @@
 import { plainToClass } from "class-transformer";
-import { chat } from "googleapis/build/src/apis/chat";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import { ApartmentImageDto } from "../../dto/Image/apartmentImages.dto";

@@ -1,4 +1,4 @@
-import { select } from "auto-mapping";
+
 import { plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";

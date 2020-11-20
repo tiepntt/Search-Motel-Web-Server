@@ -1,9 +1,7 @@
 import { plainToClass } from "class-transformer";
-import { HandelStatus } from "../../config/HandelStatus";
 import { ApartmentInputDto } from "../../dto/Apartment/apartment.dto";
 import { ConditionApartmentSearch } from "../../dto/Search/condition.dto";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
-import { mapObject } from "../../utils/map";
 import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
