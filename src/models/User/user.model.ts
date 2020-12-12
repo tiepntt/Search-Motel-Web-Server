@@ -33,21 +33,29 @@ const getAll = async () => {
 
   return HandelStatus(200, null, userRes);
 };
-const getEmployments = async (userId) => {
+const getEmployments = async (userId: number, take?: number, skip?: number) => {
   if (!userId) return HandelStatus(404);
   let userRepo = getRepository(User);
   let user = await userRepo.findOne(userId);
-  let employments = await userRepo.find({
+  let count = await userRepo.count({
     relations: ["userManager", "role", "avatar"],
     where: {
       userManager: user,
     },
   });
+  let employments = await userRepo.find({
+    relations: ["userManager", "role", "avatar"],
+    where: {
+      userManager: user,
+    },
+    take: take || 5,
+    skip: skip || 0,
+  });
   try {
     let result = deserializeArray(UserGetDto, JSON.stringify(employments), {
       excludeExtraneousValues: true,
     });
-    return HandelStatus(200, null, result);
+    return HandelStatus(200, null, { result, count });
   } catch (e) {
     return HandelStatus(500, e.name);
   }

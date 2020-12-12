@@ -22,7 +22,7 @@ const login = async (req, res) => {
     id: tokenCode.id,
   };
   var token = jwt.sign(payload2, process.env.TOKEN_SECRET_TV, {
-    expiresIn: 1400, // expires in 24 hours
+    expiresIn: 1400 * 24, // expires in 24 hours
   });
   return res.json({
     status: 200,

@@ -1,14 +1,18 @@
 import { plainToClass } from "class-transformer";
-import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import { UserAssignDto, UserInputDto } from "../../dto/User/user.dto";
-import { User } from "../../entity/user/User";
 import { UserService } from "../../models/User/user.model";
 
 const getEmployments = async (req, res) => {
   let userId = res.locals.userId;
-  let result = await UserService.getEmployments(userId);
+
+  let { take, skip, options } = req.query;
+
+  let result = await UserService.getEmployments(userId, take, skip);
   return res.send(result);
+};
+const getAllUser = async (req, res) => {
+  let { take, skip } = req.query;
 };
 const createEmployment = async (req, res) => {
   let userId = res.locals.userId;
@@ -45,4 +49,5 @@ export const ManagerController = {
   removeUser,
   getAllNewUser,
   createEmployment,
+  getAllUser,
 };

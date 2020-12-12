@@ -6,6 +6,11 @@ const getAll = async (req, res) => {
   let users = await UserService.getAll();
   res.send(users);
 };
+const getProfile = async (req, res) => {
+  let userId = res.locals.userId;
+  let result = await UserService.getById(userId);
+  return res.send(result);
+};
 const getById = async (req, res) => {
   let id = req.params.id;
   let result = await UserService.getById(id);
@@ -24,4 +29,10 @@ const changeAvatar = async (req, res) => {
   let result = await UserService.changeAvatar(imgId, userId);
   return res.send(result);
 };
-export const UserController = { getAll, getById, changeAvatar, update };
+export const UserController = {
+  getAll,
+  getById,
+  changeAvatar,
+  update,
+  getProfile,
+};

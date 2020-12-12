@@ -64,6 +64,8 @@ export class UserGetDto {
   @Expose()
   email: string;
   @Expose()
+  personNo: string;
+  @Expose()
   isBlock: boolean;
   @Expose()
   isApprove: boolean;
@@ -76,6 +78,11 @@ export class UserGetDto {
   @Expose()
   @Type((type) => ContactDto)
   contactUser: ContactDto;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  userManager: UserTitleDto;
+  @Expose()
+  createAt?: Date;
 }
 
 export class UserTitleDto {
@@ -138,4 +145,6 @@ export class UserDetailDto {
   @Expose()
   @Type(() => AvatarUserDto, {})
   avatar: AvatarUserDto;
+  @Expose()
+  personNo: string;
 }
