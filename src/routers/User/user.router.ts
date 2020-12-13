@@ -7,6 +7,7 @@ import { uploadAvatarUser } from "../../services/upload/upload";
 
 let userRouter = express.Router();
 userRouter.get("/", UserController.getAll);
+userRouter.get("/profile", UserController.getProfile);
 userRouter.get("/:id", UserController.getById);
 userRouter.put("/update", UserController.update);
 userRouter.post(
