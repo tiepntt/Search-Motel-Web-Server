@@ -2,7 +2,7 @@ import { deserialize, deserializeArray, plainToClass } from "class-transformer";
 import { ETIMEDOUT } from "constants";
 import { accessSync } from "fs";
 
-import { Equal, getRepository, In, IsNull, Not } from "typeorm";
+import { Equal, getRepository, In, IsNull, Like, Not } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
   AccountDto,
@@ -33,6 +33,7 @@ const getAll = async () => {
 
   return HandelStatus(200, null, userRes);
 };
+
 const getEmployments = async (userId: number, take?: number, skip?: number) => {
   if (!userId) return HandelStatus(404);
   let userRepo = getRepository(User);
@@ -60,26 +61,36 @@ const getEmployments = async (userId: number, take?: number, skip?: number) => {
     return HandelStatus(500, e.name);
   }
 };
-const getAllNewOwner = async () => {
+const getAllNewOwner = async (input: {
+  isApprove: boolean;
+  take?: number;
+  skip: number;
+  key?: string;
+}) => {
   let role = await getRepository(Role).findOne({ code: "O" });
-  let users = await getRepository(User).find({
+  let condition = {
     relations: ["role"],
     where: [
       {
-        isApprove: false,
+        isApprove: input.isApprove,
         role: role,
+        name: Like(`%${input.key || ""}%`),
       },
       {
+        isApprove: input.isApprove,
         role: role,
-        userManager: IsNull(),
+        email: Like(`%${input.key || ""}%`),
       },
     ],
-  });
+    take: input.take || 10,
+    skip: input.skip || 0,
+  };
+  let users = await getRepository(User).findAndCount(condition);
   try {
-    let result = deserialize(UserTitleDto, JSON.stringify(users), {
+    let result = deserialize(UserGetDto, JSON.stringify(users), {
       excludeExtraneousValues: true,
     });
-    return HandelStatus(200, null, result);
+    return HandelStatus(200, null, { data: result[0], count: result[1] });
   } catch (e) {
     return HandelStatus(500, e);
   }
@@ -158,7 +169,7 @@ const create = async (userConfig: UserInputDto) => {
   try {
     await avatarRepo.save(avatar);
     await userRepo.save(user);
-    return HandelStatus(200);
+    return HandelStatus(200, null, { id: user.id });
   } catch (e) {
     return HandelStatus(400, e);
   }

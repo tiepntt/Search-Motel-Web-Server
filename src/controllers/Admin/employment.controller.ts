@@ -1,4 +1,4 @@
-
+import { User } from "../../entity/user/User";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { ApartmentReportService } from "../../models/Apartment/apartment.report.model";
 import { ApartmentReviewService } from "../../models/Apartment/apartment.review.model";
@@ -13,6 +13,11 @@ const approveApartment = async (req, res) => {
 const getUserOfEmployment = async (req, res) => {
   let userId = req.params.Id;
   let result = await UserService.getUsersByEmployment(userId);
+  return res.send(result);
+};
+const getAllUser = async (req, res) => {
+  let { take, skip, aprove, sortByName } = req.query;
+  let result = await UserService.getAll();
   return res.send(result);
 };
 const getAllApartmentApproveYet = async (req, res) => {

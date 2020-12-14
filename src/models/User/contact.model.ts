@@ -1,4 +1,3 @@
-
 import { plainToClass } from "class-transformer";
 import { getRepository } from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
@@ -29,7 +28,6 @@ const create = async (contactIpnut: ContactDto) => {
     !contactIpnut ||
     !contactIpnut.email ||
     !contactIpnut.phone ||
-    !contactIpnut.phone2 ||
     !contactIpnut.userId
   ) {
     return HandelStatus(400);

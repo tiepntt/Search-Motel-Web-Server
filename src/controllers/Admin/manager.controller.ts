@@ -5,14 +5,9 @@ import { UserService } from "../../models/User/user.model";
 
 const getEmployments = async (req, res) => {
   let userId = res.locals.userId;
-
   let { take, skip, options } = req.query;
-
   let result = await UserService.getEmployments(userId, take, skip);
   return res.send(result);
-};
-const getAllUser = async (req, res) => {
-  let { take, skip } = req.query;
 };
 const createEmployment = async (req, res) => {
   let userId = res.locals.userId;
@@ -40,7 +35,8 @@ const removeUser = async (req, res) => {
   return res.send(result);
 };
 const getAllNewUser = async (req, res) => {
-  let result = await UserService.getAllNewOwner();
+  let { take, skip, isApprove, key } = req.query;
+  let result = await UserService.getAllNewOwner({ take, skip, isApprove, key });
   return res.send(result);
 };
 export const ManagerController = {
@@ -49,5 +45,4 @@ export const ManagerController = {
   removeUser,
   getAllNewUser,
   createEmployment,
-  getAllUser,
 };
