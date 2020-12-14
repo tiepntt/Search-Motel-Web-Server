@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -21,12 +22,14 @@ export class User {
   id: number;
   @Column({ length: 30, unique: true })
   personNo: string;
+  @Index({ fulltext: true })
   @Column({ length: 30, unique: true })
   email: string;
   @Column({ nullable: true, default: "Normal" })
   loginType: string;
   @Column({ length: 30 })
   password: string;
+  @Index({ fulltext: true })
   @Column({ type: "nvarchar", charset: "utf8" })
   name: string;
   @CreateDateColumn({ nullable: false })

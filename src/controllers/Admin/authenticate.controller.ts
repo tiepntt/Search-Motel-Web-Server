@@ -30,7 +30,7 @@ const login = async (req, res) => {
   });
 };
 const register = async (req, res) => {
-  let accountInput = req.body.account;
+  let accountInput = req.body.account;         
   if (!accountInput) return res.send(HandelStatus(400));
   let account = plainToClass(UserInputDto, accountInput);
   if (
