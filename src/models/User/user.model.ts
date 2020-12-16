@@ -2,7 +2,16 @@ import { deserialize, deserializeArray, plainToClass } from "class-transformer";
 import { ETIMEDOUT } from "constants";
 import { accessSync } from "fs";
 
-import { Equal, getRepository, In, IsNull, Like, Not } from "typeorm";
+import {
+  Equal,
+  getRepository,
+  In,
+  IsNull,
+  LessThan,
+  Like,
+  MoreThan,
+  Not,
+} from "typeorm";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
   AccountDto,
@@ -61,23 +70,27 @@ const getEmployments = async (userId: number, take?: number, skip?: number) => {
     return HandelStatus(500, e.name);
   }
 };
+
 const getAllNewOwner = async (input: {
-  isApprove: boolean;
+  isApprove: number;
   take?: number;
   skip: number;
   key?: string;
 }) => {
   let role = await getRepository(Role).findOne({ code: "O" });
+  if (!role) return HandelStatus(400);
+  console.log(input.isApprove === -1);
+
   let condition = {
-    relations: ["role"],
+    relations: ["role", "userManager"],
     where: [
       {
-        isApprove: input.isApprove,
+        isApprove: input.isApprove === -1 ? 1 : input.isApprove,
         role: role,
         name: Like(`%${input.key || ""}%`),
       },
       {
-        isApprove: input.isApprove,
+        isApprove: input.isApprove === -1 ? 0 : input.isApprove,
         role: role,
         email: Like(`%${input.key || ""}%`),
       },
@@ -181,7 +194,6 @@ const update = async (input: UserUpdateDto) => {
   if (!user) return HandelStatus(404);
   input = plainToClass(UserUpdateDto, input, { excludeExtraneousValues: true });
   let userUpdate = mapObject(user, input);
-  console.log(userUpdate);
 
   try {
     await userRepo.update(input.id, userUpdate);

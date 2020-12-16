@@ -54,7 +54,7 @@ export class UserUpdateDto {
   @Expose()
   name: string;
   @Expose()
-  password: string;
+  email: string;
 }
 export class UserGetDto {
   @Expose()

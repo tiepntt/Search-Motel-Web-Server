@@ -18,7 +18,9 @@ const getById = async (req, res) => {
 };
 const update = async (req, res) => {
   let user = req.body.user;
+  let userId = res.locals.userId;
   let userUpdate = plainToClass(UserUpdateDto, user);
+  userUpdate.id = userId;
   let result = await UserService.update(userUpdate);
   return res.send(result);
 };
