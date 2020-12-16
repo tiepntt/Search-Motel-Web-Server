@@ -36,7 +36,12 @@ const removeUser = async (req, res) => {
 };
 const getAllNewUser = async (req, res) => {
   let { take, skip, isApprove, key } = req.query;
-  let result = await UserService.getAllNewOwner({ take, skip, isApprove, key });
+  let result = await UserService.getAllNewOwner({
+    take: take,
+    skip,
+    isApprove: parseInt(isApprove),
+    key,
+  });
   return res.send(result);
 };
 export const ManagerController = {

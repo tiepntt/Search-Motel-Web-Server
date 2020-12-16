@@ -30,6 +30,8 @@ const create = async (contactIpnut: ContactDto) => {
     !contactIpnut.phone ||
     !contactIpnut.userId
   ) {
+    console.log(contactIpnut);
+
     return HandelStatus(400);
   }
 
