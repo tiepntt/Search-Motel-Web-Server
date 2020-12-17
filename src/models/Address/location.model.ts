@@ -1,4 +1,4 @@
-import {  getRepository } from "typeorm";
+import { getRepository } from "typeorm";
 import { Location } from "../../entity/address/Location";
 import { HandelStatus } from "../../config/HandelStatus";
 import { Province } from "../../entity/address/Province";
@@ -11,6 +11,7 @@ import {
   LocationGetDto,
   LocationCreateDto,
   LocationUpdateDto,
+  LocationOfDistrictDto,
 } from "../../dto/Adress/location.dto";
 import { District } from "../../entity/address/District";
 import { mapObject } from "../../utils/map";
@@ -34,18 +35,17 @@ const getAllByProvinceId = async (provinceId: number) => {
 };
 const getAllByDistrictId = async (districtId: number) => {
   let districtRepo = getRepository(District);
-  let locationRepo = getRepository(Location);
   if (!districtId) return HandelStatus(400);
 
-  let district = await districtRepo.findOne(districtId);
+  let district = await districtRepo.findOne({
+    relations: ["locations"],
+    where: {
+      id: districtId,
+    },
+  });
   if (!district) return HandelStatus(404, "Không tìm thấy dữ liệu Quận/Huyện.");
-
-  let locations = await locationRepo
-    .createQueryBuilder("location")
-    .where("districtId=:districtId", { districtId: districtId })
-    .getMany();
-  let result = deserializeArray(LocationGetDto, JSON.stringify(locations), {
-    excludeExtraneousValues: false,
+  let result = plainToClass(LocationOfDistrictDto, district, {
+    excludeExtraneousValues: true,
   });
   return HandelStatus(200, null, result);
 };
