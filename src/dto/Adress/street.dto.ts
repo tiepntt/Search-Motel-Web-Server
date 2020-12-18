@@ -27,5 +27,5 @@ export class StreetsOfDistrict {
   name: string;
   @Expose()
   @Type((type) => StreetGetDto)
-  streets: StreetGetDto;
+  streets: StreetGetDto[];
 }

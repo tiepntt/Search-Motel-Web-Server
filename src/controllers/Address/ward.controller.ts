@@ -10,7 +10,7 @@ const getAllByDistrictId = async (req, res) => {
   return res.send(result);
 };
 const create = async (req, res) => {
-  let input = req.body.ward;
+  let input = req.body.ward; 
   let result = await WardService.create(input);
   return res.send(result);
 };
