@@ -30,7 +30,7 @@ export class District {
   @JoinColumn()
   province: Province;
 
-  @ManyToMany((type) => Street, (o) => o.districts)
+  @OneToMany((type) => Street, (o) => o.districts)
   @JoinColumn()
   streets: Street[];
   @OneToMany((type) => Location, (o) => o.district)

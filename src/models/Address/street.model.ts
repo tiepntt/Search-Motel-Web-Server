@@ -37,11 +37,13 @@ const create = async (input: StreetInputDto) => {
 const getAllByDistrictId = async (districtId: number) => {
   if (!districtId) return HandelStatus(400);
   let districtRepo = getRepository(District);
-  let district = await districtRepo
-    .createQueryBuilder("district")
-    .leftJoinAndSelect("district.streets", "streets")
-    .where("district.id=:id", { id: districtId })
-    .getOne();
+  let district = await districtRepo.findOne({
+    relations: ["streets"],
+    where: { id: districtId },
+  });
+  if (!district) {
+    return HandelStatus(404);
+  }
   let result = deserialize(StreetsOfDistrict, JSON.stringify(district), {
     excludeExtraneousValues: true,
   });
@@ -50,11 +52,12 @@ const getAllByDistrictId = async (districtId: number) => {
 const getById = async (id: number) => {
   if (!id) return HandelStatus(400);
   let streetRepo = getRepository(Street);
-  let street = await streetRepo
-    .createQueryBuilder("street")
-    .leftJoinAndSelect("street.districts", "districts")
-    .where("street.id=:id", { id: id })
-    .getOne();
+  let street = await streetRepo.findOne({
+    relations: [],
+    where: {
+      id: id,
+    },
+  });
 
   let result = deserialize(StreetGetDto, JSON.stringify(street), {
     excludeExtraneousValues: true,
