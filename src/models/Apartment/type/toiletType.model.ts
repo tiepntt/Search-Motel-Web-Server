@@ -22,7 +22,7 @@ const getAll = async () => {
     let result = plainToClass(ToiletTypeDto, toiletType, {
       excludeExtraneousValues: true,
     });
-    return result;
+    return HandelStatus(200, null, result);
   } catch (e) {
     return HandelStatus(500);
   }

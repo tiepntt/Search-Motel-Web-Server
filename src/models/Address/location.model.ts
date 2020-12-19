@@ -18,19 +18,24 @@ import { mapObject } from "../../utils/map";
 
 const getAllByProvinceId = async (provinceId: number) => {
   let provinceRepo = getRepository(Province);
-  let locationRepo = getRepository(Location);
+
   if (!provinceId) return HandelStatus(400);
 
-  let province = await provinceRepo.findOne(provinceId);
+  let province = await provinceRepo.findOne({
+    relations: ["locations"],
+    where: {
+      id: provinceId,
+    },
+  });
   if (!province) return HandelStatus(404, "Không tìm thấy dữ liệu Tỉnh.");
 
-  let locations = await locationRepo
-    .createQueryBuilder("location")
-    .where("provinceId=:provinceId", { provinceId: provinceId })
-    .getMany();
-  let result = deserializeArray(LocationGetDto, JSON.stringify(locations), {
-    excludeExtraneousValues: false,
-  });
+  let result = deserializeArray(
+    LocationOfDistrictDto,
+    JSON.stringify(province),
+    {
+      excludeExtraneousValues: true,
+    }
+  );
   return HandelStatus(200, null, result);
 };
 const getAllByDistrictId = async (districtId: number) => {
