@@ -10,12 +10,14 @@ import {
 } from "../../dto/Apartment/apartment.dto";
 import { ConditionApartmentSearch } from "../../dto/Search/condition.dto";
 import { District } from "../../entity/address/District";
+import { Location } from "../../entity/address/Location";
 import { Province } from "../../entity/address/Province";
 import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
+import { LocationNearService } from "./apartmentNear.model";
 
 const create = async (input: ApartmentInputDto) => {
   if (
@@ -26,42 +28,76 @@ const create = async (input: ApartmentInputDto) => {
     !input.price
   )
     return HandelStatus(400);
-
   let apartmentRepo = getRepository(Apartment);
+
   let apartmentTypeRepo = getRepository(ApartmentType);
   let provinceRepo = getRepository(Province);
   let districtRepo = getRepository(District);
   let wardRepo = getRepository(Ward);
   let userRepo = getRepository(User);
   let streetRepo = getRepository(Street);
+  let locationRepo = getRepository(Location);
   let province = await provinceRepo.findOne(input.provinceId);
-  if (!province) return HandelStatus(404, "Province Not Found");
-  let district = await districtRepo.findOne({
-    id: input.districtId,
-  });
-  let type = await apartmentTypeRepo.findOne(input.type);
-  if (!type) return HandelStatus(404, "Apartment Type not Found");
-  if (!district) return HandelStatus(404, "District Not Found");
-  let ward = await wardRepo.findOne({
-    id: input.wardId,
-  });
-  if (!ward) return HandelStatus(404, "Ward Not Found");
-  let street = await streetRepo.findOne({
-    id: input.streetId,
-  });
-  if (!street) return HandelStatus(404, "Street Not Found");
+  let apartment = {} as Apartment;
   let user = await userRepo.findOne(input.userId);
   if (!user) return HandelStatus(401);
-  let apartment = plainToClass(Apartment, input);
+  if (input.id) {
+    apartment = await apartmentRepo.findOne({
+      where: {
+        id: input.id,
+        user: user,
+      },
+      relations: ["district", "province", "street", "ward", "user", "type"],
+    });
+
+    await LocationNearService.createMany(apartment, input.LocationsNearCode);
+    // console.log(apartment);
+
+    if (!apartment) {
+      return HandelStatus(404);
+    }
+  } else {
+    apartment = plainToClass(Apartment, input);
+  }
+  if (!province) return HandelStatus(404, "Không tìm thấy dũ liệu tỉnh");
+  let district = await districtRepo.findOne({
+    id: input.districtId,
+    province: province,
+  });
+
+  let type = await apartmentTypeRepo.findOne(input.type);
+  if (!type) return HandelStatus(404, "Apartment Type not Found");
+  if (!district) return HandelStatus(404, "Dữ liệu quận/huyện không phù hợp");
+  let ward = await wardRepo.findOne({
+    where: {
+      id: input.wardId,
+      district: district,
+    },
+  });
+  if (!ward) return HandelStatus(404, "Dữ liệu phường/xã không phù hợp");
+  let street = await streetRepo.findOne({
+    id: input.streetId,
+    districts: district,
+  });
+  if (!street) return HandelStatus(404, "Dữ liệu đường/phố không hợp lệ");
+
   apartment.province = province;
   apartment.district = district;
   apartment.ward = ward;
   apartment.user = user;
   apartment.type = type;
   apartment.street = street;
+  apartment.id = input.id;
+
   try {
-    await apartmentRepo.save(apartment);
-    return HandelStatus(200);
+    if (input.id) {
+      await apartmentRepo.save(apartment);
+    } else {
+      let result = await apartmentRepo.save(apartment);
+      await LocationNearService.createMany(apartment, input.LocationsNearCode);
+    }
+
+    return HandelStatus(200, null, { id: apartment.id });
   } catch (e) {
     return HandelStatus(500, e);
   }

@@ -5,7 +5,10 @@ import { ApartmentDetailService } from "../../models/Apartment/apartmentDetail.m
 const create = async (req, res) => {
   let body = req.body;
 
-  let details = plainToClass(ApartmentDetailInputDto, body);
+  let details = plainToClass(ApartmentDetailInputDto, body, {
+    excludeExtraneousValues: true,
+  });
+
   let result = await ApartmentDetailService.create(details);
   return res.send(result);
 };

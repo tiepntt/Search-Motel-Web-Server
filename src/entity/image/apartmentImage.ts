@@ -13,6 +13,8 @@ export class ApartmentImage {
   id: number;
   @Column()
   url: string;
+  @Column()
+  folder: string;
   @ManyToOne((type) => ApartmentDetail, (o) => o.images, {
     onDelete: "SET NULL",
     onUpdate: "CASCADE",

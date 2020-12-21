@@ -2,9 +2,12 @@ import {
   Column,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Apartment } from "../apartment/apartment";
 import { District } from "./District";
 import { Province } from "./Province";
 import { Street } from "./Street";

@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from "typeorm";
+import { Apartment } from "../apartment/apartment";
 import { District } from "./District";
 import { Location } from "./Location";
 
@@ -26,4 +27,7 @@ export class Ward {
   @OneToMany((type) => Location, (o) => o.ward)
   @JoinColumn()
   locations: Location[];
+  @OneToMany((type) => Apartment, (o) => o.ward)
+  @JoinColumn()
+  aparmtemtns: Apartment[];
 }

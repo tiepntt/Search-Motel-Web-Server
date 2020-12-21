@@ -20,6 +20,7 @@ import { Street } from "../address/Street";
 import { Ward } from "../address/Ward";
 import { User } from "../user/User";
 import { ApartmentDetail } from "./apartmentDetail";
+import { ApartmentNear } from "./apartmentNearLocation";
 import { ApartmentReport } from "./apartmentReport";
 import { ApartmentReview } from "./apartmentReview";
 import { ApartmentType } from "./apartmentType";
@@ -68,6 +69,9 @@ export class Apartment {
   })
   @JoinColumn()
   apartmentDetail: ApartmentDetail;
+  @OneToMany((type) => ApartmentNear, (o) => o.apartment)
+  @JoinColumn()
+  near: ApartmentNear[];
   // address
   @ManyToOne((type) => Province, {
     onDelete: "SET NULL",
@@ -95,9 +99,7 @@ export class Apartment {
   street: Street;
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
   streetNo: string;
-  @ManyToMany((type) => Location)
-  @JoinTable()
-  LocationsNear: Location[];
+
   @Column({
     nullable: true,
     default: "https://www.avatarins.com/image/homesmall.png",
