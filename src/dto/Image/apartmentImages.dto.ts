@@ -5,5 +5,7 @@ export class ApartmentImageDto {
   id: number;
   @Expose()
   url: string;
+  @Expose()
+  folder: string;
   apartmentDetailId: string;
 }

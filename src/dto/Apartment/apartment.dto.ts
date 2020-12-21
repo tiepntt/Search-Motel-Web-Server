@@ -9,18 +9,30 @@ import { ApartmentDetailGetDto } from "./apartmentDetail.dto";
 import { ApartmentTypeGetDto } from "./apartmentType.dto";
 
 export class ApartmentInputDto {
+  @Expose()
+  id?: number;
+  @Expose()
   title: string;
+  @Expose()
   description: string;
+  @Expose()
   price: number;
+  @Expose()
   userId: number;
+  @Expose()
   type: number;
+  @Expose()
   provinceId: number;
+  @Expose()
   districtId: number;
+  @Expose()
   wardId: number;
+  @Expose()
   streetId: number;
+  @Expose()
   streetNo: string;
-  LocationsNearCode: string[];
-  avatar: string;
+  @Expose()
+  LocationsNearCode: number[];
 }
 export class ApartmentDeletedDto {
   @Expose()

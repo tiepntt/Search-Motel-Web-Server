@@ -2,14 +2,15 @@ import { plainToClass } from "class-transformer";
 import { ApartmentInputDto } from "../../dto/Apartment/apartment.dto";
 import { ConditionApartmentSearch } from "../../dto/Search/condition.dto";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
+import { mapStringToArray } from "../../utils/mapStringToIntArray";
 import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
   let body = req.body;
-  let input = plainToClass(ApartmentInputDto, body);
+  let input = plainToClass(ApartmentInputDto, body, {
+    excludeExtraneousValues: true,
+  });
   input.userId = res.locals.userId || undefined;
-
-  input.avatar = req.file ? getUrl(req.file.path) : undefined;
   let result = await ApartmentService.create(input);
   return res.send(result);
 };
