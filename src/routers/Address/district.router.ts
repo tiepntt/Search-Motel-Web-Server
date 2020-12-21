@@ -3,7 +3,7 @@ import { DistrictController } from "../../controllers/Address/district.controlle
 
 let districtRouter = express.Router();
 districtRouter
-  .get("/:provinceId", DistrictController.getAllByProvinceId)
+  .get("/getAll/:provinceId", DistrictController.getAllByProvinceId)
   .get("/:districtId", DistrictController.getById)
   .post("/create", DistrictController.create)
   .put("/update", DistrictController.update)

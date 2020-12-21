@@ -6,8 +6,6 @@ import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
   let body = req.body;
-  console.log();
-
   let input = plainToClass(ApartmentInputDto, body);
   input.userId = res.locals.userId || undefined;
 
