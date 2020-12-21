@@ -33,8 +33,8 @@ app.use(cors(options));
 app.use(express.static("public"));
 app.use(express.static("public/avatar"));
 app.use(express.static("public/apartment"));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 morgan.token("id", function getId(req) {
   return req.id;
