@@ -11,4 +11,6 @@ export class ConditionApartmentSearch {
   wardId = null;
   streetId = null;
   nearLocation = [];
+  take: number;
+  skip: number;
 }

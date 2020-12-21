@@ -31,7 +31,7 @@ apartmentRouter
   .put("/restore", ApartmentController.restore)
   .delete("/delete", ApartmentController.remove)
   .get("/deleted", ApartmentController.getRemoved)
-  .get("/", ApartmentController.getAll)
+  
   .get("/userId=:userId", ApartmentController.getAllByUserId)
   .get(
     "/detail/apartmentId=:apartmentId",

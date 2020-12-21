@@ -11,6 +11,7 @@ import apartmentReportRouter from "./Apartment/apartment.report.router";
 import apartmentReviewRouter from "./Apartment/apartment.review.router";
 import apartmentRouter from "./Apartment/apartment.router";
 import apartmentTypeRouter from "./Apartment/apartment.type.router";
+import searchRouter from "./Apartment/search.router";
 import initAddressRouter from "./InitData/init-address.router";
 import contactRouter from "./User/contact.router";
 import roleRouter from "./User/role.router";
@@ -24,6 +25,7 @@ export const router = (app) => {
   app.use("/district", CheckToken, districtRouter);
   app.use("/ward", CheckToken, wardRouter);
   app.use("/street", CheckToken, streetRouter);
+  app.use("/search", searchRouter);
   app.use(
     "/init-data/address",
     CheckToken,

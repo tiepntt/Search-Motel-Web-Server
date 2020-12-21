@@ -43,6 +43,7 @@ const create = async (input: ApartmentDetailInputDto) => {
       id: input.id,
       apartment: apartment,
     });
+
     if (!apartmentDetail) return HandelStatus(404);
     apartmentDetail = mapObject(apartmentDetail, input);
   } else {
@@ -52,15 +53,20 @@ const create = async (input: ApartmentDetailInputDto) => {
   if (images && images.length != 0) apartmentDetail.images = images;
   apartmentDetail.toiletType = toiletType;
   apartmentDetail.kitchenType = kitchenType;
-  if (!input.apartmentId) apartmentDetail.apartment = apartment;
-  apartment.apartmentDetail = apartmentDetail;
-
+  if (!input.id) {
+    apartmentDetail.apartment = apartment;
+    apartment.apartmentDetail = apartmentDetail;
+  }
+  apartment.avatar = images && images.length != 0 ? images[0].url : undefined;
   // console.log(apartmentDetail);
 
   try {
     if (input.id) {
-      await apartmentDetailRepo.update(input.id, apartmentDetail);
-    } else await apartmentDetailRepo.save(apartmentDetail);
+      await apartmentDetailRepo.save(apartmentDetail);
+    } else {
+      await apartmentDetailRepo.save(apartmentDetail);
+      await apartmentRepo.save(apartment);
+    }
     return HandelStatus(200, null, { id: apartmentDetail.id });
   } catch (e) {
     return HandelStatus(500, e);
