@@ -18,6 +18,7 @@ import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
+import { mapObject } from "../../utils/map";
 import { LocationNearService } from "./apartmentNear.model";
 
 const create = async (input: ApartmentInputDto) => {
@@ -56,6 +57,7 @@ const create = async (input: ApartmentInputDto) => {
     if (!apartment) {
       return HandelStatus(404);
     }
+    apartment = mapObject(apartment, input);
   } else {
     apartment = plainToClass(Apartment, input);
   }

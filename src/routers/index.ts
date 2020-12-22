@@ -32,7 +32,7 @@ export const router = (app) => {
     CheckRole.roleManager,
     initAddressRouter
   );
-  app.use("/apartment", CheckToken, apartmentRouter);
+  app.use("/apartment", apartmentRouter);
   app.use("/review", CheckToken, apartmentReviewRouter);
   app.use("/report", CheckToken, apartmentReportRouter);
   app.use("/authenticate", AuthenticateRouter);
