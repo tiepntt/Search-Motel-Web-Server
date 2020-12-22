@@ -73,6 +73,4 @@ export class LocationTitleGetDto {
   id: number;
   @Expose()
   name: string;
-  @Expose()
-  description: string;
 }

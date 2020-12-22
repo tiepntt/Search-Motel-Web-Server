@@ -1,5 +1,13 @@
 import { deserialize, deserializeArray, plainToClass } from "class-transformer";
-import { getRepository, IsNull, Not } from "typeorm";
+import {
+  Between,
+  getRepository,
+  IsNull,
+  LessThan,
+  LessThanOrEqual,
+  Like,
+  Not,
+} from "typeorm";
 import { isNull } from "util";
 import { HandelStatus } from "../../config/HandelStatus";
 import {
@@ -52,8 +60,6 @@ const create = async (input: ApartmentInputDto) => {
       relations: ["district", "province", "street", "ward", "user", "type"],
     });
 
-    await LocationNearService.createMany(apartment, input.LocationsNearCode);
-
     if (!apartment) {
       return HandelStatus(404);
     }
@@ -90,7 +96,23 @@ const create = async (input: ApartmentInputDto) => {
   apartment.type = type;
   apartment.street = street;
   apartment.id = input.id;
-
+  apartment.hint =
+    street.name +
+    "," +
+    ward.name +
+    "," +
+    district.name +
+    "," +
+    province.name +
+    "," +
+    street.name +
+    "," +
+    district.name +
+    "," +
+    province.name;
+  if (input.id) {
+    await LocationNearService.createMany(apartment, input.LocationsNearCode);
+  }
   try {
     if (input.id) {
       await apartmentRepo.save(apartment);
@@ -152,6 +174,9 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     ward: ward || Not(isNull(ward)),
     street: street || Not(isNull(street)),
     type: type || Not(isNull(type)),
+    price: Between(condition.minPrice, condition.maxPrice),
+    area: Between(condition.minS, condition.maxS),
+    hint: Like(`%${condition.key || ""}%`),
   };
 
   let apartment = await apartmentRepo.findAndCount({

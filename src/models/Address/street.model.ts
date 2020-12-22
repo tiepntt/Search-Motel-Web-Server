@@ -9,6 +9,7 @@ import {
 import { District } from "../../entity/address/District";
 import { Street } from "../../entity/address/Street";
 import { mapObject } from "../../utils/map";
+import { HintService } from "./hint.model";
 
 const create = async (input: StreetInputDto) => {
   if (!input || !input.code || !input.districtCode || !input.name)
@@ -21,12 +22,20 @@ const create = async (input: StreetInputDto) => {
   });
   let streetFind = await streetRepo.findOne({ code: input.code });
   if (streetFind) return HandelStatus(302, "Mã code đã tồn tại");
-  let districts = await districtRepo.findOne({ code: input.districtCode });
+  let districts = await districtRepo.findOne({
+    relations: ["province"],
+    where: { code: input.districtCode },
+  });
   if (!districts) return HandelStatus(404, "Mã huyện k hợp lệ");
 
   street.districts = districts;
   try {
     await streetRepo.save(street);
+    HintService.add({
+      name: input.name + "," + districts.name + "," + districts.province.name,
+      provinceName: input.name,
+      districtName: districts.name,
+    });
     return HandelStatus(200);
   } catch (e) {
     console.log(e);

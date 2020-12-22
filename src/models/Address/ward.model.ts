@@ -5,6 +5,7 @@ import { WardInputDto, WardsOfDistrictDto } from "../../dto/Adress/ward.dto";
 import { District } from "../../entity/address/District";
 import { Ward } from "../../entity/address/Ward";
 import { mapObject } from "../../utils/map";
+import { HintService } from "./hint.model";
 
 const getAllByDistrictId = async (districtId: number) => {
   if (!districtId) return HandelStatus(400);
@@ -32,12 +33,21 @@ const create = async (input: WardInputDto) => {
     return HandelStatus(400);
   let wardRepo = getRepository(Ward);
   let districtRepo = getRepository(District);
-  let district = await districtRepo.findOne({ code: input.districtCode });
+  let district = await districtRepo.findOne({
+    where: { code: input.districtCode },
+    relations: ["province"],
+  });
   if (!district) return HandelStatus(404, "Dữ liệu quận/huyện không tồn tại");
   let ward = plainToClass(Ward, input);
   ward.district = district;
   try {
     await wardRepo.save(ward);
+    HintService.add({
+      name: input.name + "," + district.name + "," + district.province.name,
+      provinceName: district.province.name,
+      districtName: district.name,
+      wardName: input.name,
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e.name);

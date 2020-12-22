@@ -36,6 +36,8 @@ export class ApartmentDetailInputDto {
 }
 export class ApartmentDetailGetDto {
   @Expose()
+  id: number;
+  @Expose()
   description: string;
   @Expose()
   apartmentId: number;

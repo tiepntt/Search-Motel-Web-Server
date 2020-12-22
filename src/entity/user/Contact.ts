@@ -16,7 +16,7 @@ export class ContactUser {
   @Column({ nullable: true })
   email: string;
   @Expose()
-  @Column({ length: 15, nullable: true })
+  @Column({ length: 15, nullable: false })
   phone: string;
   @Expose()
   @Column({ length: 15, nullable: true })

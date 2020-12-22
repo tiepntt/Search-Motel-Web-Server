@@ -22,7 +22,6 @@ export class User {
   id: number;
   @Column({ length: 30, unique: true })
   personNo: string;
-  @Index({ fulltext: true })
   @Column({ length: 30, unique: true })
   email: string;
   @Column({ nullable: true, default: "Normal" })

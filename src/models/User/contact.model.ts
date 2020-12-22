@@ -21,32 +21,33 @@ const getContactByUserId = async (userId) => {
     return HandelStatus(404);
   } else return HandelStatus(200, null, contactResult);
 };
-const create = async (contactIpnut: ContactDto) => {
+const create = async (contactInput: ContactDto) => {
   let contactRepo = getRepository(ContactUser);
   let userRepo = getRepository(User);
+  console.log(contactInput.phone, "p");
+
   if (
-    !contactIpnut ||
-    !contactIpnut.email ||
-    !contactIpnut.phone ||
-    !contactIpnut.userId
+    !contactInput ||
+    !contactInput.email ||
+    !contactInput.phone ||
+    !contactInput.userId
   ) {
-    console.log(contactIpnut);
+    console.log(contactInput);
 
     return HandelStatus(400);
   }
 
-  let user = await userRepo.findOne(contactIpnut.userId);
+  let user = await userRepo.findOne(contactInput.userId);
   if (!user) {
     return HandelStatus(404, "User không tồn tại!");
   }
-  let contact = plainToClass(ContactUser, contactIpnut);
+  let contact = plainToClass(ContactUser, contactInput);
   let contactGet = await contactRepo.findOne({ user: user });
   if (contactGet) {
     try {
-      contactGet.email = contactIpnut.email || contactGet.email;
-      contactGet.phone = contactIpnut.phone || contactGet.phone;
-      contactGet.phone2 = contactIpnut.phone2 || contactGet.phone2;
-
+      contactGet.email = contactInput.email || contactGet.email;
+      contactGet.phone = contactInput.phone || contactGet.phone;
+      contactGet.phone2 = contactInput.phone2 || contactGet.phone2;
       await contactRepo.update(contactGet.id, contactGet);
 
       return HandelStatus(200);
@@ -59,7 +60,7 @@ const create = async (contactIpnut: ContactDto) => {
   contact.user = user;
   try {
     await contactRepo.save(contact);
-    await userRepo.update(contactIpnut.userId, user);
+    await userRepo.update(contactInput.userId, user);
   } catch (e) {
     return HandelStatus(500, e.name);
   }
@@ -68,6 +69,9 @@ const create = async (contactIpnut: ContactDto) => {
 const getByid = async (id: number) => {};
 const update = async (input: ContactDto) => {
   if (!input || !input.id) return HandelStatus(400);
+  if (!input.phone)
+    return HandelStatus(400, "Số điện thoại không được bỏ trống");
+  if (!input.email) return HandelStatus(400, "Email không được bỏ trống");
   let contactRepo = getRepository(ContactUser);
   let user = await getRepository(User).findOne(input.userId || -1);
   if (!user) return HandelStatus(403);
@@ -81,6 +85,9 @@ const update = async (input: ContactDto) => {
     return HandelStatus(500, e);
   }
 };
+const getUserInfo = () => {
+  
+}
 const remove = async (id: number, userId: number) => {
   if (!id || !userId) return HandelStatus(400);
   let contactRepo = getRepository(ContactUser);

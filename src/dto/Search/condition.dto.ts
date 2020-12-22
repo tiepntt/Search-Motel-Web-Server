@@ -13,4 +13,5 @@ export class ConditionApartmentSearch {
   nearLocation = [];
   take: number;
   skip: number;
+  key: string;
 }

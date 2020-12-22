@@ -16,6 +16,11 @@ const getById = async (req, res) => {
   let result = await UserService.getById(id);
   res.send(result);
 };
+const getAccount = async (req, res) => {
+  let id = res.locals.userId;
+  let result = await UserService.getAccount(id);
+  res.send(result);
+};
 const update = async (req, res) => {
   let user = req.body.user;
   let userId = res.locals.userId;
@@ -37,4 +42,5 @@ export const UserController = {
   changeAvatar,
   update,
   getProfile,
+  getAccount,
 };

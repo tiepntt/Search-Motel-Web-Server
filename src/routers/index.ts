@@ -1,5 +1,6 @@
 import { CheckRole, CheckToken } from "../middleware/authenticate.middleware";
 import districtRouter from "./Address/district.router";
+import hintRouter from "./Address/hint.router";
 import locationRouter from "./Address/location.router";
 import provinceRouter from "./Address/province.router";
 import streetRouter from "./Address/street.router";
@@ -40,4 +41,5 @@ export const router = (app) => {
   app.use("/location", locationRouter);
   app.use("/employment", CheckToken, EmploymentRouter);
   app.use("/type", apartmentTypeRouter);
+  app.use("/hint", hintRouter);
 };
