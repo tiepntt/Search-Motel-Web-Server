@@ -8,6 +8,7 @@ import {
 import { District } from "../../entity/address/District";
 import { Province } from "../../entity/address/Province";
 import { mapObject } from "../../utils/map";
+import { HintService } from "./hint.model";
 
 const getAllByProvinceId = async (provinceId: number) => {
   if (!provinceId) return HandelStatus(400);
@@ -50,6 +51,11 @@ const create = async (input: DistrictInputDto) => {
 
   try {
     await districtRepo.save(district);
+    HintService.add({
+      name: input.name + "," + province.name,
+      provinceName: province.name,
+      districtName: input.name,
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e.name);

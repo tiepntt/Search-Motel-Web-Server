@@ -11,6 +11,7 @@ import {
 } from "../../dto/Adress/province.dto";
 import { Province } from "../../entity/address/Province";
 import { mapObject } from "../../utils/map";
+import { HintService } from "./hint.model";
 
 export const getAll = async () => {
   let provinceRepo = getRepository(Province);
@@ -37,6 +38,10 @@ export const create = async (input: ProvinceInputDto) => {
   if (provinceGet) return HandelStatus(302);
   try {
     await provinceRepo.save(province);
+    HintService.add({
+      name: province.name,
+      provinceName: province.name,
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e.name);

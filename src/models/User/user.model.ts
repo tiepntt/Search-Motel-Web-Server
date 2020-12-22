@@ -191,7 +191,10 @@ const update = async (input: UserUpdateDto) => {
   if (!input || !input.id) return HandelStatus(400);
   let userRepo = getRepository(User);
   let user = await userRepo.findOne(input.id);
+  let userGet = await userRepo.findOne({ email: input.email });
+
   if (!user) return HandelStatus(404);
+  if (user.id != userGet.id) return HandelStatus(404, "Email đã tồn tại");
   input = plainToClass(UserUpdateDto, input, { excludeExtraneousValues: true });
   let userUpdate = mapObject(user, input);
 
@@ -244,6 +247,19 @@ const getByAccount = async (account: UserLogin) => {
   });
   return HandelStatus(200, null, result);
 };
+const getAccount = async (userId: number) => {
+  if (!userId) return HandelStatus(400);
+  let user = await getRepository(User).findOne({
+    relations: ["role", "avatar"],
+    where: { id: userId },
+  });
+
+  if (!user) return HandelStatus(404);
+  let result = deserialize(AccountDto, JSON.stringify(user), {
+    excludeExtraneousValues: true,
+  });
+  return HandelStatus(200, null, result);
+};
 const getUsersByEmployment = async (userId: number) => {
   if (!userId) return HandelStatus(400);
   let user = await getRepository(User).find({
@@ -275,4 +291,5 @@ export const UserService = {
   getAllNewOwner,
   assignUserToAdmin,
   getUsersByEmployment,
+  getAccount,
 };

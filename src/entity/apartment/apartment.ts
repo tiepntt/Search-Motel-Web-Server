@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Index,
   JoinColumn,
   JoinTable,
   ManyToMany,
@@ -44,6 +45,8 @@ export class Apartment {
   wardrobe: number;
   @CreateDateColumn()
   create_at: Date;
+  @Column({ type: "text", charset: "utf8mb4" })
+  hint: string;
   @UpdateDateColumn()
   update_at: Date;
   @DeleteDateColumn()

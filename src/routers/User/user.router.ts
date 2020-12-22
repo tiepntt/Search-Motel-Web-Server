@@ -5,16 +5,18 @@ import { UserController } from "../../controllers/User/user.controller";
 import { uploadAvatarUser } from "../../services/upload/upload";
 // import { uploadAvatarUser } from "../../services/upload/upload.cloudinary";
 
-let userRouter = express.Router();
-userRouter.get("/", UserController.getAll);
-userRouter.get("/profile", UserController.getProfile);
-userRouter.get("/:id", UserController.getById);
-userRouter.put("/update", UserController.update);
-userRouter.post(
-  "/changeAvatar",
-  uploadAvatarUser.single("avatar"),
-  AvatarUserController.create,
-  UserController.changeAvatar
-);
+let userRouter = express
+  .Router()
+  .get("/", UserController.getAll)
+  .get("/account", UserController.getAccount)
+  .get("/profile", UserController.getProfile)
+  .get("/:id", UserController.getById)
+  .put("/update", UserController.update)
+  .post(
+    "/changeAvatar",
+    uploadAvatarUser.single("avatar"),
+    AvatarUserController.create,
+    UserController.changeAvatar
+  );
 
 export default userRouter;

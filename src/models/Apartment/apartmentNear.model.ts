@@ -17,7 +17,7 @@ const createMany = async (apartment: Apartment, nearId: number[]) => {
       location: location,
     });
     near.apartment = apartment;
-
+    apartment.hint += "," + location.name;
     if (!location || nearGet) {
       continue;
     }
@@ -30,6 +30,7 @@ const createMany = async (apartment: Apartment, nearId: number[]) => {
       console.log(e);
     }
   }
+  await getRepository(Apartment).save(apartment);
   return output;
 };
 export const LocationNearService = {

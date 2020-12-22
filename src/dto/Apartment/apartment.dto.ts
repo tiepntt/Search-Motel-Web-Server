@@ -1,4 +1,5 @@
 import { Expose, Type } from "class-transformer";
+import { ApartmentNear } from "../../entity/apartment/apartmentNearLocation";
 import { DistrictDto } from "../Adress/district.dto";
 import { LocationTitleGetDto } from "../Adress/location.dto";
 import { ProvinceGetDto } from "../Adress/province.dto";
@@ -6,6 +7,7 @@ import { StreetGetDto } from "../Adress/street.dto";
 import { WardGetDto } from "../Adress/ward.dto";
 import { UserDto, UserGetDto, UserTitleDto } from "../User/user.dto";
 import { ApartmentDetailGetDto } from "./apartmentDetail.dto";
+import { ApartmentNearDto } from "./apartmentNear.dto";
 import { ApartmentTypeGetDto } from "./apartmentType.dto";
 
 export class ApartmentInputDto {
@@ -154,8 +156,8 @@ export class ApartmentGetDto {
   @Expose()
   streetNo: string;
   @Expose()
-  @Type((type) => LocationTitleGetDto)
-  LocationsNear: LocationTitleGetDto[];
+  @Type((type) => ApartmentNearDto)
+  near: ApartmentNearDto[];
   @Expose()
   avatar: string;
   @Expose()

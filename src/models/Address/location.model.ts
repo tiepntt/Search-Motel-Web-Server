@@ -15,6 +15,7 @@ import {
 } from "../../dto/Adress/location.dto";
 import { District } from "../../entity/address/District";
 import { mapObject } from "../../utils/map";
+import { HintService } from "./hint.model";
 
 const getAllByProvinceId = async (provinceId: number) => {
   let provinceRepo = getRepository(Province);
@@ -84,6 +85,11 @@ const create = async (input: LocationCreateDto) => {
 
   try {
     await locationRepo.save(location);
+    HintService.add({
+      name: input.name,
+      provinceName: province.name,
+      districtName: district.name,
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e.name);

@@ -44,8 +44,10 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => {
   res.send("<h1>Web Server Timtro.vn</h1>");
 });
+
 loader();
 router(app);
+
 var server = http.createServer(app);
 
 server.listen(process.env.PORT || 3000);
