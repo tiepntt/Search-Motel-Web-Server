@@ -2,8 +2,6 @@ import { plainToClass } from "class-transformer";
 import { ApartmentInputDto } from "../../dto/Apartment/apartment.dto";
 import { ConditionApartmentSearch } from "../../dto/Search/condition.dto";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
-import { mapStringToArray } from "../../utils/mapStringToIntArray";
-import { getUrl } from "../../utils/regex";
 
 const create = async (req, res) => {
   let body = req.body;
@@ -15,9 +13,8 @@ const create = async (req, res) => {
   return res.send(result);
 };
 const getAll = async (req, res) => {
-  let condition = req.body.condition;
+  let condition = req.query;
   if (!condition) condition = new ConditionApartmentSearch();
-  console.log(condition);
 
   let input = plainToClass(ConditionApartmentSearch, condition);
   let result = await ApartmentService.getAll(input);

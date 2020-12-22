@@ -12,9 +12,12 @@ var storageApartment = multer.diskStorage({
     cb(null, "public/apartment");
   },
   filename: function (req, file, cb) {
-    cb(null, "apartment-" + Date.now() + "-" + file.originalname);
+    cb(null, "apartment-" + Date.now() + "." + hash(file.originalname));
   },
 });
+const hash = (str: string) => {
+  return str.split(".").pop();
+};
 // var upload = multer({ storage: storage });
 export const uploadAvatarUser = multer({
   storage: storageAvatar,

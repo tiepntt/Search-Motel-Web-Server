@@ -1,4 +1,3 @@
-
 import {
   Column,
   CreateDateColumn,
@@ -20,7 +19,7 @@ import { ToiletType } from "./type/toiletType";
 export class ApartmentDetail {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
+  @Column({ nullable: true, type: "text" })
   description: string;
   @OneToOne((type) => Apartment, (o) => o.apartmentDetail, {
     onDelete: "CASCADE",
@@ -28,7 +27,9 @@ export class ApartmentDetail {
   })
   @JoinColumn()
   apartment: Apartment;
-  @OneToMany((type) => ApartmentImage, (o) => o.apartmentDetail)
+  @OneToMany((type) => ApartmentImage, (o) => o.apartmentDetail, {
+    cascade: true,
+  })
   @JoinColumn()
   images: ApartmentImage[];
   @ManyToOne((type) => ToiletType, {
@@ -63,7 +64,7 @@ export class ApartmentDetail {
   @Column({ nullable: true })
   priceElectricity: number;
   @Column({ nullable: true })
-  priceWater: string;
+  priceWater: number;
   @Column({ nullable: true, default: false })
   isHasParking: boolean;
   @CreateDateColumn()

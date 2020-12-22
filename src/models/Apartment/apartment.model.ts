@@ -5,6 +5,7 @@ import { HandelStatus } from "../../config/HandelStatus";
 import {
   ApartmentApproveDto,
   ApartmentDeletedDto,
+  ApartmentDto,
   ApartmentGetDto,
   ApartmentInputDto,
 } from "../../dto/Apartment/apartment.dto";
@@ -17,6 +18,7 @@ import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { User } from "../../entity/user/User";
+import { mapObject } from "../../utils/map";
 import { LocationNearService } from "./apartmentNear.model";
 
 const create = async (input: ApartmentInputDto) => {
@@ -51,11 +53,11 @@ const create = async (input: ApartmentInputDto) => {
     });
 
     await LocationNearService.createMany(apartment, input.LocationsNearCode);
-    // console.log(apartment);
 
     if (!apartment) {
       return HandelStatus(404);
     }
+    apartment = mapObject(apartment, input);
   } else {
     apartment = plainToClass(Apartment, input);
   }
@@ -115,6 +117,8 @@ const getAllByUserId = async (userId: number) => {
   return HandelStatus(200, null, result);
 };
 const getAll = async (condition: ConditionApartmentSearch) => {
+  // console.log(condition);
+
   let apartmentRepo = getRepository(Apartment);
   let apartmentTypeRepo = getRepository(ApartmentType);
   let provinceRepo = getRepository(Province);
@@ -123,7 +127,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   let userRepo = getRepository(User);
   let streetRepo = getRepository(Street);
   let province = await provinceRepo.findOne({
-    id: condition.districtId || -1,
+    id: condition.provinceId || -1,
   });
 
   let district = await districtRepo.findOne({
@@ -141,28 +145,29 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   let street = await streetRepo.findOne({
     id: condition.streetId || -1,
   });
+  let conditionLet = {
+    // isApprove: true,
+    province: province || Not(isNull(province)),
+    district: district || Not(isNull(district)),
+    ward: ward || Not(isNull(ward)),
+    street: street || Not(isNull(street)),
+    type: type || Not(isNull(type)),
+  };
 
-  let apartment = await apartmentRepo.find({
+  let apartment = await apartmentRepo.findAndCount({
     relations: ["province", "district", "street", "ward", "type", "user"],
-    where: {
-      isApprove: true,
-      province: province || Not(isNull(province)),
-      district: district || Not(isNull(district)),
-      ward: ward || Not(isNull(ward)),
-      street: street || Not(isNull(street)),
-      type: type || Not(isNull(type)),
-    },
+    where: conditionLet,
     order: {
-      create_at: "ASC",
+      create_at: "DESC",
     },
-    take: 10,
-    skip: 0,
+    take: condition.take || 5,
+    skip: condition.skip || 0,
   });
   if (!apartment) return HandelStatus(404);
-  let result = deserialize(ApartmentGetDto, JSON.stringify(apartment), {
+  let result = deserialize(ApartmentDto, JSON.stringify(apartment[0]), {
     excludeExtraneousValues: true,
   });
-  return HandelStatus(200, null, result);
+  return HandelStatus(200, null, { count: apartment[1], data: result });
 };
 
 const update = async (input: ApartmentInputDto) => {};
@@ -239,7 +244,6 @@ const getNeedApproveByAdminId = async (adminId: number) => {
     );
     return HandelStatus(200, null, apartmentList);
   } catch (e) {
-    console.log(e);
     return HandelStatus(500, e.name);
   }
 };

@@ -23,18 +23,19 @@ apartmentRouter
   .post("/detail/create", ApartmentDetailController.create)
   .post(
     "/upload",
+    CheckToken,
     uploadApartment.single("image"),
     uploadMiddleware.uploadApartmentImg,
     ImageApartmentController.add
   )
-  .delete("/upload", ImageApartmentController.remove)
+  .delete("/upload", CheckToken, ImageApartmentController.remove)
   .put("/restore", ApartmentController.restore)
   .delete("/delete", ApartmentController.remove)
   .get("/deleted", ApartmentController.getRemoved)
-  .get("/", ApartmentController.getAll)
+
   .get("/userId=:userId", ApartmentController.getAllByUserId)
   .get(
-    "/detail/apartmentId=:apartmentId",
+    "/detail/:apartmentId",
     ApartmentDetailController.getByApartmentId
   )
   .delete("/detail/:id", ApartmentDetailController.remove);

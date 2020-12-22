@@ -28,12 +28,20 @@ import { ApartmentType } from "./apartmentType";
 export class Apartment {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: "nvarchar", charset: "utf8" })
+  @Column({ type: "nvarchar", charset: "utf8mb4" })
   title: string;
   @Column({ nullable: true, type: "nvarchar", charset: "utf8" })
   description: string;
   @Column()
   price: number;
+  @Column({ default: 0 })
+  area: number;
+  @Column({ default: 0 })
+  bathRoom: number;
+  @Column({ default: 0 })
+  bedRoom: number;
+  @Column({ default: 0 })
+  wardrobe: number;
   @CreateDateColumn()
   create_at: Date;
   @UpdateDateColumn()
