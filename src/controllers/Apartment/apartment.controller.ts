@@ -25,6 +25,18 @@ const getAllByUserId = async (req, res) => {
   let result = await ApartmentService.getAllByUserId(userId);
   return res.send(result);
 };
+const getAllApartmentByUserId = async (req, res) => {
+  let { take, skip, isApprove, key } = req.query;
+  let userId = res.locals.userId;
+  let result = await ApartmentService.getAllApartmentByUser(
+    userId,
+    take,
+    skip,
+    isApprove,
+    key
+  );
+  return res.send(result);
+};
 const remove = async (req, res) => {
   let apartmentId = req.body.apartmentId;
   let userId = res.locals.userId;
@@ -40,6 +52,22 @@ const restore = async (req, res) => {
   let result = await ApartmentService.restoreById(apartmentId);
   return res.send(result);
 };
+const changeStatus = async (req, res) => {
+  let userId = res.locals.userId;
+  let { apartmentId } = req.body;
+  let result = await ApartmentService.changeStatus(userId, apartmentId);
+  return res.send(result);
+};
+const extendApartment = async (req, res) => {
+  let userId = res.locals.userId;
+  let { apartmentId, postPriceId } = req.body;
+  let result = await ApartmentService.extendApartment(
+    userId,
+    apartmentId,
+    postPriceId
+  );
+  return res.send(result);
+};
 export const ApartmentController = {
   create,
   getAll,
@@ -47,4 +75,7 @@ export const ApartmentController = {
   remove,
   restore,
   getRemoved,
+  getAllApartmentByUserId,
+  changeStatus,
+  extendApartment,
 };

@@ -1,13 +1,15 @@
 import * as express from "express";
 import { EmploymentController } from "../../controllers/Admin/employment.controller";
+import { CheckRole } from "../../middleware/authenticate.middleware";
 
 let EmploymentRouter = express.Router();
-EmploymentRouter.get(
-  "/getUsers/",
-  EmploymentController.getUserOfEmployment
-)
+EmploymentRouter.get("/getUsers/", EmploymentController.getUserOfEmployment)
   .get("/apartmentNeedApprove", EmploymentController.getAllApartmentApproveYet)
-  .post("/approve", EmploymentController.approveApartment)
+  .post(
+    "/approve",
+    CheckRole.roleApproveApartment,
+    EmploymentController.approveApartment
+  )
   .get("/reviews", EmploymentController.getAllReviewApartmentApproveYet)
   .get(
     "/reviews/apartmentId=:id",
