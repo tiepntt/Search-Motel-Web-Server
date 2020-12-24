@@ -102,4 +102,11 @@ export const staticData = {
       password: "123qwe",
     },
   ],
+  postPrice: [
+    { id: 1, name: "1 Tuần", time: 7, price: 100000, code: "1W" },
+    { id: 2, name: "2 Tuần", time: 14, price: 195000, code: "2W" },
+    { id: 3, name: "3 Tuần", time: 21, price: 270000, code: "3W" },
+    { id: 4, name: "30 ngày", time: 30, price: 350000, code: "1T" },
+    { id: 5, name: "60 ngày", time: 60, price: 600000, code: "2T" },
+  ],
 };

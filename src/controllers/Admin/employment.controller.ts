@@ -11,15 +11,12 @@ const approveApartment = async (req, res) => {
   return res.send(result);
 };
 const getUserOfEmployment = async (req, res) => {
-  let userId = req.params.Id;
-  let result = await UserService.getUsersByEmployment(userId);
+  let { take, skip, key } = req.query;
+  let userId = res.locals.userId;
+  let result = await UserService.getUsersByEmployment(userId, take, skip, key);
   return res.send(result);
 };
-const getAllUser = async (req, res) => {
-  let { take, skip, aprove, sortByName } = req.query;
-  let result = await UserService.getAll();
-  return res.send(result);
-};
+
 const getAllApartmentApproveYet = async (req, res) => {
   let userId = res.locals.userId;
   let result = await ApartmentService.getNeedApproveByAdminId(userId || -1);

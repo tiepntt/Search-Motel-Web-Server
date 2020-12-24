@@ -14,8 +14,9 @@ const create = async (req, res) => {
 };
 const getByApartmentId = async (req, res) => {
   let id = req.params.apartmentId;
+  let userId = res.locals.userId || -1;
 
-  let result = await ApartmentDetailService.getByApartmentId(id);
+  let result = await ApartmentDetailService.getByApartmentId(id, userId);
   return res.send(result);
 };
 const remove = async (req, res) => {

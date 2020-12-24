@@ -1,9 +1,10 @@
 import { plainToClass } from "class-transformer";
-import { UserUpdateDto } from "../../dto/User/user.dto";
+import { ChangePasswordDto, UserUpdateDto } from "../../dto/User/user.dto";
 import { UserService } from "../../models/User/user.model";
 
 const getAll = async (req, res) => {
-  let users = await UserService.getAll();
+  let { take, skip, key } = req.query;
+  let users = await UserService.getAll(take, skip, key);
   res.send(users);
 };
 const getProfile = async (req, res) => {
@@ -36,6 +37,16 @@ const changeAvatar = async (req, res) => {
   let result = await UserService.changeAvatar(imgId, userId);
   return res.send(result);
 };
+const changePassWord = async (req, res) => {
+  let body = req.body;
+  let input = plainToClass(ChangePasswordDto, body, {
+    excludeExtraneousValues: true,
+  });
+
+  input.id = res.locals.userId;
+  let result = await UserService.changePassword(input);
+  return res.send(result);
+};
 export const UserController = {
   getAll,
   getById,
@@ -43,4 +54,5 @@ export const UserController = {
   update,
   getProfile,
   getAccount,
+  changePassWord,
 };

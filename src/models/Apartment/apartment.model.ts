@@ -10,6 +10,7 @@ import {
 } from "typeorm";
 import { isNull } from "util";
 import { HandelStatus } from "../../config/HandelStatus";
+import { ApartmentReviewController } from "../../controllers/Apartment/apartmentReivew.controller";
 import {
   ApartmentApproveDto,
   ApartmentDeletedDto,
@@ -25,7 +26,10 @@ import { Street } from "../../entity/address/Street";
 import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
+import { Price } from "../../entity/payment/postprice";
 import { User } from "../../entity/user/User";
+import { ApartmentReviewHelper } from "../../helper/apartment.review.helper";
+import { ApartmentReportHelper } from "../../helper/apartmentReport.helper";
 import { mapObject } from "../../utils/map";
 import { LocationNearService } from "./apartmentNear.model";
 
@@ -35,7 +39,8 @@ const create = async (input: ApartmentInputDto) => {
     !input.provinceId ||
     !input.districtId ||
     !input.title ||
-    !input.price
+    !input.price ||
+    !input.pricePostId
   )
     return HandelStatus(400);
   let apartmentRepo = getRepository(Apartment);
@@ -88,7 +93,10 @@ const create = async (input: ApartmentInputDto) => {
     districts: district,
   });
   if (!street) return HandelStatus(404, "Dữ liệu đường/phố không hợp lệ");
-
+  let pricePost = await getRepository(Price).findOne({
+    id: input.pricePostId,
+  });
+  if (!pricePost) return HandelStatus(404, "Không tìm thấy gói đăng tin");
   apartment.province = province;
   apartment.district = district;
   apartment.ward = ward;
@@ -96,6 +104,7 @@ const create = async (input: ApartmentInputDto) => {
   apartment.type = type;
   apartment.street = street;
   apartment.id = input.id;
+  apartment.pricePost = pricePost;
   apartment.hint =
     street.name +
     "," +
@@ -139,8 +148,6 @@ const getAllByUserId = async (userId: number) => {
   return HandelStatus(200, null, result);
 };
 const getAll = async (condition: ConditionApartmentSearch) => {
-  // console.log(condition);
-
   let apartmentRepo = getRepository(Apartment);
   let apartmentTypeRepo = getRepository(ApartmentType);
   let provinceRepo = getRepository(Province);
@@ -167,6 +174,13 @@ const getAll = async (condition: ConditionApartmentSearch) => {
   let street = await streetRepo.findOne({
     id: condition.streetId || -1,
   });
+  let convert = {
+    ...condition,
+    minPrice: parseInt(condition.minPrice.toString() || "0"),
+    maxPrice: parseInt(condition.maxPrice.toString() || "10000000"),
+    minS: parseInt(condition.minS.toString() || "0"),
+    maxS: parseInt(condition.maxS.toString() || "100000000"),
+  };
   let conditionLet = {
     // isApprove: true,
     province: province || Not(isNull(province)),
@@ -174,8 +188,8 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     ward: ward || Not(isNull(ward)),
     street: street || Not(isNull(street)),
     type: type || Not(isNull(type)),
-    price: Between(condition.minPrice, condition.maxPrice),
-    area: Between(condition.minS, condition.maxS),
+    price: Between(convert.minPrice, convert.maxPrice),
+    area: Between(convert.minS, convert.maxS),
     hint: Like(`%${condition.key || ""}%`),
   };
 
@@ -274,8 +288,10 @@ const getNeedApproveByAdminId = async (adminId: number) => {
 };
 const approveApartment = async (id: number, userApproveId: number) => {
   let apartment = await getRepository(Apartment).findOne({
-    id: id,
-    userApprove: IsNull(),
+    where: {
+      id: id,
+      userApprove: IsNull(),
+    },
   });
   if (!apartment) return HandelStatus(404);
   apartment.userApprove =
@@ -319,6 +335,52 @@ const getAllByEmploymentId = async (
     return HandelStatus(500, e);
   }
 };
+const getAllApartment = async (
+  take: number,
+  skip: number,
+  isApprove: boolean,
+  key: string
+) => {
+  let apartmentRepo = getRepository(Apartment);
+
+  let apartments = await apartmentRepo.findAndCount({
+    relations: [
+      "street",
+      "ward",
+      "district",
+      "province",
+      "user",
+      "type",
+      "userApprove",
+    ],
+    where: {
+      isApprove: isApprove || false,
+      hint: Like(`%${key || ""}%`),
+    },
+    take: take || 5,
+    skip: skip || 0,
+  });
+
+  try {
+    let apartmentsGet = { ...apartments }[0];
+    let dtos = plainToClass(ApartmentDto, apartmentsGet, {
+      excludeExtraneousValues: true,
+    });
+
+    for (let i = 0; i < apartments[0].length; i++) {
+      dtos[i].reportCount = await ApartmentReportHelper.getCountByApartment(
+        apartments[0][i]
+      );
+      dtos[i].reviewCount = await ApartmentReviewHelper.getCountByApartment(
+        apartments[0][i]
+      );
+    }
+    return HandelStatus(200, null, { data: dtos, count: apartments[1] });
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
+const getALlApproveByEmployment = async () => {};
 export const ApartmentService = {
   create,
   getAll,
@@ -326,6 +388,8 @@ export const ApartmentService = {
   remove,
   getById,
   getAllByUserId,
+  getAllApartment,
+  getALlApproveByEmployment,
   getDeleted,
   restoreById,
   getNeedApproveByAdminId,

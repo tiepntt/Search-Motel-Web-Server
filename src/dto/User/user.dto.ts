@@ -56,6 +56,13 @@ export class UserUpdateDto {
   @Expose()
   email: string;
 }
+export class ChangePasswordDto {
+  id: number;
+  @Expose()
+  oldPassword: string;
+  @Expose()
+  newPassword: string;
+}
 export class UserGetDto {
   @Expose()
   id: number;
@@ -117,6 +124,9 @@ export class AccountDto {
   isBlock: boolean;
   @Expose()
   isApprove: boolean;
+  @Expose()
+  @Type(() => AvatarUserDto, {})
+  avatar: AvatarUserDto;
 }
 export class UserDetailDto {
   @Expose()

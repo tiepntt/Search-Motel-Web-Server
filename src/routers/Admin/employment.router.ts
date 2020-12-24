@@ -3,7 +3,7 @@ import { EmploymentController } from "../../controllers/Admin/employment.control
 
 let EmploymentRouter = express.Router();
 EmploymentRouter.get(
-  "/getUsers/userId=:Id",
+  "/getUsers/",
   EmploymentController.getUserOfEmployment
 )
   .get("/apartmentNeedApprove", EmploymentController.getAllApartmentApproveYet)

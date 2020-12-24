@@ -19,6 +19,7 @@ import { Location } from "../address/Location";
 import { Province } from "../address/Province";
 import { Street } from "../address/Street";
 import { Ward } from "../address/Ward";
+import { Price } from "../payment/postprice";
 import { User } from "../user/User";
 import { ApartmentDetail } from "./apartmentDetail";
 import { ApartmentNear } from "./apartmentNearLocation";
@@ -36,11 +37,15 @@ export class Apartment {
   @Column()
   price: number;
   @Column({ default: 0 })
+  views: number;
+  @Column({ default: 0 })
   area: number;
   @Column({ default: 0 })
   bathRoom: number;
   @Column({ default: 0 })
   bedRoom: number;
+  @Column({ default: false })
+  status: boolean;
   @Column({ default: 0 })
   wardrobe: number;
   @CreateDateColumn()
@@ -51,6 +56,7 @@ export class Apartment {
   update_at: Date;
   @DeleteDateColumn()
   delete_at: Date;
+  s;
   @ManyToOne((type) => User, { onUpdate: "CASCADE", onDelete: "SET NULL" })
   @JoinColumn()
   userDeleted: User;
@@ -74,6 +80,11 @@ export class Apartment {
   })
   @JoinColumn()
   type: ApartmentType;
+  @ManyToOne((type) => Price, {
+    onDelete: "SET NULL",
+  })
+  @JoinColumn()
+  pricePost: Price;
   @OneToOne((type) => ApartmentDetail, (o) => o.apartment, {
     onUpdate: "CASCADE",
     onDelete: "SET NULL",

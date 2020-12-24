@@ -15,6 +15,7 @@ import {
 import { HandelStatus } from "../../config/HandelStatus";
 import {
   AccountDto,
+  ChangePasswordDto,
   UserAssignDto,
   UserDetailDto,
   UserGetDto,
@@ -30,42 +31,54 @@ import { User } from "../../entity/user/User";
 import { mapObject } from "../../utils/map";
 import { checkEmail } from "../../utils/regex";
 
-const getAll = async () => {
+const getAll = async (take: number, skip: number, key?: string) => {
   let userRepo = getRepository(User);
-  let user = await userRepo
-    .createQueryBuilder("user")
-    .leftJoinAndSelect("user.avatar", "avatar")
-    .getMany();
-  let userRes = deserializeArray(UserGetDto, JSON.stringify(user), {
+  let role = await getRepository(Role).findOne({ code: "R" });
+  if (!role) return HandelStatus(400);
+  let user = await userRepo.findAndCount({
+    relations: ["avatar", "role", "contactUser"],
+    where: {
+      role: role,
+      name: Like(`%${key}%`),
+    },
+    take: take || 5,
+    skip: skip || 0,
+  });
+  let userRes = deserializeArray(UserGetDto, JSON.stringify(user[0]), {
     excludeExtraneousValues: true,
   });
 
-  return HandelStatus(200, null, userRes);
+  return HandelStatus(200, null, { data: userRes, count: user[1] });
 };
 
-const getEmployments = async (userId: number, take?: number, skip?: number) => {
+const getEmployments = async (
+  userId: number,
+  take?: number,
+  skip?: number,
+  key?: string
+) => {
   if (!userId) return HandelStatus(404);
   let userRepo = getRepository(User);
   let user = await userRepo.findOne(userId);
-  let count = await userRepo.count({
+  let roleAdmin = await getRepository(Role).findOne({ code: "A" });
+  if (!roleAdmin) return HandelStatus(500);
+
+  let employments = await userRepo.findAndCount({
     relations: ["userManager", "role", "avatar"],
+
     where: {
       userManager: user,
-    },
-  });
-  let employments = await userRepo.find({
-    relations: ["userManager", "role", "avatar"],
-    where: {
-      userManager: user,
+      role: roleAdmin,
+      name: Like(`%${key || ""}%`),
     },
     take: take || 5,
     skip: skip || 0,
   });
   try {
-    let result = deserializeArray(UserGetDto, JSON.stringify(employments), {
+    let result = deserializeArray(UserGetDto, JSON.stringify(employments[0]), {
       excludeExtraneousValues: true,
     });
-    return HandelStatus(200, null, { result, count });
+    return HandelStatus(200, null, { result, count: employments[1] });
   } catch (e) {
     return HandelStatus(500, e.name);
   }
@@ -79,7 +92,6 @@ const getAllNewOwner = async (input: {
 }) => {
   let role = await getRepository(Role).findOne({ code: "O" });
   if (!role) return HandelStatus(400);
-  console.log(input.isApprove === -1);
 
   let condition = {
     relations: ["role", "userManager"],
@@ -108,6 +120,7 @@ const getAllNewOwner = async (input: {
     return HandelStatus(500, e);
   }
 };
+const getRenter = async (input: {}) => {};
 const assignUserToAdmin = async (input: UserAssignDto) => {
   console.log(input);
 
@@ -173,9 +186,17 @@ const create = async (userConfig: UserInputDto) => {
   let user = plainToClass(User, userConfig);
   user.userManager = await userRepo.findOne(userConfig.managerId || -1);
   let userGet = await userRepo.findOne({ email: userConfig.email });
-  let role = await roleRepo.findOne({ code: userConfig.roleCode });
+  let role = await roleRepo.findOne({
+    code: userConfig.roleCode,
+  });
   if (!role) return HandelStatus(404, "Role Not Found");
-  if (userGet) return HandelStatus(302);
+  if (userGet) {
+    if (userGet.email === userConfig.email)
+      return HandelStatus(302, "Email đã được sử dụng");
+    if (userGet.personNo === userConfig.personNo)
+      return HandelStatus(302, "Số CMND đã được sử dụng");
+    return HandelStatus(302);
+  }
   user.role = role;
   let avatar = new AvatarUser();
   user.avatar = avatar;
@@ -184,7 +205,7 @@ const create = async (userConfig: UserInputDto) => {
     await userRepo.save(user);
     return HandelStatus(200, null, { id: user.id });
   } catch (e) {
-    return HandelStatus(400, e);
+    return HandelStatus(500, e.name);
   }
 };
 const update = async (input: UserUpdateDto) => {
@@ -241,7 +262,7 @@ const getByAccount = async (account: UserLogin) => {
     relations: ["role", "avatar"],
     where: { email: account.email, password: account.password },
   });
-  if (!user) return HandelStatus(401, "Email hoặc mật khẩu không đúng");
+  if (!user) return HandelStatus(404, "Email hoặc mật khẩu không đúng");
   let result = deserialize(AccountDto, JSON.stringify(user), {
     excludeExtraneousValues: true,
   });
@@ -260,25 +281,57 @@ const getAccount = async (userId: number) => {
   });
   return HandelStatus(200, null, result);
 };
-const getUsersByEmployment = async (userId: number) => {
+const getUsersByEmployment = async (
+  userId?: number,
+  take?: number,
+  skip?: number,
+  key?: string
+) => {
+  console.log(userId, take, skip, key);
+
   if (!userId) return HandelStatus(400);
-  let user = await getRepository(User).find({
-    relations: ["userChild"],
+  let userManager = await getRepository(User).findOne({
     where: {
       id: userId,
     },
   });
-  if (!user) return HandelStatus(404);
+  if (!userManager) return HandelStatus(404);
+  let user = await getRepository(User).findAndCount({
+    where: { userManager: userManager, name: Like(`%${key}%`) },
+    take: take || 5,
+    skip: skip || 0,
+  });
   try {
-    let resull = deserialize(UserListDto, JSON.stringify(user), {
+    let result = deserialize(UserGetDto, JSON.stringify(user[0]), {
       excludeExtraneousValues: true,
     });
-    return HandelStatus(200, null, resull);
+    return HandelStatus(200, null, { data: result, count: user[1] });
   } catch (e) {
     return HandelStatus(500, e);
   }
 };
+const changePassword = async (input: ChangePasswordDto) => {
+  console.log(input);
 
+  if (!input || !input.id || !input.oldPassword || !input.newPassword)
+    return HandelStatus(400);
+  let userRepo = getRepository(User);
+  let user = await userRepo.findOne({
+    id: input.id,
+    password: input.oldPassword,
+  });
+  console.log(input.oldPassword);
+  console.log(user);
+
+  if (!user) return HandelStatus(404, "Mật khẩu không đúng");
+  user.password = input.newPassword;
+  try {
+    await userRepo.save(user);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500, e.name);
+  }
+};
 export const UserService = {
   getAll,
   create,
@@ -292,4 +345,5 @@ export const UserService = {
   assignUserToAdmin,
   getUsersByEmployment,
   getAccount,
+  changePassword,
 };
