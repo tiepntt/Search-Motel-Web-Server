@@ -5,6 +5,7 @@ import { LocationTitleGetDto } from "../Adress/location.dto";
 import { ProvinceGetDto } from "../Adress/province.dto";
 import { StreetGetDto } from "../Adress/street.dto";
 import { WardGetDto } from "../Adress/ward.dto";
+import { PriceDto } from "../Payment/price.dto";
 import { UserDto, UserGetDto, UserTitleDto } from "../User/user.dto";
 import { ApartmentDetailGetDto } from "./apartmentDetail.dto";
 import { ApartmentNearDto } from "./apartmentNear.dto";
@@ -42,7 +43,11 @@ export class ApartmentInputDto {
   @Expose()
   streetNo: string;
   @Expose()
+  pricePostId: number;
+  @Expose()
   LocationsNearCode: number[];
+  @Expose()
+  status: boolean;
 }
 export class ApartmentDeletedDto {
   @Expose()
@@ -63,6 +68,8 @@ export class ApartmentDeletedDto {
   @Expose()
   @Type((type) => UserTitleDto)
   userDeleted: UserTitleDto;
+  @Expose()
+  status: boolean;
 }
 export class ApartmentTitleDto {
   @Expose()
@@ -71,6 +78,8 @@ export class ApartmentTitleDto {
   title: string;
   @Expose()
   price: number;
+  @Expose()
+  status: boolean;
 }
 export class ApartmentDto {
   @Expose()
@@ -81,6 +90,8 @@ export class ApartmentDto {
   title: string;
   @Expose()
   area: number;
+  @Expose()
+  views: number;
   @Expose()
   bathRoom: number;
   @Expose()
@@ -110,10 +121,18 @@ export class ApartmentDto {
   type: ApartmentTypeGetDto;
   @Expose()
   create_at?: Date;
+  @Expose()
+  status: boolean;
+  @Expose()
+  reviewCount: number;
+  @Expose()
+  reportCount: number;
 }
 export class ApartmentGetDto {
   @Expose()
   id: number;
+  @Expose()
+  views: number;
   @Expose()
   title: string;
   @Expose()
@@ -164,11 +183,16 @@ export class ApartmentGetDto {
   @Type((type) => ApartmentDetailGetDto)
   apartmentDetail: ApartmentDetailGetDto;
   @Expose()
+  @Type((type) => PriceDto)
+  pricePost: PriceDto;
+  @Expose()
   area: number;
   @Expose()
   bathRoom: number;
   @Expose()
   bedRoom: number;
+  @Expose()
+  status: boolean;
 }
 export class ApartmentApproveDto {
   @Expose()

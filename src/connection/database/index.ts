@@ -1,12 +1,15 @@
 import { plainToClass } from "class-transformer";
 import "reflect-metadata";
 import { createConnection, getRepository } from "typeorm";
+import { PriceDto } from "../../dto/Payment/price.dto";
 import { UserInputDto } from "../../dto/User/user.dto";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { KitchenType } from "../../entity/apartment/type/kitchenType";
 import { ToiletType } from "../../entity/apartment/type/toiletType";
+import { Price } from "../../entity/payment/postprice";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
+import { PriceService } from "../../models/Payment/price.model";
 import { UserService } from "../../models/User/user.model";
 import { mapObject } from "../../utils/map";
 import { staticData } from "./staticdata";
@@ -68,6 +71,17 @@ export const connectDatabase = (configDb) =>
         let userGet = await userRepo.find({ email: user.email });
         try {
           await UserService.create(user);
+        } catch (e) {
+          console.log(e.name);
+        }
+      });
+
+      staticData.postPrice.forEach(async (item) => {
+        let price = plainToClass(PriceDto, item, {
+          excludeExtraneousValues: true,
+        });
+        try {
+          await PriceService.create(price);
         } catch (e) {
           console.log(e.name);
         }

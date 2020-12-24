@@ -24,7 +24,6 @@ const getContactByUserId = async (userId) => {
 const create = async (contactInput: ContactDto) => {
   let contactRepo = getRepository(ContactUser);
   let userRepo = getRepository(User);
-  console.log(contactInput.phone, "p");
 
   if (
     !contactInput ||
@@ -32,7 +31,6 @@ const create = async (contactInput: ContactDto) => {
     !contactInput.phone ||
     !contactInput.userId
   ) {
-    console.log(contactInput);
 
     return HandelStatus(400);
   }

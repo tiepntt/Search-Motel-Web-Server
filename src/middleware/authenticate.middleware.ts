@@ -53,7 +53,6 @@ const roleApproveUser = async (req, res, next) => {
   }
 };
 const roleManager = async (req, res, next) => {
-  console.log("hi");
 
   let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));

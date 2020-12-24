@@ -10,7 +10,6 @@ const create = async (req, res) => {
 };
 const getAllByDistrictId = async (req, res) => {
   let id = req.params.districtId;
-  console.log(id);
 
   let result = await StreetService.getAllByDistrictId(id);
   return res.send(result);

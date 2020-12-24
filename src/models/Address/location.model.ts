@@ -112,7 +112,6 @@ const update = async (input: LocationUpdateDto) => {
   let location = plainToClass(Location, newLocation);
   location.province = province;
   location.district = district;
-  console.log(location);
   try {
     await locationRepo.update(id, location);
     return HandelStatus(200);

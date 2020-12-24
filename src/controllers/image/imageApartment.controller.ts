@@ -19,7 +19,6 @@ const createMany = async (req, res, next) => {
 };
 const add = async (req, res) => {
   if (!req.file) return res.send(HandelStatus(400));
-  console.log(req.file);
 
   let result = await ImageApartmentService.create({
     url: getUrl(req.file.path),

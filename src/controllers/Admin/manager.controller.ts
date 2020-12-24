@@ -1,12 +1,23 @@
 import { plainToClass } from "class-transformer";
 import { HandelStatus } from "../../config/HandelStatus";
 import { UserAssignDto, UserInputDto } from "../../dto/User/user.dto";
+import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { UserService } from "../../models/User/user.model";
 
 const getEmployments = async (req, res) => {
   let userId = res.locals.userId;
-  let { take, skip, options } = req.query;
-  let result = await UserService.getEmployments(userId, take, skip);
+  let { take, skip, options, key } = req.query;
+  let result = await UserService.getEmployments(userId, take, skip, key);
+  return res.send(result);
+};
+const getALlApartment = async (req, res) => {
+  let { take, skip, isApprove, key } = req.query;
+  let result = await ApartmentService.getAllApartment(
+    take,
+    skip,
+    isApprove,
+    key
+  );
   return res.send(result);
 };
 const createEmployment = async (req, res) => {
@@ -18,6 +29,7 @@ const createEmployment = async (req, res) => {
   });
   userInput.managerId = userId || null;
   userInput.isApprove = true;
+  userInput.roleCode = "A";
   let result = await UserService.create(userInput);
   return res.send(result);
 };
@@ -36,6 +48,7 @@ const removeUser = async (req, res) => {
 };
 const getAllNewUser = async (req, res) => {
   let { take, skip, isApprove, key } = req.query;
+
   let result = await UserService.getAllNewOwner({
     take: take,
     skip,
@@ -50,4 +63,5 @@ export const ManagerController = {
   removeUser,
   getAllNewUser,
   createEmployment,
+  getALlApartment,
 };

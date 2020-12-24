@@ -14,6 +14,7 @@ import apartmentRouter from "./Apartment/apartment.router";
 import apartmentTypeRouter from "./Apartment/apartment.type.router";
 import searchRouter from "./Apartment/search.router";
 import initAddressRouter from "./InitData/init-address.router";
+import PriceRouter from "./Payment/price.router";
 import contactRouter from "./User/contact.router";
 import roleRouter from "./User/role.router";
 import userRouter from "./User/user.router";
@@ -42,4 +43,5 @@ export const router = (app) => {
   app.use("/employment", CheckToken, EmploymentRouter);
   app.use("/type", apartmentTypeRouter);
   app.use("/hint", hintRouter);
+  app.use("/price", PriceRouter);
 };

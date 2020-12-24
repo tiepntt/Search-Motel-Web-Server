@@ -58,7 +58,6 @@ const create = async (input: ApartmentDetailInputDto) => {
     apartment.apartmentDetail = apartmentDetail;
   }
   apartment.avatar = images && images.length != 0 ? images[0].url : undefined;
-  // console.log(apartmentDetail);
 
   try {
     if (input.id) {
@@ -72,13 +71,15 @@ const create = async (input: ApartmentDetailInputDto) => {
     return HandelStatus(500, e);
   }
 };
-const getByApartmentId = async (apartmentId: number) => {
+const getByApartmentId = async (apartmentId: number, userId = -1) => {
   if (!apartmentId) return HandelStatus(400);
-  let apartmentRepo = await getRepository(Apartment).findOne({
+  let apartmentRepo = getRepository(Apartment);
+  let apartment = await apartmentRepo.findOne({
     relations: [
       "province",
       "district",
       "ward",
+      "pricePost",
       "type",
       "user",
       "street",
@@ -93,11 +94,14 @@ const getByApartmentId = async (apartmentId: number) => {
       id: apartmentId,
     },
   });
-
-  if (!apartmentRepo) return HandelStatus(404);
-  let result = deserialize(ApartmentGetDto, JSON.stringify(apartmentRepo), {
+  if (!apartment) return HandelStatus(404);
+  let result = plainToClass(ApartmentGetDto, apartment, {
     excludeExtraneousValues: true,
   });
+  if (userId !== apartment.user.id) {
+    apartment.views += 1;
+    apartmentRepo.save(apartment);
+  }
   return HandelStatus(200, null, result);
 };
 const update = async (input: ApartmentInputDto) => {};
