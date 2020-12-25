@@ -345,7 +345,7 @@ const getAllApartment = async (
   key: string
 ) => {
   let apartmentRepo = getRepository(Apartment);
-  let approve = isApprove.toString() === "true";
+  let approve = isApprove && isApprove.toString() === "true";
   let apartments = await apartmentRepo.findAndCount({
     relations: [
       "street",
