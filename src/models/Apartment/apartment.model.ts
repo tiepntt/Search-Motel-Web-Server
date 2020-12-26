@@ -183,7 +183,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     maxS: parseInt(condition.maxS.toString() || "100000000"),
   };
   let conditionLet = {
-    // isApprove: true,
+    isApprove: true,
     province: province || Not(isNull(province)),
     district: district || Not(isNull(district)),
     ward: ward || Not(isNull(ward)),
@@ -476,6 +476,34 @@ const extendApartment = async (
     return HandelStatus(500);
   }
 };
+const getMaxViews = async (take: number) => {
+  let apartmentRepo = getRepository(Apartment);
+  let result = await apartmentRepo.find({
+    relations: [
+      "street",
+      "ward",
+      "district",
+      "province",
+      "user",
+      "type",
+      "userApprove",
+      "pricePost",
+    ],
+    where: {},
+    take: take || 5,
+    order: {
+      views: "DESC",
+    },
+  });
+  try {
+    let res = plainToClass(ApartmentDto, result, {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, res);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
 export const ApartmentService = {
   create,
   getAll,
@@ -493,4 +521,5 @@ export const ApartmentService = {
   approveApartment,
   getAllByEmploymentId,
   changeStatus,
+  getMaxViews,
 };

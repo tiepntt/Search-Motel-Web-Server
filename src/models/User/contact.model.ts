@@ -31,7 +31,6 @@ const create = async (contactInput: ContactDto) => {
     !contactInput.phone ||
     !contactInput.userId
   ) {
-
     return HandelStatus(400);
   }
 
@@ -83,9 +82,7 @@ const update = async (input: ContactDto) => {
     return HandelStatus(500, e);
   }
 };
-const getUserInfo = () => {
-  
-}
+const getUserInfo = () => {};
 const remove = async (id: number, userId: number) => {
   if (!id || !userId) return HandelStatus(400);
   let contactRepo = getRepository(ContactUser);

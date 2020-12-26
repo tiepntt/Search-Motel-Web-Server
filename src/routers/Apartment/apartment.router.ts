@@ -45,6 +45,9 @@ apartmentRouter
 
   .get("/userId=:userId", ApartmentController.getAllByUserId)
   .get("/detail/:apartmentId", ApartmentDetailController.getByApartmentId)
-  .delete("/detail/:id", ApartmentDetailController.remove);
+  .delete("/detail/:id", ApartmentDetailController.remove)
+  .get("/hobby", CheckToken, ApartmentController.getHobby)
+  .post("/hobby", CheckToken, ApartmentController.saveToHobby)
+  .delete("/hobby/:apartmentId", CheckToken, ApartmentController.removeToHobby);
 
 export default apartmentRouter;

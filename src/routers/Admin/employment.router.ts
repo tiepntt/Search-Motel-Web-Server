@@ -1,5 +1,6 @@
 import * as express from "express";
 import { EmploymentController } from "../../controllers/Admin/employment.controller";
+import { ApartmentController } from "../../controllers/Apartment/apartment.controller";
 import { CheckRole } from "../../middleware/authenticate.middleware";
 
 let EmploymentRouter = express.Router();
@@ -19,6 +20,7 @@ EmploymentRouter.get("/getUsers/", EmploymentController.getUserOfEmployment)
   .get("/report", EmploymentController.getReportByUserId)
   .delete("/apartment", EmploymentController.removeApartment)
   .get("/apartment", EmploymentController.getAllApartmentApproveByUser)
-  .put("/apartment", EmploymentController.restoreApartment);
+  .put("/apartment", EmploymentController.restoreApartment)
+  .get("/max", EmploymentController.getListApartmentViewMax);
 
 export default EmploymentRouter;
