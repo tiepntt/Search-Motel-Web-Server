@@ -4,7 +4,8 @@ import { RoleDtoDetails } from "../dto/User/role.dto";
 import { TokenService } from "../models/author/token.model";
 export const CheckToken = async (req, res, next) => {
   let token = req.headers.token || req.headers["x-access-token"];
-  if (!token) return HandelStatus(401, "Bạn chưa đăng nhập");
+
+  if (!token) return res.send(HandelStatus(401, "Đăng nhập"));
 
   var payload = await jwt.verify(
     token,
@@ -53,7 +54,6 @@ const roleApproveUser = async (req, res, next) => {
   }
 };
 const roleManager = async (req, res, next) => {
-
   let roleReq = res.locals.role;
   if (!roleReq) return res.send(HandelStatus(400));
   let role = roleReq as RoleDtoDetails;

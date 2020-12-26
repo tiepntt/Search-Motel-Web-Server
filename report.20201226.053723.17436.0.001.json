@@ -4,10 +4,10 @@
     "reportVersion": 2,
     "event": "Allocation failed - JavaScript heap out of memory",
     "trigger": "FatalError",
-    "filename": "report.20201224.202026.16376.0.001.json",
-    "dumpEventTime": "2020-12-24T20:20:26Z",
-    "dumpEventTimeStamp": "1608816026149",
-    "processId": 16376,
+    "filename": "report.20201226.053723.17436.0.001.json",
+    "dumpEventTime": "2020-12-26T05:37:23Z",
+    "dumpEventTimeStamp": "1608935843984",
+    "processId": 17436,
     "threadId": null,
     "cwd": "C:\\Users\\Admin\\Desktop\\Web\\Search-Motel-Web-Server",
     "commandLine": [
@@ -52,74 +52,74 @@
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 6614171,
+        "user": 23178000,
         "nice": 0,
-        "sys": 4343859,
-        "idle": 28695875,
-        "irq": 398500
+        "sys": 17349812,
+        "idle": 96878328,
+        "irq": 2088984
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 4282515,
+        "user": 17718968,
         "nice": 0,
-        "sys": 2292593,
-        "idle": 33078296,
-        "irq": 67359
+        "sys": 9557796,
+        "idle": 110128890,
+        "irq": 317843
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 11350125,
+        "user": 38477875,
         "nice": 0,
-        "sys": 3678937,
-        "idle": 24624359,
-        "irq": 81718
+        "sys": 12872671,
+        "idle": 86055109,
+        "irq": 264921
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 7703125,
+        "user": 25313093,
         "nice": 0,
-        "sys": 3463140,
-        "idle": 28487140,
-        "irq": 74468
+        "sys": 12246375,
+        "idle": 99846187,
+        "irq": 172140
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 12394125,
+        "user": 33632359,
         "nice": 0,
-        "sys": 3727921,
-        "idle": 23531375,
-        "irq": 84484
+        "sys": 13170687,
+        "idle": 90602609,
+        "irq": 202984
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 5189046,
+        "user": 20346671,
         "nice": 0,
-        "sys": 2796015,
-        "idle": 31668328,
-        "irq": 29687
+        "sys": 11264671,
+        "idle": 105794296,
+        "irq": 105718
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 9044515,
+        "user": 29426984,
         "nice": 0,
-        "sys": 3449546,
-        "idle": 27159343,
-        "irq": 58093
+        "sys": 11933156,
+        "idle": 96045500,
+        "irq": 149687
       },
       {
         "model": "Intel(R) Core(TM) i5-8250U CPU @ 1.60GHz",
         "speed": 1800,
-        "user": 5354734,
+        "user": 22272437,
         "nice": 0,
-        "sys": 2820390,
-        "idle": 31478265,
-        "irq": 24734
+        "sys": 11455703,
+        "idle": 103677500,
+        "irq": 87234
       }
     ],
     "networkInterfaces": [
@@ -241,15 +241,19 @@
       "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+546637"
     },
     {
-      "pc": "0x000001897056a5e1",
+      "pc": "0x00007ff78162ba73",
+      "symbol": "v8::internal::SetupIsolateDelegate::SetupHeap+40627"
+    },
+    {
+      "pc": "0x0000026a5a5ebd2b",
       "symbol": ""
     }
   ],
   "javascriptHeap": {
-    "totalMemory": 2154143744,
-    "totalCommittedMemory": 2154143744,
-    "usedMemory": 2137440112,
-    "availableMemory": 54618032,
+    "totalMemory": 2154000384,
+    "totalCommittedMemory": 2154000384,
+    "usedMemory": 2139529896,
+    "availableMemory": 47877176,
     "memoryLimit": 2197815296,
     "heapSpaces": {
       "read_only_space": {
@@ -263,35 +267,35 @@
         "memorySize": 4194304,
         "committedMemory": 4194304,
         "capacity": 2094912,
-        "used": 574536,
-        "available": 1520376
+        "used": 164136,
+        "available": 1930776
       },
       "old_space": {
-        "memorySize": 2075271168,
-        "committedMemory": 2075271168,
-        "capacity": 2070793408,
-        "used": 2063842184,
-        "available": 6951224
+        "memorySize": 2072125440,
+        "committedMemory": 2072125440,
+        "capacity": 2063419184,
+        "used": 2063382608,
+        "available": 36576
       },
       "code_space": {
-        "memorySize": 4100096,
-        "committedMemory": 4100096,
-        "capacity": 3903488,
-        "used": 3523520,
-        "available": 379968
+        "memorySize": 3837952,
+        "committedMemory": 3837952,
+        "capacity": 3240256,
+        "used": 3240256,
+        "available": 0
       },
       "map_space": {
         "memorySize": 1052672,
         "committedMemory": 1052672,
-        "capacity": 618320,
-        "used": 618320,
+        "capacity": 616720,
+        "used": 616720,
         "available": 0
       },
       "large_object_space": {
-        "memorySize": 69214208,
-        "committedMemory": 69214208,
-        "capacity": 68845960,
-        "used": 68845960,
+        "memorySize": 72478720,
+        "committedMemory": 72478720,
+        "capacity": 72090584,
+        "used": 72090584,
         "available": 0
       },
       "code_large_object_space": {
@@ -311,17 +315,17 @@
     }
   },
   "resourceUsage": {
-    "userCpuSeconds": 368.515,
-    "kernelCpuSeconds": 21.109,
-    "cpuConsumptionPercent": 0.75491,
-    "maxRss": 2217725952,
+    "userCpuSeconds": 267.734,
+    "kernelCpuSeconds": 23.046,
+    "cpuConsumptionPercent": 11.2662,
+    "maxRss": 2359132160,
     "pageFaults": {
-      "IORequired": 1387702,
+      "IORequired": 1325907,
       "IONotRequired": 0
     },
     "fsActivity": {
-      "reads": 476212,
-      "writes": 527
+      "reads": 519938,
+      "writes": 532
     }
   },
   "libuv": [
@@ -510,6 +514,8 @@
     "npm_package_dependencies_redis": "^3.0.2",
     "npm_package_dependencies_reflect_metadata": "^0.1.10",
     "npm_package_dependencies_request": "^2.88.2",
+    "npm_package_dependencies_socket_io": "^3.0.4",
+    "npm_package_dependencies_socket_io_client": "^3.0.4",
     "npm_package_dependencies_swagger_express_ts": "^1.0.1",
     "npm_package_dependencies_swagger_jsdoc": "^4.0.0",
     "npm_package_dependencies_swagger_ui_express": "^4.1.4",
@@ -524,7 +530,7 @@
     "npm_package_devDependencies_ts_node_dev": "^1.0.0",
     "npm_package_devDependencies_typescript": "3.3.3333",
     "npm_package_devDependencies__types_node": "^8.0.29",
-    "npm_package_gitHead": "4ce62566e9579f9b6855cc2226cfc8ff1ee7817a",
+    "npm_package_gitHead": "c4436ce595d5c9e8a4fdf4beeb715edf59c0dc6a",
     "npm_package_name": "web-server",
     "npm_package_readmeFilename": "README.md",
     "npm_package_scripts_start": "ts-node-dev src/index.ts",
@@ -580,11 +586,11 @@
     "C:\\Windows\\System32\\ucrtbase.dll",
     "C:\\Windows\\System32\\ADVAPI32.dll",
     "C:\\Windows\\System32\\msvcrt.dll",
+    "C:\\Windows\\System32\\sechost.dll",
     "C:\\Windows\\SYSTEM32\\IPHLPAPI.DLL",
     "C:\\Windows\\SYSTEM32\\USERENV.dll",
-    "C:\\Windows\\System32\\sechost.dll",
-    "C:\\Windows\\System32\\profapi.dll",
     "C:\\Windows\\System32\\USER32.dll",
+    "C:\\Windows\\System32\\profapi.dll",
     "C:\\Windows\\System32\\win32u.dll",
     "C:\\Windows\\System32\\GDI32.dll",
     "C:\\Windows\\System32\\gdi32full.dll",

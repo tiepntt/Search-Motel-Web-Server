@@ -19,11 +19,14 @@ const create = async (input: ApartmentReportInputDto) => {
   let report = plainToClass(ApartmentReport, input);
   report.user = user;
   report.apartment = apartment;
+
   try {
     await apartmentReportRepo.save(report);
     return HandelStatus(200);
   } catch (e) {
-    return HandelStatus(500, e.code);
+    console.log(e);
+
+    return HandelStatus(500);
   }
 };
 const getAllByUserAdmin = async (userId: number) => {

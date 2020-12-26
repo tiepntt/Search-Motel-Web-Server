@@ -103,6 +103,8 @@ export class UserTitleDto {
   isBlock: boolean;
   @Expose()
   isApprove: boolean;
+  @Expose()
+  create_at?: Date;
 }
 export class UserAssignDto {
   @Expose()

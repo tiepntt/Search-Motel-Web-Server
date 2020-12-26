@@ -3,9 +3,13 @@ import { UserTitleDto } from "../User/user.dto";
 import { ApartmentTitleDto } from "./apartment.dto";
 
 export class ApartmentReportInputDto {
+  @Expose()
   id: number;
+  @Expose()
   content: string;
+  @Expose()
   userId: number;
+  @Expose()
   apartmentId: number;
 }
 export class ApartmentReportGetDto {

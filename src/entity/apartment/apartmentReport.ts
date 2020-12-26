@@ -13,7 +13,11 @@ import { Apartment } from "./apartment";
 export class ApartmentReport {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column({ type: "nvarchar", charset: "utf8" })
+  @Column({
+    type: "nvarchar",
+    charset: "utf8",
+    default: "Bài đăng không đúng sự thật",
+  })
   content: string;
   @CreateDateColumn()
   create_at: Date;

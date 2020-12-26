@@ -3,10 +3,13 @@ import { ApartmentReportInputDto } from "../../dto/Apartment/apartmentReport.dto
 import { ApartmentReportService } from "../../models/Apartment/apartment.report.model";
 
 const create = async (req, res) => {
-  let report = req.body.report;
-  report.userId = res.locals.userId;
-  report = plainToClass(ApartmentReportInputDto, report);
-  let result = await ApartmentReportService.create(report);
+  let apartmentId = req.body.apartmentId;
+  let userId = res.locals.userId;
+
+  let reportInput = new ApartmentReportInputDto();
+  reportInput.apartmentId = apartmentId;
+  reportInput.userId = userId;
+  let result = await ApartmentReportService.create(reportInput);
   return res.send(result);
 };
 const getById = async (req, res) => {

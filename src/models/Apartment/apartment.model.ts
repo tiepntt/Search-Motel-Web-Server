@@ -30,6 +30,7 @@ import { Price } from "../../entity/payment/postprice";
 import { User } from "../../entity/user/User";
 import { ApartmentReviewHelper } from "../../helper/apartment.review.helper";
 import { ApartmentReportHelper } from "../../helper/apartmentReport.helper";
+import { addDate } from "../../utils/dateTime";
 import { mapObject } from "../../utils/map";
 import { LocationNearService } from "./apartmentNear.model";
 
@@ -182,7 +183,7 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     maxS: parseInt(condition.maxS.toString() || "100000000"),
   };
   let conditionLet = {
-    // isApprove: true,
+    isApprove: true,
     province: province || Not(isNull(province)),
     district: district || Not(isNull(district)),
     ward: ward || Not(isNull(ward)),
@@ -288,15 +289,17 @@ const getNeedApproveByAdminId = async (adminId: number) => {
 };
 const approveApartment = async (id: number, userApproveId: number) => {
   let apartment = await getRepository(Apartment).findOne({
+    relations: ["pricePost"],
     where: {
       id: id,
-      userApprove: IsNull(),
+      isApprove: false,
     },
   });
   if (!apartment) return HandelStatus(404);
   apartment.userApprove =
     (await getRepository(User).findOne(userApproveId)) || apartment.userApprove;
   apartment.isApprove = true;
+  apartment.deadline = addDate(new Date(), apartment.pricePost.time || 0);
   apartment.approve_at = new Date();
   try {
     await getRepository(Apartment).save(apartment);
@@ -342,7 +345,7 @@ const getAllApartment = async (
   key: string
 ) => {
   let apartmentRepo = getRepository(Apartment);
-
+  let approve = isApprove && isApprove.toString() === "true";
   let apartments = await apartmentRepo.findAndCount({
     relations: [
       "street",
@@ -352,9 +355,60 @@ const getAllApartment = async (
       "user",
       "type",
       "userApprove",
+      "pricePost",
     ],
     where: {
-      isApprove: isApprove || false,
+      isApprove: approve || false,
+      hint: Like(`%${key || ""}%`),
+    },
+    take: take || 5,
+    skip: skip || 0,
+  });
+
+  try {
+    let apartmentsGet = { ...apartments }[0];
+    let dtos = plainToClass(ApartmentDto, apartmentsGet, {
+      excludeExtraneousValues: true,
+    });
+
+    for (let i = 0; i < apartments[0].length; i++) {
+      dtos[i].reportCount = await ApartmentReportHelper.getCountByApartment(
+        apartments[0][i]
+      );
+      dtos[i].reviewCount = await ApartmentReviewHelper.getCountByApartment(
+        apartments[0][i]
+      );
+    }
+    return HandelStatus(200, null, { data: dtos, count: apartments[1] });
+  } catch (e) {
+    return HandelStatus(500, e);
+  }
+};
+const getAllApartmentByUser = async (
+  userId,
+  take: number,
+  skip: number,
+  isApprove: boolean,
+  key: string
+) => {
+  let user = await getRepository(User).findOne(userId);
+  if (!user) return HandelStatus(404, "Không tìm thấy người dùng");
+  let apartmentRepo = getRepository(Apartment);
+  let approve = isApprove.toString() === "true";
+  let apartments = await apartmentRepo.findAndCount({
+    relations: [
+      "street",
+      "ward",
+      "district",
+      "province",
+      "user",
+      "type",
+      "userApprove",
+      "pricePost",
+    ],
+    where: {
+      user: user,
+      isApprove: approve || false,
       hint: Like(`%${key || ""}%`),
     },
     take: take || 5,
@@ -381,18 +435,91 @@ const getAllApartment = async (
   }
 };
 const getALlApproveByEmployment = async () => {};
+const changeStatus = async (userId: number, apartmentId: number) => {
+  if (!userId || !apartmentId) return HandelStatus(400);
+  let user = await getRepository(User).findOne(userId);
+  let apartmentRepo = getRepository(Apartment);
+  if (!user) return HandelStatus(404, "Bạn không phải chủ nhà");
+  let apartment = await apartmentRepo.findOne({ user: user, id: apartmentId });
+  if (!apartment) return HandelStatus(404);
+  apartment.status = !apartment.status;
+  try {
+    await apartmentRepo.save(apartment);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
+const extendApartment = async (
+  userId: number,
+  apartmentId: number,
+  postPriceId: number
+) => {
+  if (!userId || !apartmentId || !postPriceId) return HandelStatus(400);
+  if (!userId || !apartmentId) return HandelStatus(400);
+  let user = await getRepository(User).findOne(userId);
+  let apartmentRepo = getRepository(Apartment);
+  if (!user) return HandelStatus(404, "Bạn không phải chủ nhà");
+  let apartment = await apartmentRepo.findOne({ user: user, id: apartmentId });
+  let postPrice = await getRepository(Price).findOne(postPriceId);
+  if (!postPrice) return HandelStatus(404, "Không tìm thấy gói thời gian");
+  if (!apartment) return HandelStatus(404);
+
+  apartment.pricePost = postPrice;
+  apartment.deadline = null;
+  apartment.isApprove = false;
+  apartment.status == false;
+  try {
+    await apartmentRepo.save(apartment);
+    return HandelStatus(200);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
+const getMaxViews = async (take: number) => {
+  let apartmentRepo = getRepository(Apartment);
+  let result = await apartmentRepo.find({
+    relations: [
+      "street",
+      "ward",
+      "district",
+      "province",
+      "user",
+      "type",
+      "userApprove",
+      "pricePost",
+    ],
+    where: {},
+    take: take || 5,
+    order: {
+      views: "DESC",
+    },
+  });
+  try {
+    let res = plainToClass(ApartmentDto, result, {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, res);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
 export const ApartmentService = {
   create,
   getAll,
   update,
+  extendApartment,
   remove,
   getById,
   getAllByUserId,
   getAllApartment,
   getALlApproveByEmployment,
+  getAllApartmentByUser,
   getDeleted,
   restoreById,
   getNeedApproveByAdminId,
   approveApartment,
   getAllByEmploymentId,
+  changeStatus,
+  getMaxViews,
 };

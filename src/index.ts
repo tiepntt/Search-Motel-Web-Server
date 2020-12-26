@@ -9,8 +9,10 @@ import { debug } from "console";
 import { connection } from "./connection";
 import { router } from "./routers";
 import { loader } from "./loader";
+import { ConnectSocket } from "./loader/soketio";
 
 let app = express();
+var server = http.createServer(app);
 //connection
 
 connection();
@@ -22,6 +24,7 @@ const options: cors.CorsOptions = {
     "Content-Type",
     "Accept",
     "X-Access-Token",
+    "token",
   ],
   credentials: true,
   methods: "GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE",
@@ -48,8 +51,10 @@ app.get("/", (req, res) => {
 loader();
 router(app);
 
-var server = http.createServer(app);
-
+ConnectSocket(server);
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers");
+});
 server.listen(process.env.PORT || 3000);
 server.on("listening", onListening);
 function onListening() {

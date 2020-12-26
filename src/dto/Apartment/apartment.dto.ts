@@ -114,6 +114,9 @@ export class ApartmentDto {
   @Type((type) => WardGetDto)
   ward: WardGetDto;
   @Expose()
+  @Type((type) => PriceDto)
+  pricePost: PriceDto;
+  @Expose()
   @Type((type) => StreetGetDto)
   street: StreetGetDto;
   @Expose()
@@ -122,11 +125,19 @@ export class ApartmentDto {
   @Expose()
   create_at?: Date;
   @Expose()
+  deadline: Date;
+  @Expose()
   status: boolean;
   @Expose()
   reviewCount: number;
   @Expose()
   reportCount: number;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  userApprove: UserTitleDto;
 }
 export class ApartmentGetDto {
   @Expose()
@@ -220,6 +231,10 @@ export class ApartmentApproveDto {
   @Expose()
   @Type((type) => UserTitleDto)
   user: UserTitleDto;
+  @Expose()
+  deadline: Date;
+  @Expose()
+  isApprove: boolean;
 }
 export class ApproveInput {
   @Expose()

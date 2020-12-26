@@ -11,8 +11,7 @@ import { User } from "../../entity/user/User";
 import { mapObject } from "../../utils/map";
 
 const create = async (input: ApartmentReviewInputDto) => {
-  if (!input || !input.star || !input.userId || !input.apartmentId)
-    return HandelStatus(400);
+  if (!input || !input.userId || !input.apartmentId) return HandelStatus(400);
   let reviewRepo = getRepository(ApartmentReview);
   let userRepo = getRepository(User);
   let apartmentRepo = getRepository(Apartment);

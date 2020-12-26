@@ -64,6 +64,11 @@ const restoreApartment = async (req, res) => {
   let result = await ApartmentService.restoreById(id);
   return res.send(result);
 };
+const getListApartmentViewMax = async (req, res) => {
+  let { take } = req.query;
+  let result = await ApartmentService.getMaxViews(take);
+  return res.send(result);
+};
 export const EmploymentController = {
   getUserOfEmployment,
   getAllApartmentApproveYet,
@@ -75,4 +80,5 @@ export const EmploymentController = {
   removeApartment,
   getAllApartmentApproveByUser,
   restoreApartment,
+  getListApartmentViewMax,
 };
