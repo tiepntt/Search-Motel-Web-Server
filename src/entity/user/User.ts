@@ -5,6 +5,7 @@ import {
   Entity,
   Index,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -13,6 +14,7 @@ import {
 } from "typeorm";
 import { Apartment } from "../apartment/apartment";
 import { AvatarUser } from "../image/avatarUser";
+import { NotificationApartment } from "../notification/Notification";
 import { ContactUser } from "./Contact";
 
 import { Role } from "./Role";
@@ -77,4 +79,14 @@ export class User {
   })
   @JoinColumn()
   avatar: AvatarUser;
+  @ManyToMany((type) => NotificationApartment, (o) => o.userSeen, {
+    eager: false,
+    onDelete: "SET NULL",
+  })
+  notificationSeen: NotificationApartment[];
+  @ManyToMany((type) => NotificationApartment, (o) => o.userSubscribe, {
+    eager: false,
+    onDelete: "SET NULL",
+  })
+  notificationSubscribe: NotificationApartment[];
 }

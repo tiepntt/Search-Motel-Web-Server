@@ -19,8 +19,12 @@ const update = async (req, res) => {
   return res.send(result);
 };
 const getAllByApartmentId = async (req, res) => {
-  let apartmentId = req.params.apartmentId;
-  let result = await ApartmentReviewService.getAllByApartmentId(apartmentId);
+  let { apartmentId, skip, take } = req.query;
+  let result = await ApartmentReviewService.getAllByApartmentId(
+    apartmentId,
+    take,
+    skip
+  );
   return res.send(result);
 };
 export const ApartmentReviewController = {

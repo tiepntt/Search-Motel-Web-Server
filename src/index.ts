@@ -51,7 +51,7 @@ app.get("/", (req, res) => {
 loader();
 router(app);
 
-ConnectSocket(server);
+export const io = ConnectSocket(server);
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Headers", "Access-Control-Allow-Headers");
 });

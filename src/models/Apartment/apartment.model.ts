@@ -2,10 +2,12 @@ import { deserialize, deserializeArray, plainToClass } from "class-transformer";
 import {
   Between,
   getRepository,
+  In,
   IsNull,
   LessThan,
   LessThanOrEqual,
   Like,
+  MoreThan,
   Not,
 } from "typeorm";
 import { isNull } from "util";
@@ -27,11 +29,13 @@ import { Ward } from "../../entity/address/Ward";
 import { Apartment } from "../../entity/apartment/apartment";
 import { ApartmentType } from "../../entity/apartment/apartmentType";
 import { Price } from "../../entity/payment/postprice";
+import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
 import { ApartmentReviewHelper } from "../../helper/apartment.review.helper";
 import { ApartmentReportHelper } from "../../helper/apartmentReport.helper";
 import { addDate } from "../../utils/dateTime";
 import { mapObject } from "../../utils/map";
+import { NotificationApartmentService } from "../Notification/notification.apartment.model";
 import { LocationNearService } from "./apartmentNear.model";
 
 const create = async (input: ApartmentInputDto) => {
@@ -128,25 +132,58 @@ const create = async (input: ApartmentInputDto) => {
       await apartmentRepo.save(apartment);
     } else {
       let result = await apartmentRepo.save(apartment);
+      let roles = await getRepository(Role).find({
+        where: [{ code: "A" }, { code: "MNG" }],
+      });
+
+      let userSubscribe = await getRepository(User).find({
+        relations: ["role"],
+        where: [
+          {
+            role: roles[0],
+          },
+          { role: roles[1] },
+        ],
+      });
+
+      await NotificationApartmentService.create({
+        context: user.name + " đã thêm một bài đăng.",
+        apartment: apartment,
+        userCreate: user,
+        userSubscribe: userSubscribe,
+      });
       await LocationNearService.createMany(apartment, input.LocationsNearCode);
     }
 
     return HandelStatus(200, null, { id: apartment.id });
   } catch (e) {
-    return HandelStatus(500, e);
+    return HandelStatus(500);
   }
 };
-const getAllByUserId = async (userId: number) => {
+const getAllByUserId = async (userId: number, take?: number, skip?: number) => {
   if (!userId) return HandelStatus(400);
-  let apartment = await getRepository(Apartment)
-    .createQueryBuilder("apartment")
-    .where("apartment.userId = :id", { id: userId })
-    .getMany();
-  if (!apartment) return HandelStatus(200);
-  let result = deserializeArray(ApartmentGetDto, JSON.stringify(apartment), {
-    excludeExtraneousValues: true,
-  });
-  return HandelStatus(200, null, result);
+  let user = await getRepository(User).findOne({ id: userId });
+  let takeOffset = parseInt(take.toString());
+  let skipOffset = parseInt(skip.toString());
+  if (!user) return HandelStatus(404);
+  try {
+    let apartment = await getRepository(Apartment).findAndCount({
+      relations: ["district", "province", "street", "ward", "user", "type"],
+      where: {
+        user: user,
+        isApprove: true,
+      },
+      take: takeOffset || 5,
+      skip: skipOffset || 0,
+    });
+    if (!apartment) return HandelStatus(200);
+    let result = plainToClass(ApartmentGetDto, apartment[0], {
+      excludeExtraneousValues: true,
+    });
+    return HandelStatus(200, null, { count: apartment[1], data: result });
+  } catch (e) {
+    return HandelStatus(500);
+  }
 };
 const getAll = async (condition: ConditionApartmentSearch) => {
   let apartmentRepo = getRepository(Apartment);
@@ -289,20 +326,28 @@ const getNeedApproveByAdminId = async (adminId: number) => {
 };
 const approveApartment = async (id: number, userApproveId: number) => {
   let apartment = await getRepository(Apartment).findOne({
-    relations: ["pricePost"],
+    relations: ["pricePost", "user"],
     where: {
       id: id,
       isApprove: false,
     },
   });
   if (!apartment) return HandelStatus(404);
-  apartment.userApprove =
+  let user =
     (await getRepository(User).findOne(userApproveId)) || apartment.userApprove;
+  apartment.userApprove = user;
+
   apartment.isApprove = true;
   apartment.deadline = addDate(new Date(), apartment.pricePost.time || 0);
   apartment.approve_at = new Date();
   try {
     await getRepository(Apartment).save(apartment);
+    await NotificationApartmentService.create({
+      context: "Một bài đăng đã của bạn đã được duyệt",
+      apartment: apartment,
+      userCreate: user,
+      userSubscribe: [apartment.user],
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e.name);
@@ -391,7 +436,9 @@ const getAllApartmentByUser = async (
   isApprove: boolean,
   key: string
 ) => {
-  let user = await getRepository(User).findOne(userId);
+  let user = await getRepository(User).findOne({ id: userId });
+  console.log(user);
+
   if (!user) return HandelStatus(404, "Không tìm thấy người dùng");
   let apartmentRepo = getRepository(Apartment);
   let approve = isApprove.toString() === "true";
@@ -504,7 +551,75 @@ const getMaxViews = async (take: number) => {
     return HandelStatus(500);
   }
 };
+const getApartmentListCount = async () => {
+  let districts = await getRepository(District).find();
+  try {
+    let apartments = [];
+    for (let district of districts) {
+      let apartmentCount = await getRepository(Apartment).count({
+        relations: ["district"],
+        where: {
+          district: districts,
+        },
+      });
+      apartments.push({
+        id: district.id,
+        name: district.name,
+        count: apartmentCount,
+      });
+    }
+    return HandelStatus(200, null, apartments);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
+const getApartmentListCountByType = async () => {
+  let districts = await getRepository(ApartmentType).find();
+  try {
+    let apartments = [];
+    for (let district of districts) {
+      let apartmentCount = await getRepository(Apartment).count({
+        relations: ["district"],
+        where: {
+          type: districts,
+        },
+      });
+      apartments.push({
+        id: district.id,
+        name: district.name,
+        count: apartmentCount,
+      });
+    }
+    return HandelStatus(200, null, apartments);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
+const getNew = async () => {
+  let date = addDate(new Date(), -30);
+  let news = await getRepository(Apartment).count({
+    where: {
+      isApprove: true,
+      create_at: MoreThan(date),
+    },
+  });
+  return news;
+};
+const getDeadline = async () => {
+  let news = await getRepository(Apartment).count({
+    where: {
+      isApprove: true,
+      deadline: LessThan(new Date()),
+    },
+  });
+  return news;
+};
+
 export const ApartmentService = {
+  getDeadline,
+  getNew,
+  getApartmentListCountByType,
+  getApartmentListCount,
   create,
   getAll,
   update,

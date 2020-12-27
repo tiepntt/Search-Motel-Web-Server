@@ -22,10 +22,19 @@ const getAll = async (req, res) => {
   return res.send(result);
 };
 const getAllByUserId = async (req, res) => {
-  let userId = req.params.userId;
-  let result = await ApartmentService.getAllByUserId(userId);
+  let { take, skip, key, userId } = req.query;
+  console.log(userId);
+
+  let result = await ApartmentService.getAllApartmentByUser(
+    userId,
+    take,
+    skip,
+    true,
+    key
+  );
   return res.send(result);
 };
+
 const getAllApartmentByUserId = async (req, res) => {
   let { take, skip, isApprove, key } = req.query;
   let userId = res.locals.userId;

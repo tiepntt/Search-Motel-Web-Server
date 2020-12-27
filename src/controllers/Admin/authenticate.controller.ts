@@ -30,7 +30,7 @@ const login = async (req, res) => {
   });
 };
 const register = async (req, res) => {
-  let accountInput = req.body.account;         
+  let accountInput = req.body.account;
   if (!accountInput) return res.send(HandelStatus(400));
   let account = plainToClass(UserInputDto, accountInput);
   if (
@@ -61,8 +61,15 @@ const logOut = async (req, res) => {
     }
   );
 };
+const ResetPassword = async (req, res) => {
+  let email = req.body.email;
+
+  let result = await UserService.resetPassword(email);
+  return res.send(result);
+};
 export const AuthenticateController = {
   login,
   logOut,
   register,
+  ResetPassword,
 };

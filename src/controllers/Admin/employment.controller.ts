@@ -1,3 +1,4 @@
+import { HandelStatus } from "../../config/HandelStatus";
 import { User } from "../../entity/user/User";
 import { ApartmentService } from "../../models/Apartment/apartment.model";
 import { ApartmentReportService } from "../../models/Apartment/apartment.report.model";
@@ -23,8 +24,18 @@ const getAllApartmentApproveYet = async (req, res) => {
   return res.send(result);
 };
 const getAllReviewApartmentApproveYet = async (req, res) => {
-  let userId = res.locals.userId;
-  let result = await ApartmentReviewService.getAllApproveYet(userId || -1);
+  let { skip, take, key } = req.query;
+  let result = await ApartmentReviewService.getAllApproveYet(
+    0,
+    key,
+    take,
+    skip
+  );
+  return res.send(result);
+};
+const getAllReportApproveYet = async (req, res) => {
+  let { skip, take, key } = req.query;
+  let result = await ApartmentReportService.getAllApproveYet(key, take, skip);
   return res.send(result);
 };
 const getAllReviewApproveYetByApartmentId = async (req, res) => {
@@ -38,6 +49,12 @@ const approveReview = async (req, res) => {
   let id = req.body.reviewId;
   let userId = res.locals.userId;
   let result = await ApartmentReviewService.approveReview(id, userId);
+  return res.send(result);
+};
+const approveReport = async (req, res) => {
+  let id = req.body.reviewId;
+  let userId = res.locals.userId;
+  let result = await ApartmentReportService.approveReport(id);
   return res.send(result);
 };
 
@@ -69,13 +86,52 @@ const getListApartmentViewMax = async (req, res) => {
   let result = await ApartmentService.getMaxViews(take);
   return res.send(result);
 };
+const removeReview = async (req, res) => {
+  let id = req.params.id;
+  let result = await ApartmentReviewService.remove(id);
+  return res.send(result);
+};
+const removeReport = async (req, res) => {
+  let id = req.params.id;
+  let result = await ApartmentReportService.remove(id);
+  return res.send(result);
+};
+const getCountApartmentDistrict = async (req, res) => {
+  let result = await ApartmentService.getApartmentListCount();
+  return res.send(result);
+};
+const getCountApartmentByType = async (req, res) => {
+  let result = await ApartmentService.getApartmentListCountByType();
+  return res.send(result);
+};
+const getCountListNew = async (req, res) => {
+  let apartmentCount = await ApartmentService.getNew();
+  let commentCount = await ApartmentReviewService.getNew();
+  let userCount = await UserService.getNews();
+  let deadlineCount = await ApartmentService.getDeadline();
+  return res.send(
+    HandelStatus(200, null, {
+      apartmentCount,
+      commentCount,
+      userCount,
+      deadlineCount,
+    })
+  );
+};
 export const EmploymentController = {
+  getCountListNew,
+  getCountApartmentByType,
+  getCountApartmentDistrict,
   getUserOfEmployment,
   getAllApartmentApproveYet,
   approveApartment,
   getAllReviewApartmentApproveYet,
   getAllReviewApproveYetByApartmentId,
   approveReview,
+  removeReview,
+  approveReport,
+  removeReport,
+  getAllReportApproveYet,
   getReportByUserId,
   removeApartment,
   getAllApartmentApproveByUser,
