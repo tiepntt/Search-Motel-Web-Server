@@ -5,9 +5,9 @@ import { CheckToken } from "../../middleware/authenticate.middleware";
 let contactRouter = express.Router();
 contactRouter
   .get("/", CheckToken, ContactController.getAll)
-  .get("/userId?=:id", ContactController.getByUserId)
+  .get("/userId?=:id", CheckToken, ContactController.getByUserId)
   .post("/create", ContactController.create)
-  .put("/update", ContactController.update)
-  .delete("/delete", ContactController.remove);
+  .put("/update", CheckToken, ContactController.update)
+  .delete("/delete", CheckToken, ContactController.remove);
 
 export default contactRouter;

@@ -23,7 +23,7 @@ import userRouter from "./User/user.router";
 export const router = (app) => {
   app.use("/user", CheckToken, userRouter);
   app.use("/role", CheckToken, roleRouter);
-  app.use("/contact", CheckToken, contactRouter);
+  app.use("/contact", contactRouter);
   app.use("/province", CheckToken, provinceRouter);
   app.use("/district", CheckToken, districtRouter);
   app.use("/ward", CheckToken, wardRouter);

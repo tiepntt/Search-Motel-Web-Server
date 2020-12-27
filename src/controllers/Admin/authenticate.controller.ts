@@ -15,8 +15,8 @@ const login = async (req, res) => {
   };
   let tokenCode = await TokenService.create(payload);
   let payload2 = {
-    user: tokenCode.user,
-    role: tokenCode.role,
+    user: user,
+    role: user.role,
     id: tokenCode.id,
   };
   var token = jwt.sign(payload2, process.env.TOKEN_SECRET_TV, {

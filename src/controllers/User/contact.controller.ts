@@ -19,11 +19,19 @@ const getByUserId = async (req, res) => {
 };
 const update = async (req, res) => {
   let contact = req.body.contact;
-
+  let userId = res.locals.userId;
   if (!contact) return res.send(HandelStatus(400));
   let contactUpdate = plainToClass(ContactDto, contact);
   contactUpdate.userId = res.locals.userId;
-  let result = await ContactUserService.update(contactUpdate);
+  let result;
+  if (contactUpdate.id) {
+
+    if (contactUpdate.userId != userId) return HandelStatus(500);
+    result = await ContactUserService.update(contactUpdate);
+  } else {
+    contactUpdate.userId = userId;
+    result = await ContactUserService.create(contactUpdate);
+  }
   return res.send(result);
 };
 const remove = async (req, res) => {

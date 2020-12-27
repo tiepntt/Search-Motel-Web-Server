@@ -127,7 +127,7 @@ const getAllNewOwner = async (input: {
 };
 const getRenter = async (input: {}) => {};
 const assignUserToAdmin = async (input: UserAssignDto) => {
-  console.log(input);
+
 
   if (!input || !input.userId || !input.userAdminId) return HandelStatus(400);
   let userRepo = getRepository(User);
@@ -167,15 +167,16 @@ const assignUserToAdmin = async (input: UserAssignDto) => {
 };
 const getById = async (id) => {
   let userRepo = getRepository(User);
-  let user = await userRepo
-    .createQueryBuilder("user")
-    .leftJoinAndSelect("user.role", "role")
-    .leftJoinAndSelect("user.contactUser", "contactUser")
-    .leftJoinAndSelect("user.avatar", "avatar")
-    .where("user.id = :id", { id: id })
-    .getOne();
+  let user = await userRepo.findOne({
+    relations: ["role", "contactUser", "avatar"],
+    where: {
+      id: id,
+    },
+  });
+
+
   if (!user) return HandelStatus(404);
-  let userRes = deserializeArray(UserDetailDto, JSON.stringify(user), {
+  let userRes = plainToClass(UserDetailDto, user, {
     excludeExtraneousValues: true,
   });
 
@@ -274,6 +275,8 @@ const getByAccount = async (account: UserLogin) => {
     relations: ["role", "avatar"],
     where: { email: account.email, password: account.password },
   });
+
+
   if (!user) return HandelStatus(404, "Email hoặc mật khẩu không đúng");
   let result = deserialize(AccountDto, JSON.stringify(user), {
     excludeExtraneousValues: true,
@@ -299,7 +302,7 @@ const getUsersByEmployment = async (
   skip?: number,
   key?: string
 ) => {
-  console.log(userId, take, skip, key);
+
 
   if (!userId) return HandelStatus(400);
   let userManager = await getRepository(User).findOne({
@@ -323,7 +326,7 @@ const getUsersByEmployment = async (
   }
 };
 const changePassword = async (input: ChangePasswordDto) => {
-  console.log(input);
+
 
   if (!input || !input.id || !input.oldPassword || !input.newPassword)
     return HandelStatus(400);
@@ -332,8 +335,8 @@ const changePassword = async (input: ChangePasswordDto) => {
     id: input.id,
     password: input.oldPassword,
   });
-  console.log(input.oldPassword);
-  console.log(user);
+
+
 
   if (!user) return HandelStatus(404, "Mật khẩu không đúng");
   user.password = input.newPassword;

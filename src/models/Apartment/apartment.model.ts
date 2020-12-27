@@ -146,6 +146,8 @@ const create = async (input: ApartmentInputDto) => {
         ],
       });
 
+      console.log(userSubscribe);
+
       await NotificationApartmentService.create({
         context: user.name + " đã thêm một bài đăng.",
         apartment: apartment,

@@ -12,7 +12,9 @@ const getContactByUserId = async (userId) => {
   let contactRepo = getRepository(ContactUser);
   let userRepo = getRepository(User);
   let user = await userRepo.findOne(userId);
+  if (!user) return HandelStatus(404, "Không tìm thấy người dùng");
   let contact = await contactRepo.findOne({ user: user });
+  if(!contact) return []
   let contactResult = plainToClass(ContactDto, contact, {
     excludeExtraneousValues: true,
   });
