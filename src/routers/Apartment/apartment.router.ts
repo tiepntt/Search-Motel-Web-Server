@@ -44,7 +44,7 @@ apartmentRouter
   .delete("/delete", ApartmentController.remove)
   .get("/deleted", ApartmentController.getRemoved)
   .get("/reviews/", ApartmentReviewController.getAllByApartmentId)
-  .get("/userId=:userId", ApartmentController.getAllByUserId)
+  .get("/user", ApartmentController.getAllByUserId)
   .get("/detail/:apartmentId", ApartmentDetailController.getByApartmentId)
   .delete("/detail/:id", ApartmentDetailController.remove)
   .get("/hobby", CheckToken, ApartmentController.getHobby)

@@ -57,7 +57,6 @@ export const staticData = {
     { name: "Nhà trọ bình dân", code: "0001" },
     { name: "Chung cư mini", code: "0002" },
     { name: "Chung cư", code: "0003" },
-    { name: "Nhà riêng", code: "0004" },
     { name: "Home Stay", code: "0005" },
   ],
   kitchenType: [
