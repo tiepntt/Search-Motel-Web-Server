@@ -15,12 +15,14 @@ export const CheckToken = async (req, res, next) => {
         res.send(HandelStatus(401, err.message));
         return;
       } else {
+        console.log(verifiedJwt.id, "idv");
+
         let token = await TokenService.getById(verifiedJwt.id);
 
         if (!token) return res.send(HandelStatus(401));
-        res.locals.userId = token.user.id || null;
-        res.locals.isApprove = token.user.isApprove || false;
-        res.locals.role = token.role || null;
+        res.locals.userId = verifiedJwt.user.id || null;
+        res.locals.isApprove = verifiedJwt.user.isApprove || false;
+        res.locals.role = verifiedJwt.role || null;
         next();
       }
     }
