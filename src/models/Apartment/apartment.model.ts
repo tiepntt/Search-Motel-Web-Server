@@ -559,7 +559,7 @@ const getApartmentListCount = async () => {
       let apartmentCount = await getRepository(Apartment).count({
         relations: ["district"],
         where: {
-          district: districts,
+          district: district,
         },
       });
       apartments.push({
@@ -579,9 +579,9 @@ const getApartmentListCountByType = async () => {
     let apartments = [];
     for (let district of districts) {
       let apartmentCount = await getRepository(Apartment).count({
-        relations: ["district"],
+        relations: ["type"],
         where: {
-          type: districts,
+          type: district,
         },
       });
       apartments.push({

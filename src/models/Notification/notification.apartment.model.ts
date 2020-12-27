@@ -33,15 +33,14 @@ const seen = async (userId: number, id: number) => {
     relations: ["userSeen"],
     where: { id: id },
   });
+
   if (!notification || !user) return HandelStatus(404);
+
   try {
-    if (!notification.userSeen || notification.userSeen.length == 0) {
-      notification.userSeen = [];
-      if (notification.userSeen.find((o) => o.id == userId) == null) {
-        notification.userSeen.push(user);
-        await getRepository(NotificationApartment).save(notification);
-        return HandelStatus(200);
-      } else return HandelStatus(404);
+    if (!notification.userSeen.find((o) => o.id == userId)) {
+      notification.userSeen.push(user);
+      await getRepository(NotificationApartment).save(notification);
+      return HandelStatus(200);
     } else return HandelStatus(404);
   } catch (e) {
     console.log(e);

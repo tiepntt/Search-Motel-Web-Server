@@ -263,7 +263,7 @@ const changeAvatar = async (avatarId: number, userId: number) => {
   user.avatar = avatar || user.avatar;
   try {
     await userRepo.update(userId, user);
-    return HandelStatus(200);
+    return HandelStatus(200, null, { avatar });
   } catch (e) {
     return HandelStatus(500, e.name);
   }

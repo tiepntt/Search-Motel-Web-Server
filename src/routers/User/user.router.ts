@@ -13,7 +13,7 @@ let userRouter = express
   .get("/profile", UserController.getProfile)
   .get("/:id", UserController.getById)
   .put("/update", UserController.update)
-  .post(
+  .put(
     "/changeAvatar",
     uploadAvatarUser.single("avatar"),
     AvatarUserController.create,

@@ -5,7 +5,6 @@ import { ApartmentController } from "../../controllers/Apartment/apartment.contr
 
 let searchRouter = express.Router();
 searchRouter
-
   .get("/all", ManagerController.getALlApartment)
   .get("/user", ApartmentController.getAllByUserId)
   .get("/listCountByDistrict", EmploymentController.getCountApartmentDistrict)
