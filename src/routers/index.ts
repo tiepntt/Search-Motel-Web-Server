@@ -21,9 +21,9 @@ import roleRouter from "./User/role.router";
 import userRouter from "./User/user.router";
 
 export const router = (app) => {
-  app.use("/user", userRouter);
+  app.use("/user", CheckToken, userRouter);
   app.use("/role", CheckToken, roleRouter);
-  app.use("/contact", contactRouter);
+  app.use("/contact", CheckToken, contactRouter);
   app.use("/province", CheckToken, provinceRouter);
   app.use("/district", CheckToken, districtRouter);
   app.use("/ward", CheckToken, wardRouter);
