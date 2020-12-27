@@ -105,6 +105,9 @@ export class UserTitleDto {
   isApprove: boolean;
   @Expose()
   create_at?: Date;
+  @Expose()
+  @Type(() => AvatarUserDto, {})
+  avatar: AvatarUserDto;
 }
 export class UserAssignDto {
   @Expose()

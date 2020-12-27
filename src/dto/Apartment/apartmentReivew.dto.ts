@@ -21,6 +21,9 @@ export class ApartmentReviewGetDto {
   @Expose()
   @Type((type) => UserTitleDto)
   user: UserTitleDto;
+  @Expose()
+  @Type((type) => ApartmentTitleDto)
+  apartment: ApartmentTitleDto;
 }
 export class ApartmentListGetDto {
   @Expose()

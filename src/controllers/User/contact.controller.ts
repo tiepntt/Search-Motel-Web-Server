@@ -8,7 +8,7 @@ const getAll = async (req, res) => {
 };
 const create = async (req, res) => {
   let input = req.body.contact;
-  input.userId = res.locals.userId;
+  // input.userId = res.locals.userId;
   let result = await ContactUserService.create(input);
   res.send(result);
 };

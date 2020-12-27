@@ -17,10 +17,14 @@ EmploymentRouter.get("/getUsers/", EmploymentController.getUserOfEmployment)
     EmploymentController.getAllReviewApproveYetByApartmentId
   )
   .post("/reviews/approve", EmploymentController.approveReview)
-  .get("/report", EmploymentController.getReportByUserId)
+  .delete("/reviews/remove/:id", EmploymentController.removeReview)
+  .get("/reports", EmploymentController.getAllReportApproveYet)
+  .post("/report/approve", EmploymentController.approveReport)
+  .delete("/report/remove/:id", EmploymentController.removeReport)
   .delete("/apartment", EmploymentController.removeApartment)
   .get("/apartment", EmploymentController.getAllApartmentApproveByUser)
   .put("/apartment", EmploymentController.restoreApartment)
+  .get("/listNew", EmploymentController.getCountListNew)
   .get("/max", EmploymentController.getListApartmentViewMax);
 
 export default EmploymentRouter;

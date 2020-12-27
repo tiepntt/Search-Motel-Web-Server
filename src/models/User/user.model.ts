@@ -28,8 +28,13 @@ import {
 import { AvatarUser } from "../../entity/image/avatarUser";
 import { Role } from "../../entity/user/Role";
 import { User } from "../../entity/user/User";
+import { SendMail } from "../../services/email/config";
+import { changePasswordForm } from "../../services/email/form";
+import { addDate } from "../../utils/dateTime";
+import { genPassword } from "../../utils/genPassword";
 import { mapObject } from "../../utils/map";
 import { checkEmail } from "../../utils/regex";
+import { NotificationApartmentService } from "../Notification/notification.apartment.model";
 
 const getAll = async (take: number, skip: number, key?: string) => {
   let userRepo = getRepository(User);
@@ -148,6 +153,13 @@ const assignUserToAdmin = async (input: UserAssignDto) => {
   user.userManager = userAdmin;
   try {
     await userRepo.update(user.id, user);
+    await NotificationApartmentService.create({
+      context:
+        "Tài khoản của bạn đã được phê duyệt. Giờ đây, bạn có thể đăng tin các bài cho thuê phòng trọ.",
+      apartment: null,
+      userCreate: userAdmin,
+      userSubscribe: [user],
+    });
     return HandelStatus(200);
   } catch (e) {
     return HandelStatus(500, e);
@@ -332,7 +344,43 @@ const changePassword = async (input: ChangePasswordDto) => {
     return HandelStatus(500, e.name);
   }
 };
+const resetPassword = async (email) => {
+  let userRepo = getRepository(User);
+  if (!email) return HandelStatus(400);
+  let user = await userRepo.findOne({ email: email });
+  if (!user) return HandelStatus(404, "Khong ton tai email");
+  user.password = genPassword();
+
+  try {
+    let textEmail = changePasswordForm({
+      to: user.email,
+      password: user.password,
+      name: user.name,
+    });
+    let check = await SendMail(textEmail);
+    if (check.status == 200) {
+      await userRepo.save(user);
+      return HandelStatus(
+        200,
+        `Mật khẩu mới đã được gửi tới email ${user.email}.`
+      );
+    } else return HandelStatus(500);
+  } catch (e) {
+    return HandelStatus(500);
+  }
+};
+const getNews = async () => {
+  let date = addDate(new Date(), -30);
+  let news = await getRepository(User).count({
+    where: {
+      create_at: MoreThan(date),
+    },
+  });
+  return news;
+};
 export const UserService = {
+  getNews,
+  resetPassword,
   getAll,
   create,
   getById,

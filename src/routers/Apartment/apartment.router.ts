@@ -2,6 +2,7 @@ import * as express from "express";
 import { ManagerController } from "../../controllers/Admin/manager.controller";
 import { ApartmentController } from "../../controllers/Apartment/apartment.controller";
 import { ApartmentDetailController } from "../../controllers/Apartment/apartmentDetail.controller";
+import { ApartmentReviewController } from "../../controllers/Apartment/apartmentReivew.controller";
 import { ImageApartmentController } from "../../controllers/image/imageApartment.controller";
 import {
   CheckRole,
@@ -42,7 +43,7 @@ apartmentRouter
   .put("/updateStatus", CheckToken, ApartmentController.changeStatus)
   .delete("/delete", ApartmentController.remove)
   .get("/deleted", ApartmentController.getRemoved)
-
+  .get("/reviews/", ApartmentReviewController.getAllByApartmentId)
   .get("/userId=:userId", ApartmentController.getAllByUserId)
   .get("/detail/:apartmentId", ApartmentDetailController.getByApartmentId)
   .delete("/detail/:id", ApartmentDetailController.remove)

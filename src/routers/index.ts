@@ -16,13 +16,14 @@ import searchRouter from "./Apartment/search.router";
 import initAddressRouter from "./InitData/init-address.router";
 import PriceRouter from "./Payment/price.router";
 import contactRouter from "./User/contact.router";
+import notificationRouter from "./User/notification.router";
 import roleRouter from "./User/role.router";
 import userRouter from "./User/user.router";
 
 export const router = (app) => {
-  app.use("/user", CheckToken, userRouter);
+  app.use("/user", userRouter);
   app.use("/role", CheckToken, roleRouter);
-  app.use("/contact", CheckToken, contactRouter);
+  app.use("/contact", contactRouter);
   app.use("/province", CheckToken, provinceRouter);
   app.use("/district", CheckToken, districtRouter);
   app.use("/ward", CheckToken, wardRouter);
@@ -44,4 +45,5 @@ export const router = (app) => {
   app.use("/type", apartmentTypeRouter);
   app.use("/hint", hintRouter);
   app.use("/price", PriceRouter);
+  app.use("/notification", CheckToken, notificationRouter);
 };

@@ -5,5 +5,6 @@ let AuthenticateRouter = express.Router();
 AuthenticateRouter.post("/login", AuthenticateController.login);
 AuthenticateRouter.post("/logout", AuthenticateController.logOut);
 AuthenticateRouter.post("/register", AuthenticateController.register);
+AuthenticateRouter.put("/resetPassword", AuthenticateController.ResetPassword);
 
 export default AuthenticateRouter;

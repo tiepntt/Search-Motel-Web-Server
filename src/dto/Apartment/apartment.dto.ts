@@ -80,6 +80,9 @@ export class ApartmentTitleDto {
   price: number;
   @Expose()
   status: boolean;
+  @Expose()
+  @Type((type) => UserTitleDto)
+  user: UserTitleDto;
 }
 export class ApartmentDto {
   @Expose()
