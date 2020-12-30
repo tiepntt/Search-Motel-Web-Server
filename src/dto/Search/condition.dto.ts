@@ -4,7 +4,7 @@ export class ConditionApartmentSearch {
   minPrice = 0;
   maxPrice = 1000000000;
   minS = 0;
-  maxS = 1000;
+  maxS = 1000000;
   apartmentTypeId = null;
   provinceId = 1;
   districtId = null;

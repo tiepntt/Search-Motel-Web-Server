@@ -26,7 +26,7 @@ export const router = (app) => {
   app.use("/contact", contactRouter);
   app.use("/province", CheckToken, provinceRouter);
   app.use("/district", CheckToken, districtRouter);
-  app.use("/ward", CheckToken, wardRouter);
+  app.use("/ward", wardRouter);
   app.use("/street", CheckToken, streetRouter);
   app.use("/search", searchRouter);
   app.use(

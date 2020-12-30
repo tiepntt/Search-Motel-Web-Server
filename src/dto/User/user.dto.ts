@@ -106,6 +106,10 @@ export class UserTitleDto {
   @Expose()
   create_at?: Date;
   @Expose()
+  @Type(() => ContactDto, {})
+  contactUser: ContactDto;
+
+  @Expose()
   @Type(() => AvatarUserDto, {})
   avatar: AvatarUserDto;
 }

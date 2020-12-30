@@ -219,8 +219,11 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     minPrice: parseInt(condition.minPrice.toString() || "0"),
     maxPrice: parseInt(condition.maxPrice.toString() || "10000000"),
     minS: parseInt(condition.minS.toString() || "0"),
-    maxS: parseInt(condition.maxS.toString() || "100000000"),
+    maxS: parseInt(condition.maxS.toString() || "10000"),
   };
+
+  console.log(convert.minS, convert.maxS);
+
   let conditionLet = {
     isApprove: true,
     province: province || Not(isNull(province)),
@@ -242,6 +245,8 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     take: condition.take || 5,
     skip: condition.skip || 0,
   });
+  console.log(apartment);
+
   if (!apartment) return HandelStatus(404);
   let result = deserialize(ApartmentDto, JSON.stringify(apartment[0]), {
     excludeExtraneousValues: true,
