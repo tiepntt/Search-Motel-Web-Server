@@ -82,6 +82,8 @@ const getByApartmentId = async (apartmentId: number, userId = -1) => {
       "pricePost",
       "type",
       "user",
+      "user.avatar",
+      "user.contactUser",
       "street",
       "apartmentDetail",
       "apartmentDetail.kitchenType",
@@ -94,6 +96,7 @@ const getByApartmentId = async (apartmentId: number, userId = -1) => {
       id: apartmentId,
     },
   });
+
   if (!apartment) return HandelStatus(404);
   let result = plainToClass(ApartmentGetDto, apartment, {
     excludeExtraneousValues: true,

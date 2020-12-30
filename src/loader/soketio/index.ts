@@ -13,8 +13,6 @@ export const ConnectSocket = (server) => {
   });
 
   io.on("connect", (socket) => {
-    console.log("connected with", socket.id);
-
     socket.on("join", ({ name, room }, callback) => {
       const { error, user } = usersServiceIo.addUser({
         id: socket.id,

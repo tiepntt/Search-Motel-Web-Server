@@ -174,7 +174,6 @@ const getById = async (id) => {
     },
   });
 
-
   if (!user) return HandelStatus(404);
   let userRes = plainToClass(UserDetailDto, user, {
     excludeExtraneousValues: true,
@@ -275,7 +274,6 @@ const getByAccount = async (account: UserLogin) => {
     relations: ["role", "avatar"],
     where: { email: account.email, password: account.password },
   });
-
 
   if (!user) return HandelStatus(404, "Email hoặc mật khẩu không đúng");
   let result = deserialize(AccountDto, JSON.stringify(user), {
