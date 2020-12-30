@@ -146,8 +146,6 @@ const create = async (input: ApartmentInputDto) => {
         ],
       });
 
-      console.log(userSubscribe);
-
       await NotificationApartmentService.create({
         context: user.name + " đã thêm một bài đăng.",
         apartment: apartment,
@@ -222,8 +220,6 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     maxS: parseInt(condition.maxS.toString() || "10000"),
   };
 
-  console.log(convert.minS, convert.maxS);
-
   let conditionLet = {
     isApprove: true,
     province: province || Not(isNull(province)),
@@ -245,7 +241,6 @@ const getAll = async (condition: ConditionApartmentSearch) => {
     take: condition.take || 5,
     skip: condition.skip || 0,
   });
-  console.log(apartment);
 
   if (!apartment) return HandelStatus(404);
   let result = deserialize(ApartmentDto, JSON.stringify(apartment[0]), {

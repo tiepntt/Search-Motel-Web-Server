@@ -96,7 +96,6 @@ const getByApartmentId = async (apartmentId: number, userId = -1) => {
       id: apartmentId,
     },
   });
-  // console.log(apartment);
 
   if (!apartment) return HandelStatus(404);
   let result = plainToClass(ApartmentGetDto, apartment, {
